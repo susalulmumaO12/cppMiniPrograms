@@ -17,7 +17,6 @@ for(int i=0;i<n;i++){
      cout<<static_cast<char>(tolower(m));  //convert to lowercase
      else                       //for odd letters in the string
      cout<<static_cast<char>(toupper(m));  //convert to uppercase
-
 }
 cout<<endl;
     return 0;
