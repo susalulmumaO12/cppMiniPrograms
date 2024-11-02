@@ -1,35 +1,28 @@
-/* 
-Breadth-first search is one of the simplest algorithms for searching a graph and
-the archetype for many important graph algorithms.
-
-The following graph class is implemented specifically for Breadth-First Search algorithm, using adjacency lists to represent a graph G = (V, E).
- */
-#include<iostream>
-#include<list>
+#include "graph.h"
+#include <iostream>
+#include <list>
 
 using namespace std;
 
-class Graph
-{
-	private:
-	int V;
-	list<int>* EL; //edges list
-	bool* visited;
+Graph::Graph(int V) { // constructor
+    this->V = V;
+    this->EL = new list<int>[V+1];
+}
 
-	public:
-	Graph(int V){ //constructor
-		this->V = V;
-		this->EL = new list<int>[V];
-	}
+void Graph::insertEdge(int src, int des) {
+    // add an undirected edge
+    EL[src].push_back(des);
+    EL[des].push_back(src);
+}
 
-	void insertEdge(int src, int des){
-		//add an undirected edge
-		EL[src].push_back(des);
-		EL[des].push_back(src);
-	}
+int Graph::getVertices() {
+    return V;
+}
 
-	~Graph(){ //destructor
+list<int>* Graph::getEL() {
+    return EL;
+}
+
+Graph::~Graph() { // destructor
     delete[] this->EL;
-    delete[] this->visited;
-	}
-};
+}

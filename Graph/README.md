@@ -3,7 +3,19 @@ Graph data structure and Algorithms
 
 ## Algorithms
 
-**Breadth-First Search**
+**Breadth-First Search:**
+
+&emsp; Used structure for graph for BFS algorithm is adjacency lists. The example graph in `main` is: 
+<pre>
+        1------2------3
+        |  __/        |
+        4 /           5
+        |
+        6-----7
+        |
+        8
+</pre>
+
 
 ## Resources
 
