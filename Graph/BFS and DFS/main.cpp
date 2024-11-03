@@ -1,5 +1,6 @@
 #include<iostream>
 #include<queue>
+#include<stack>
 #include"graph.h"
 
 using namespace std;
@@ -36,6 +37,35 @@ void bfs(Graph g, int src){
     delete[] visited;
 } //bfs
 
+void dfs(Graph g, int src){ //iterative dfs
+    int V = g.getVertices();
+    list<int>* el = g.getEL();
+    bool* visited = new bool[V+1];
+
+    for(int i=0; i<=V; i++){
+         visited[i] = false;
+    }
+
+    stack<int> u;
+
+    //flag given start point as visited
+    visited[src] = true;
+    u.push(src);
+
+    while(!u.empty()){
+        int s = u.top();
+        cout<<"pointer at "<<s<<endl;
+        u.pop();
+
+        for(auto edge:el[s]){
+            if(!visited[edge]){
+                visited[edge] = true;
+                u.push(edge);
+            }
+        }
+    }
+} //dfs
+
 int main(){
 
     /* 
@@ -59,7 +89,25 @@ int main(){
     graph.insertEdge(6, 7);
     graph.insertEdge(6, 8);
 
-    bfs(graph, 1);
+    int input, start;
+    bool correct = false;
+
+    cout<<"Choose traversal: 1) BFS, 2) DFS\n";
+    cin>>input;
+    cout<<"Choose starting point:\n";
+    cin>>start;
+
+
+    if(start>8)
+    {
+        while(!correct){
+            cout<<"Invalid starting point, must be between 1-8:\n";
+            cin>>start;
+            if(start<=8) correct = true;
+        }
+    }
+    
+    input==1? bfs(graph, start) : dfs(graph, start);
 
     return 0;
 }
