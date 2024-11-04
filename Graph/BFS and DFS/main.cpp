@@ -10,7 +10,7 @@ void bfs(Graph g, int src){
     list<int>* el = g.getEL();
     bool* visited = new bool[V+1];
 
-    for(int i=0; i<=V; i++){
+    for(int i=1; i<=V; i++){
          visited[i] = false;
     }
 
@@ -64,6 +64,7 @@ void dfs(Graph g, int src){ //iterative dfs
             }
         }
     }
+    delete[] visited;
 } //dfs
 
 int main(){
@@ -113,4 +114,5 @@ int main(){
 }
 
 //TODO: fix "Segmentation fault (core dumped)"
-//TODO: support graphical representaion for BFS
+//TODO: support graphical representaion for BFS and DFS
+//TODO: support custom graph insertion (with ncurses possibly)
