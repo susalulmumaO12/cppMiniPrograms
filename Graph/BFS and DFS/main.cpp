@@ -113,6 +113,5 @@ int main(){
     return 0;
 }
 
-//TODO: fix "Segmentation fault (core dumped)"
 //TODO: support graphical representaion for BFS and DFS
 //TODO: support custom graph insertion (with ncurses possibly)
