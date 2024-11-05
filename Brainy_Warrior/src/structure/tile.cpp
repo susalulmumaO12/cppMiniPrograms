@@ -1,43 +1,33 @@
-#include<iostream>
-#include<vector>
+#include"TILE_H"
 
-using namespace std;
-
-class Tile{
-	private:
-		int row;
-		int col;
-		int value;
-
-	public:
-		Tile(int row, int col, int value){
-			this->row=row;
-			this->col=col;
-			this-value=value;
-		}
-
-		int getValue(){
-			return value;
-		}
-
-		void setValue(int value){
-			this->value=value;
-		}
-
-		int getRow(){
-			return row;
-		}
-
-		void setRow(int row){
-			this->row=row;
-		}
-
-		int getCol(){
-			return col;
-		}
-
-		void setCol(int col){
-			this->col=col;
-		}
-
+Tile::Tile(int row, int col, int value){
+	this->row=row;
+	this->col=col;
+	this-value=value;
 }
+
+int Tile::getValue(){
+	return value;
+}
+
+void Tile::setValue(int value){
+	this->value=value;
+}
+
+int Tile::getRow(){
+	return row;
+}
+
+void Tile::setRow(int row){
+	this->row=row;
+}
+
+int Tile::getCol(){
+	return col;
+}
+
+void Tile::setCol(int col){
+	this->col=col;
+}
+
+
