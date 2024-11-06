@@ -94,3 +94,131 @@ bool canMoveRight(Board board, Tile tile){
 		return true;
 	} else return false;
 }
+
+Board moveRight(Board b, Tile tile){
+
+	int i=tile.getRow();
+	int j=tile.getCol();
+	int m=b.getM();
+
+	for(int k=j+1; k<m; k++)
+	{
+		int next = b.board[i][k];
+
+		if(next == 0){
+			b.board[i][j]=1;
+			return b;
+		} else if(next == 1){
+			continue;
+		} else if(next == 4){
+			b.board[i][j]=1;
+			b.board[i][k-1]=9;
+			tile.setCol(k-1);
+		} else if(next == 5){
+			b.board[i][j]=1;
+			b.board[i][k]=9;
+			tile.setCol(k);
+		} else if(next == 6){
+			b.board[i][j]=1;
+			b.board[i][k]=9;
+			tile.setCol(k);
+		}
+	}
+	return b;
+}
+
+Board moveLeft(Board b, Tile tile){
+
+	int i=tile.getRow();
+	int j=tile.getCol();
+	int m=b.getM();
+
+	for(int k=j-1; k>=0; k--)
+	{
+		int next = b.board[i][k];
+
+		if(next == 0){
+			b.board[i][j]=1;
+			return b;
+		} else if(next == 1){
+			continue;
+		} else if(next == 4){
+			b.board[i][j]=1;
+			b.board[i][k+1]=9;
+			tile.setCol(k+1);
+		} else if(next == 5){
+			b.board[i][j]=1;
+			b.board[i][k]=9;
+			tile.setCol(k);
+		} else if(next == 6){
+			b.board[i][j]=1;
+			b.board[i][k]=9;
+			tile.setCol(k);
+		}
+	}
+	return b;
+}
+
+Board moveUp(Board b, Tile tile){
+
+	int i=tile.getRow();
+	int j=tile.getCol();
+	int n=b.getN();
+
+	for(int k=i-1; k>=0; k--)
+	{
+		int next = b.board[k][j];
+
+		if(next == 0){
+			b.board[i][j]=1;
+			return b;
+		} else if(next == 1){
+			continue;
+		} else if(next == 4){
+			b.board[i][j]=1;
+			b.board[k+1][j]=9;
+			tile.setRow(k+1);
+		} else if(next == 5){
+			b.board[i][j]=1;
+			b.board[k][j]=9;
+			tile.setRow(k);
+		} else if(next == 6){
+			b.board[i][j]=1;
+			b.board[k][j]=9;
+			tile.setRow(k);
+		}
+	}
+	return b;
+}
+
+Board moveDown(Board b, Tile tile){
+
+	int i=tile.getRow();
+	int j=tile.getCol();
+	int n=b.getN();
+
+	for(int k=i+1; k<n; k++)
+	{
+		int next = b.board[k][j];
+
+		if(next == 0){
+			b.board[i][j]=1;
+			return b;
+		} else if(next == 1){
+			continue;
+		} else if(next == 4){
+			b.board[i][j]=1;
+			b.board[k-1][j]=9;
+			tile.setRow(k-1);
+		} else if(next == 5){
+			b.board[i][j]=1;
+			b.board[k][j]=9;
+			tile.setRow(k);
+		} else if(next == 6){
+			b.board[i][j]=1;
+			b.board[k][j]=9;
+			tile.setRow(k);
+		}
+	}
+	return b;
+}
