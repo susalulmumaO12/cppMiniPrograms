@@ -1,4 +1,4 @@
-#include"TILE_H"
+#include"tile.h"
 
 Tile::Tile(int row, int col, int value){
 	this->row=row;
