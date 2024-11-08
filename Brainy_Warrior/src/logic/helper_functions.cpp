@@ -6,46 +6,6 @@
 
 using namespace std;
 
-list<Board> get_next_states(Board board, Tile tile){
-	list<Board> states;
-
-	if(canMoveUp(board, tile)){
-		Board up = board;
-
-		up = moveUp(board, tile);
-
-		states.push_back(up);
-	}
-
-
-	if(canMoveDown(board, tile)){
-		Board down = board;
-
-		down = moveDown(board, tile);
-
-		states.push_back(down);
-	}
-
-
-	if(canMoveLeft(board, tile)){
-		Board left = board;
-
-		left = moveLeft(board, tile);
-
-		states.push_back(left);
-	}
-
-
-	if(canMoveRight(board, tile)){
-		Board right = board;
-
-		right = moveRight(board, tile);
-
-		states.push_back(right);
-	}
-}
-
-
 bool canMoveUp(Board board, Tile tile){
 		
 	int i=tile.getRow();
@@ -221,4 +181,43 @@ Board moveDown(Board b, Tile tile){
 		}
 	}
 	return b;
+}
+
+list<Board> get_next_states(Board board, Tile tile){
+	list<Board> states;
+
+	if(canMoveUp(board, tile)){
+		Board up = board;
+
+		up = moveUp(board, tile);
+
+		states.push_back(up);
+	}
+
+
+	if(canMoveDown(board, tile)){
+		Board down = board;
+
+		down = moveDown(board, tile);
+
+		states.push_back(down);
+	}
+
+
+	if(canMoveLeft(board, tile)){
+		Board left = board;
+
+		left = moveLeft(board, tile);
+
+		states.push_back(left);
+	}
+
+
+	if(canMoveRight(board, tile)){
+		Board right = board;
+
+		right = moveRight(board, tile);
+
+		states.push_back(right);
+	}
 }
