@@ -4,13 +4,21 @@ project(brainy_warrior_project LANGUAGES CXX)
 
 # Set directory variables
 set(SOURCE_DIR src)
+set(STRUCTURE_DIR src/structure)
 set(INCLUDE_DIR include)
 
 # Access JSON package
 find_package(nlohmann_json REQUIRED)
 
 # Define target
-add_executable(Brainy_Warrior ${SOURCE_DIR}/main.cpp)
+add_executable(Brainy_Warrior 
+    ${SOURCE_DIR}/main.cpp 
+    ${STRUCTURE_DIR}/board.cpp 
+    ${STRUCTURE_DIR}/tile.cpp
+)
+
+#include headers
+include_directories(${STRUCTURE_DIR})
 
 # Set target properties
 target_compile_options(Brainy_Warrior PUBLIC -Wall -std=c++17)
