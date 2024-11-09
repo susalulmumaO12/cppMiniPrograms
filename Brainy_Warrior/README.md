@@ -12,6 +12,13 @@ While `logic` folder will contain the functionalities for the game to run, which
 
 And finally, `game_solver` folder, which will contain some algorithms that solve some levels of the game, such as BFS, DFS, A_Star and more.
 
+## Preview
+
+The game is printed on the terminal, example **Lvl-1**:
+
+<img src="./screenshot/lvl1.png" alt="level 1" height="250" />
+
+_In the picture above_ `5` _is considered a target/ enemy and_ `9` _is the player._
 
 ## How to build
 
@@ -32,3 +39,9 @@ The C++ code should compile successfully, make sure by starting the game, run th
 ```sh
 ./Brainy_Warrior
 ```
+
+## Resources
+
+- [nlohmann github repository](https://github.com/nlohmann/json)
+- [ANSI escape code](https://en.wikipedia.org/wiki/ANSI_escape_code)
+- [Working with Conan and CMake](https://www.codeproject.com/Articles/5385907/Managing-Cplusplus-Projects-with-Conan-and-CMake)
