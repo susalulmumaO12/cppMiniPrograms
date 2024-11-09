@@ -1,61 +1,69 @@
 #include<iostream>
-#include"../structure/Node_State.h"
+//#include"../structure/node_state.h"
 #include<list>
-#include"../structure/board.cpp"
-
+#include"../structure/board.h"
+#include"../structure/tile.h"
 
 using namespace std;
 
-bool canMoveUp(Board board, Tile tile){
+bool canMoveUp(Board b, Tile tile){
 		
 	int i=tile.getRow();
 	int j=tile.getCol();
 
 	if(i-1<0) return false;
 
-	if(board[i-1][j] != 4){
+	if(b.getTile(i-1, j).getValue() != 4){
 		return true;
 	} else return false;
+
+	return false;
 }
 	
-bool canMoveDown(Board board, Tile tile){
+bool canMoveDown(Board b, Tile tile){
 		
 	int i=tile.getRow();
 	int j=tile.getCol();
-	int n=board.getN();
+	int n=b.getN();
 	if(i+1>=n) return false;
 
-	if(board[i+1][j] != 4){
+	if(b.getTile(i+1, j).getValue() != 4){
 		return true;
 	} else return false;
+
+	return false;
 }
 
-bool canMoveLeft(Board board, Tile tile){
+bool canMoveLeft(Board b, Tile tile){
 	
 	int i=tile.getRow();
 	int j=tile.getCol();
 
 	if(j-1<0) return false;
 
-	if(board[i][j-1] != 4){
+	if(b.getTile(i, j-1).getValue() != 4){
 		return true;
 	} else return false;
+
+	return false;
 }
 
-bool canMoveRight(Board board, Tile tile){
+bool canMoveRight(Board b, Tile tile){
 
 	int i=tile.getRow();
 	int j=tile.getCol();
-	int m=board.getM();
+	int m=b.getM();
 
 	if(j+1>=m) return false;
 
-	if(board[i][j+1] != 4){
+	if(b.getTile(i, j+1).getValue() != 4){
 		return true;
 	} else return false;
+
+	return false;
 }
 
-Board moveRight(Board b, Tile tile){
+Board moveRight(Board b, Tile& tile){
 
 	int i=tile.getRow();
 	int j=tile.getCol();
@@ -63,24 +71,24 @@ Board moveRight(Board b, Tile tile){
 
 	for(int k=j+1; k<m; k++)
 	{
-		int next = b.board[i][k];
+		int next = b.getTile(i, k).getValue();
 
 		if(next == 0){
-			b.board[i][j]=1;
+			b.setTile(b.getTile(i, j), 1);
 			return b;
 		} else if(next == 1){
 			continue;
 		} else if(next == 4){
-			b.board[i][j]=1;
-			b.board[i][k-1]=9;
+			b.setTile(b.getTile(i, j), 1);
+			b.setTile(b.getTile(i, k-1), 9);
 			tile.setCol(k-1);
 		} else if(next == 5){
-			b.board[i][j]=1;
-			b.board[i][k]=9;
+			b.setTile(b.getTile(i, j), 1);
+			b.setTile(b.getTile(i, k), 9);
 			tile.setCol(k);
 		} else if(next == 6){
-			b.board[i][j]=1;
-			b.board[i][k]=9;
+			b.setTile(b.getTile(i, j), 1);
+			b.setTile(b.getTile(i, k), 9);
 			tile.setCol(k);
 		}
 	}
@@ -91,28 +99,27 @@ Board moveLeft(Board b, Tile tile){
 
 	int i=tile.getRow();
 	int j=tile.getCol();
-	int m=b.getM();
 
 	for(int k=j-1; k>=0; k--)
 	{
-		int next = b.board[i][k];
+		int next = b.getTile(i, k).getValue();
 
 		if(next == 0){
-			b.board[i][j]=1;
+			b.setTile(b.getTile(i, j), 1);
 			return b;
 		} else if(next == 1){
 			continue;
 		} else if(next == 4){
-			b.board[i][j]=1;
-			b.board[i][k+1]=9;
+			b.setTile(b.getTile(i, j), 1);
+			b.setTile(b.getTile(i, k+1), 9);
 			tile.setCol(k+1);
 		} else if(next == 5){
-			b.board[i][j]=1;
-			b.board[i][k]=9;
+			b.setTile(b.getTile(i, j), 1);
+			b.setTile(b.getTile(i, k), 9);
 			tile.setCol(k);
 		} else if(next == 6){
-			b.board[i][j]=1;
-			b.board[i][k]=9;
+			b.setTile(b.getTile(i, j), 1);
+			b.setTile(b.getTile(i, k), 9);
 			tile.setCol(k);
 		}
 	}
@@ -123,28 +130,27 @@ Board moveUp(Board b, Tile tile){
 
 	int i=tile.getRow();
 	int j=tile.getCol();
-	int n=b.getN();
 
 	for(int k=i-1; k>=0; k--)
 	{
-		int next = b.board[k][j];
+		int next = b.getTile(k, j).getValue();
 
 		if(next == 0){
-			b.board[i][j]=1;
+			b.setTile(b.getTile(i, j), 1);
 			return b;
 		} else if(next == 1){
 			continue;
 		} else if(next == 4){
-			b.board[i][j]=1;
-			b.board[k+1][j]=9;
+			b.setTile(b.getTile(i, j), 1);
+			b.setTile(b.getTile(k+1, j), 9);
 			tile.setRow(k+1);
 		} else if(next == 5){
-			b.board[i][j]=1;
-			b.board[k][j]=9;
+			b.setTile(b.getTile(i, j), 1);
+			b.setTile(b.getTile(k, j), 9);
 			tile.setRow(k);
 		} else if(next == 6){
-			b.board[i][j]=1;
-			b.board[k][j]=9;
+			b.setTile(b.getTile(i, j), 1);
+			b.setTile(b.getTile(k, j), 9);
 			tile.setRow(k);
 		}
 	}
@@ -159,24 +165,24 @@ Board moveDown(Board b, Tile tile){
 
 	for(int k=i+1; k<n; k++)
 	{
-		int next = b.board[k][j];
+		int next = b.getTile(k, j).getValue();
 
 		if(next == 0){
-			b.board[i][j]=1;
+			b.setTile(b.getTile(i, j), 1);
 			return b;
 		} else if(next == 1){
 			continue;
 		} else if(next == 4){
-			b.board[i][j]=1;
-			b.board[k-1][j]=9;
+			b.setTile(b.getTile(i, j), 1);
+			b.setTile(b.getTile(k-1, j), 9);
 			tile.setRow(k-1);
 		} else if(next == 5){
-			b.board[i][j]=1;
-			b.board[k][j]=9;
+			b.setTile(b.getTile(i, j), 1);
+			b.setTile(b.getTile(k, j), 9);
 			tile.setRow(k);
 		} else if(next == 6){
-			b.board[i][j]=1;
-			b.board[k][j]=9;
+			b.setTile(b.getTile(i, j), 1);
+			b.setTile(b.getTile(k, j), 9);
 			tile.setRow(k);
 		}
 	}
@@ -220,4 +226,30 @@ list<Board> get_next_states(Board board, Tile tile){
 
 		states.push_back(right);
 	}
+
+	return states;
+}
+
+
+Board move(Board b, Tile& t, char m){
+	switch(m){
+		case 'w':
+			return moveUp(b, t);
+		break;
+
+		case 's':
+			return moveDown(b, t);
+		break;
+
+		case 'a':
+			return moveLeft(b, t);
+		break;
+
+		case 'd':
+			return moveRight(b, t);
+		break;
+
+		default: cout<<"invalid move"; return b;
+	}
+	return b;
 }
