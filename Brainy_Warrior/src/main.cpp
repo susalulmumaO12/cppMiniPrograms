@@ -85,14 +85,20 @@ int main() {
     bool win = false;
     while(!win){
     Tile& player = board.getPlayerTile();
+    win = board.win();
 
     if(player.getValue() == -1){
         cout<<"\033[31mGAME OVER! You drowned...\033[0m\n";
         return 0;
     }
+
+    if(win){
+        cout<<"\033[38;5;226mYOU WIN!\033[0m\n";
+        return 0;
+    }
         char m; cin>>m;
         board = move(board, player, m);
-        //cout << "Player position: (" << player.getRow() << ", " << player.getCol() << ")" << endl;
+        cout << "Player position: (" << player.getRow() << ", " << player.getCol() << ")" << board.getTile(player.getRow(), player.getCol()).getValue() << endl;
         printBoard(board);
     }
 
