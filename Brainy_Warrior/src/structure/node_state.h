@@ -14,6 +14,6 @@ class Node_State{
 		Board getBoard();
 		Node_State getParent();
 
-}
+};
 
 #endif

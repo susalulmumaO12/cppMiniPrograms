@@ -3,6 +3,7 @@
 #include <nlohmann/json.hpp>
 #include "./structure/tile.h"
 #include "./structure/board.h"
+#include "./logic/helper_functions.h"
 
 using json = nlohmann::json;
 
@@ -16,8 +17,21 @@ void printTile(int value) {
         case 5: cout << "\033[35m5\033[0m "; break;  // 5:target
         case 6: cout << "\033[48;5;226m*\033[0m "; break;  // 6:star
         case 9: cout << "\033[31m9\033[0m "; break;  // 9:player
+        case -1: cout << "\033[41mX\033[0m "; break;  // 9:player
         default: cout << value << " "; break;
     }
+}
+
+void printBoard(Board board){
+    int n = board.getN();
+    int m = board.getM();
+
+    for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                printTile(board.getTile(i, j).getValue());
+            }
+            cout << endl;
+        }
 }
 
 int main() {
@@ -66,11 +80,20 @@ int main() {
     }
 
     cout << "Board for " << levelName << ":\n";
-    for (int i = 0; i < n; i++) {
-        for (int j = 0; j < m; j++) {
-            printTile(board.getTile(i, j).getValue());
-        }
-        cout << endl;
+    printBoard(board);
+
+    bool win = false;
+    while(!win){
+    Tile& player = board.getPlayerTile();
+
+    if(player.getValue() == -1){
+        cout<<"\033[31mGAME OVER! You drowned...\033[0m\n";
+        return 0;
+    }
+        char m; cin>>m;
+        board = move(board, player, m);
+        //cout << "Player position: (" << player.getRow() << ", " << player.getCol() << ")" << endl;
+        printBoard(board);
     }
 
     return 0;
