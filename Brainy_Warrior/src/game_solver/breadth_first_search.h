@@ -1,34 +1,39 @@
 #include<iostream>
 #include<list>
 #include<queue>
+#include<unordered_map>
 #include"../structure/board.h"
 #include"../structure/tile.h"
 #include"../include/main.h"
+#include"algorithm_helper.h"
 
 void bfs(Board board){
 
     queue<Board> q;
     q.push(board);
+    list<Board> visitedStates;
 
-    bool win = false;
-    while(!win || !q.empty()){
+    visitedStates.push_back(board);
+
+    while(!q.empty()){
 
         Board current = q.front();
-        win = current.win();
-        Tile& player = board.getPlayerTile();
-
-
         printBoard(current);
         q.pop();
 
-        list<Board> states = get_next_states(current, player);
-        for(auto state:states){
-            q.push(state);
-        }
-
-        if(win){
+        if(current.win()){
             cout<<"\033[38;5;226mYOU WIN!\033[0m\n";
             exit(0);
         }
+
+        list<Board> states = get_next_states(current);
+        for(auto state:states){
+
+            if(!isVisited(visitedStates, state)){
+                visitedStates.push_back(state);
+                q.push(state);
+            }
+        }
+
     }
 }
