@@ -1,75 +1,18 @@
+#ifndef HELPER_FUNCTIONS_H
+#define HELPER_FUNCTIONS_H
+
 #include<iostream>
 //#include"../structure/node_state.h"
 #include<list>
 #include"../structure/board.h"
 #include"../structure/tile.h"
+#include"../include/main.h"
+#include"moves.h"
 
 using namespace std;
 
-void swapTiles(Board& b, Tile& tile1, Tile& tile2) {
-    int row1 = tile1.getRow();
-    int col1 = tile1.getCol();
-    int row2 = tile2.getRow();
-    int col2 = tile2.getCol();
 
-    int value1 = b.getTile(row1, col1).getValue();
-    int value2 = b.getTile(row2, col2).getValue();
-
-    b.setTile(b.getTile(row1, col1), value2);
-    b.setTile(b.getTile(row2, col2), value1);
-}
-
-bool canMoveUp(Board b, Tile tile){
-    int i=tile.getRow();
-    int j=tile.getCol();
-
-    if(i-1<0) return false;
-
-    if(b.getTile(i-1, j).getValue() != 4){
-        return true;
-    }
-    return false;
-}
-
-bool canMoveDown(Board b, Tile tile){
-    int i=tile.getRow();
-    int j=tile.getCol();
-    int n=b.getN();
-
-    if(i+1>=n) return false;
-
-    if(b.getTile(i+1, j).getValue() != 4){
-        return true;
-    }
-    return false;
-}
-
-bool canMoveLeft(Board b, Tile tile){
-    int i=tile.getRow();
-    int j=tile.getCol();
-
-    if(j-1<0) return false;
-
-    if(b.getTile(i, j-1).getValue() != 4){
-        return true;
-    }
-    return false;
-}
-
-bool canMoveRight(Board b, Tile tile){
-    int i=tile.getRow();
-    int j=tile.getCol();
-    int m=b.getM();
-
-    if(j+1>=m) return false;
-
-    if(b.getTile(i, j+1).getValue() != 4){
-        return true;
-    }
-    return false;
-}
-
-Board moveRight(Board& b, Tile& tile){
+Board slideRight(Board& b, Tile& tile){
     int i=tile.getRow();
     int j=tile.getCol();
     int m=b.getM();
@@ -98,7 +41,7 @@ Board moveRight(Board& b, Tile& tile){
     return b;
 }
 
-Board moveLeft(Board& b, Tile& tile){
+Board slideLeft(Board& b, Tile& tile){
     int i=tile.getRow();
     int j=tile.getCol();
 
@@ -127,7 +70,7 @@ Board moveLeft(Board& b, Tile& tile){
     return b;
 }
 
-Board moveUp(Board& b, Tile& tile){
+Board slideUp(Board& b, Tile& tile){
     int i=tile.getRow();
     int j=tile.getCol();
 
@@ -155,7 +98,7 @@ Board moveUp(Board& b, Tile& tile){
     return b;
 }
 
-Board moveDown(Board& b, Tile& tile){
+Board slideDown(Board& b, Tile& tile){
     int i=tile.getRow();
     int j=tile.getCol();
     int n=b.getN();
@@ -187,45 +130,49 @@ Board moveDown(Board& b, Tile& tile){
 list<Board> get_next_states(Board board, Tile tile){
     list<Board> states;
 
+    //computer must check for valid moves
+    //a move is valid when it doesn't end the game in losing state
+    //canMove- functions check for valid moves, move- functions check for sea and walls for player
+    //TODO: remove unneseccary redundant logic
+    
     if(canMoveUp(board, tile)){
         Board up = board;
         up = moveUp(board, tile);
         states.push_back(up);
+
+        cout<<"UP\n";
+        printBoard(up);
     }
 
     if(canMoveDown(board, tile)){
         Board down = board;
         down = moveDown(board, tile);
         states.push_back(down);
+
+        cout<<"DOWN\n";
+        printBoard(down);
     }
 
     if(canMoveLeft(board, tile)){
         Board left = board;
         left = moveLeft(board, tile);
         states.push_back(left);
+
+        cout<<"LEFT\n";
+        printBoard(left);
     }
 
     if(canMoveRight(board, tile)){
         Board right = board;
         right = moveRight(board, tile);
         states.push_back(right);
+
+        cout<<"RIGHT\n";
+        printBoard(right);
     }
 
     return states;
 }
 
-Board move(Board& b, Tile& t, char m){
-    switch(m){
-        case 'w':
-            return moveUp(b, t);
-        case 's':
-            return moveDown(b, t);
-        case 'a':
-            return moveLeft(b, t);
-        case 'd':
-            return moveRight(b, t);
-        default:
-            cout<<"invalid move";
-            return b;
-    }
-}
+
+#endif
