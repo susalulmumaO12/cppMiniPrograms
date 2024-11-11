@@ -6,6 +6,7 @@ project(brainy_warrior_project LANGUAGES CXX)
 set(SOURCE_DIR src)
 set(STRUCTURE_DIR src/structure)
 set(LOGIC_DIR src/logic)
+set(GAME_SOLVER_DIR src/game_solver)
 set(INCLUDE_DIR include)
 
 # Access JSON package
@@ -17,10 +18,12 @@ add_executable(Brainy_Warrior
     ${STRUCTURE_DIR}/board.cpp 
     ${STRUCTURE_DIR}/tile.cpp
     ${LOGIC_DIR}/helper_functions.h
+    ${LOGIC_DIR}/moves.h
+    ${GAME_SOLVER_DIR}/breadth_first_search.h
 )
 
 #include headers
-include_directories(${STRUCTURE_DIR} ${LOGIC_DIR})
+include_directories(${STRUCTURE_DIR} ${LOGIC_DIR} ${GAME_SOLVER_DIR})
 
 # Set target properties
 target_compile_options(Brainy_Warrior PUBLIC -Wall -std=c++17)
