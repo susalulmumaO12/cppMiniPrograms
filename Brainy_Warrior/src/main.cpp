@@ -4,6 +4,9 @@
 #include "./structure/tile.h"
 #include "./structure/board.h"
 #include "./logic/helper_functions.h"
+#include "./logic/moves.h"
+#include "./game_solver/breadth_first_search.h"
+#include "./game_solver/depth_first_search.h"
 
 using json = nlohmann::json;
 
@@ -15,7 +18,7 @@ void printTile(int value) {
         case 1: cout << "\033[42m1\033[0m "; break;  // 1:land
         case 4: cout << "\033[103m4\033[0m "; break;  // 4:wall
         case 5: cout << "\033[35m5\033[0m "; break;  // 5:target
-        case 6: cout << "\033[48;5;226m*\033[0m "; break;  // 6:star
+        case 6: cout << "\033[38;5;226m*\033[0m "; break;  // 6:star
         case 9: cout << "\033[31m9\033[0m "; break;  // 9:player
         case -1: cout << "\033[41mX\033[0m "; break;  // 9:player
         default: cout << value << " "; break;
@@ -31,7 +34,9 @@ void printBoard(Board board){
                 printTile(board.getTile(i, j).getValue());
             }
             cout << endl;
-        }
+    }
+
+    cout<<endl;
 }
 
 int main() {
@@ -47,12 +52,16 @@ int main() {
 
     // get user input for level number
     int levelChoice;
-    cout << "Enter a level number between 1 and 15: ";
-    cin >> levelChoice;
+    cout<<"Enter a level number between 1 and 15: ";
+    cin>>levelChoice;
+
+    int playingOption;
+    cout<<"Playing options: 1) User, 2) Computer: ";
+    cin>>playingOption;
 
     // is level number valid?
     if (levelChoice < 1 || levelChoice > 15) {
-        cerr << "Invalid level number!" << endl;
+        cerr<<"Invalid level number!"<<endl;
         return 1;
     }
 
@@ -61,7 +70,7 @@ int main() {
 
     // does level exist?
     if (j.find(levelName) == j.end()) {
-        cerr << "Level " << levelChoice << " not found!" << endl;
+        cerr<<"Level "<<levelChoice<<" not found!"<<endl;
         return 1;
     }
 
@@ -82,25 +91,39 @@ int main() {
     cout << "Board for " << levelName << ":\n";
     printBoard(board);
 
-    bool win = false;
-    while(!win){
-    Tile& player = board.getPlayerTile();
-    win = board.win();
+    // USER PLAYING
+    if(playingOption == 1){
+        bool win = false;
+        while(!win){
+        Tile& player = board.getPlayerTile();
+        win = board.win();
 
-    if(player.getValue() == -1){
-        cout<<"\033[31mGAME OVER! You drowned...\033[0m\n";
-        return 0;
-    }
+        if(player.getValue() == -1){
+            cout<<"\033[31mGAME OVER! You drowned...\033[0m\n";
+            return 0;
+        }
 
-    if(win){
-        cout<<"\033[38;5;226mYOU WIN!\033[0m\n";
-        return 0;
-    }
-        char m; cin>>m;
-        board = move(board, player, m);
-        cout << "Player position: (" << player.getRow() << ", " << player.getCol() << ")" << board.getTile(player.getRow(), player.getCol()).getValue() << endl;
-        printBoard(board);
-    }
+        if(win){
+            cout<<"\033[38;5;226mYOU WIN!\033[0m\n";
+            return 0;
+        }
+            char m; cin>>m;
+            board = move(board, player, m);
+            cout << "Player position: (" << player.getRow() << ", " << player.getCol() << ")" << endl;
+            printBoard(board);
+        }
 
+    } else if (playingOption == 2){
+
+        Tile& player = board.getPlayerTile();
+        
+        int algorithm;
+        cout<<"Choose algorithm: 1) BFS, 2) DFS, 3) Next states\n";
+        cin>>algorithm;
+        if(algorithm == 1) bfs(board);
+        else if(algorithm == 2) dfs(board);
+        else if(algorithm == 3) get_next_states(board, player);
+    }
+    
     return 0;
 }

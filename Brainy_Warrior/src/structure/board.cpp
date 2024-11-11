@@ -1,5 +1,4 @@
 #include "board.h"
-#include <stdexcept>
 #include<iostream>
 #include "tile.h"
 
@@ -54,10 +53,6 @@ bool Board::win() {
         }
 
         return isWin;
-}
-
-const Tile& Board::getTile(int i, int j) const {
-    return board[i][j];
 }
 
 void Board::setTile(Tile& tile, int value) {

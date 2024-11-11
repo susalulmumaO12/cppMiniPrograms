@@ -17,7 +17,6 @@ public:
 
     Tile& getTile(int i, int j); 
     Tile& getPlayerTile();
-    const Tile& getTile(int i, int j) const;
 
     bool win();
     void setTile(Tile& tile, int value);
