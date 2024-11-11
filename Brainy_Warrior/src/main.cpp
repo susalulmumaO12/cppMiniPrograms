@@ -95,34 +95,32 @@ int main() {
     if(playingOption == 1){
         bool win = false;
         while(!win){
-        Tile& player = board.getPlayerTile();
-        win = board.win();
+            Tile& player = board.getPlayerTile();
+            win = board.win();
 
-        if(player.getValue() == -1){
-            cout<<"\033[31mGAME OVER! You drowned...\033[0m\n";
-            return 0;
-        }
+            if(player.getValue() == -1){
+                cout<<"\033[31mGAME OVER! You drowned...\033[0m\n";
+                return 0;
+            }
 
-        if(win){
-            cout<<"\033[38;5;226mYOU WIN!\033[0m\n";
-            return 0;
-        }
+            if(win){
+                cout<<"\033[38;5;226mYOU WIN!\033[0m\n";
+                return 0;
+            }
             char m; cin>>m;
-            board = move(board, player, m);
+            board = move(board, m);
             cout << "Player position: (" << player.getRow() << ", " << player.getCol() << ")" << endl;
             printBoard(board);
         }
 
     } else if (playingOption == 2){
 
-        Tile& player = board.getPlayerTile();
-        
         int algorithm;
         cout<<"Choose algorithm: 1) BFS, 2) DFS, 3) Next states\n";
         cin>>algorithm;
         if(algorithm == 1) bfs(board);
         else if(algorithm == 2) dfs(board);
-        else if(algorithm == 3) get_next_states(board, player);
+        else if(algorithm == 3) get_next_states(board);
     }
     
     return 0;

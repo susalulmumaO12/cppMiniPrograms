@@ -1,9 +1,10 @@
+#ifndef BREADTH_FIRST_SEARCH_H
+#define BREADTH_FIRST_SEARCH_H
+
 #include<iostream>
 #include<list>
 #include<queue>
-#include<unordered_map>
 #include"../structure/board.h"
-#include"../structure/tile.h"
 #include"../include/main.h"
 #include"algorithm_helper.h"
 
@@ -37,3 +38,5 @@ void bfs(Board board){
 
     }
 }
+
+#endif

@@ -20,6 +20,8 @@ add_executable(Brainy_Warrior
     ${LOGIC_DIR}/helper_functions.h
     ${LOGIC_DIR}/moves.h
     ${GAME_SOLVER_DIR}/breadth_first_search.h
+    ${GAME_SOLVER_DIR}/depth_first_search.h
+    ${GAME_SOLVER_DIR}/algorithm_helper.h
 )
 
 #include headers
