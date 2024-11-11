@@ -22,7 +22,9 @@ void swapTiles(Board& b, Tile& tile1, Tile& tile2) {
     b.setTile(b.getTile(row2, col2), value1);
 }
 
- bool canMoveUp(Board b, Tile tile){
+ bool canMoveUp(Board b){
+
+    Tile tile = b.getPlayerTile();
     int i=tile.getRow();
     int j=tile.getCol();
 
@@ -34,7 +36,9 @@ void swapTiles(Board& b, Tile& tile1, Tile& tile2) {
     return false;
 }
 
-bool canMoveDown(Board b, Tile tile){
+bool canMoveDown(Board b){
+
+    Tile tile = b.getPlayerTile();
     int i=tile.getRow();
     int j=tile.getCol();
     int n=b.getN();
@@ -47,7 +51,9 @@ bool canMoveDown(Board b, Tile tile){
     return false;
 }
 
-bool canMoveLeft(Board b, Tile tile){
+bool canMoveLeft(Board b){
+
+    Tile tile = b.getPlayerTile();
     int i=tile.getRow();
     int j=tile.getCol();
 
@@ -59,7 +65,9 @@ bool canMoveLeft(Board b, Tile tile){
     return false;
 }
 
-bool canMoveRight(Board b, Tile tile){
+bool canMoveRight(Board b){
+
+    Tile tile = b.getPlayerTile();
     int i=tile.getRow();
     int j=tile.getCol();
     int m=b.getM();
@@ -73,9 +81,10 @@ bool canMoveRight(Board b, Tile tile){
 }
 
 
-Board moveUp(Board& b, Tile& tile){
+Board moveUp(Board& b){
 
-    bool valid = canMoveUp(b, tile);
+    Tile& tile = b.getPlayerTile();
+    bool valid = canMoveUp(b);
     if(!valid){
         cout<<"\033[31mINVALID MOVE!\033[0m\n";
         return b;
@@ -85,8 +94,6 @@ Board moveUp(Board& b, Tile& tile){
     int j=tile.getCol();
     
     int next = b.getTile(i-1, j).getValue();
-
-    cout<<"\nmoving up "<<b.getTile(i, j).getRow()<<" "<<b.getTile(i, j).getCol();
 
     if(next == 0){
         // if upmost tile is 0: set player value to -1
@@ -104,9 +111,10 @@ Board moveUp(Board& b, Tile& tile){
     return b;
 }
 
-Board moveDown(Board& b, Tile& tile){
+Board moveDown(Board& b){
 
-    bool valid = canMoveDown(b, tile);
+    Tile& tile = b.getPlayerTile();
+    bool valid = canMoveDown(b);
     if(!valid){
         cout<<"\033[31mINVALID MOVE!\033[0m\n";
         return b;
@@ -133,9 +141,10 @@ Board moveDown(Board& b, Tile& tile){
     return b;
 }
 
-Board moveRight(Board& b, Tile& tile){
+Board moveRight(Board& b){
 
-    bool valid = canMoveRight(b, tile);
+    Tile& tile = b.getPlayerTile();
+    bool valid = canMoveRight(b);
     if(!valid){
         cout<<"\033[31mINVALID MOVE!\033[0m\n";
         return b;
@@ -161,9 +170,10 @@ Board moveRight(Board& b, Tile& tile){
     return b;
 }
 
-Board moveLeft(Board& b, Tile& tile){
+Board moveLeft(Board& b){
 
-    bool valid = canMoveLeft(b, tile);
+    Tile& tile = b.getPlayerTile();
+    bool valid = canMoveLeft(b);
     if(!valid){
         cout<<"\033[31mINVALID MOVE!\033[0m\n";
         return b;
@@ -189,16 +199,16 @@ Board moveLeft(Board& b, Tile& tile){
     return b;
 }
 
-Board move(Board& b, Tile& t, char m){
+Board move(Board& b, char m){
     switch(m){
         case 'w':
-            return moveUp(b, t);
+            return moveUp(b);
         case 's':
-            return moveDown(b, t);
+            return moveDown(b);
         case 'a':
-            return moveLeft(b, t);
+            return moveLeft(b);
         case 'd':
-            return moveRight(b, t);
+            return moveRight(b);
         default:
             cout<<"invalid move char";
             return b;

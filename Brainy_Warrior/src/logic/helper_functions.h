@@ -12,7 +12,9 @@
 using namespace std;
 
 
-Board slideRight(Board& b, Tile& tile){
+Board slideRight(Board& b){
+
+    Tile& tile = b.getPlayerTile();
     int i=tile.getRow();
     int j=tile.getCol();
     int m=b.getM();
@@ -41,7 +43,9 @@ Board slideRight(Board& b, Tile& tile){
     return b;
 }
 
-Board slideLeft(Board& b, Tile& tile){
+Board slideLeft(Board& b){
+
+    Tile& tile = b.getPlayerTile();
     int i=tile.getRow();
     int j=tile.getCol();
 
@@ -70,7 +74,9 @@ Board slideLeft(Board& b, Tile& tile){
     return b;
 }
 
-Board slideUp(Board& b, Tile& tile){
+Board slideUp(Board& b){
+    
+    Tile& tile = b.getPlayerTile();
     int i=tile.getRow();
     int j=tile.getCol();
 
@@ -98,7 +104,9 @@ Board slideUp(Board& b, Tile& tile){
     return b;
 }
 
-Board slideDown(Board& b, Tile& tile){
+Board slideDown(Board& b){
+
+    Tile& tile = b.getPlayerTile();
     int i=tile.getRow();
     int j=tile.getCol();
     int n=b.getN();
@@ -127,52 +135,72 @@ Board slideDown(Board& b, Tile& tile){
     return b;
 }
 
-list<Board> get_next_states(Board board, Tile tile){
+list<Board> get_next_states(Board board){
     list<Board> states;
-
     //computer must check for valid moves
     //a move is valid when it doesn't end the game in losing state
     //canMove- functions check for valid moves, move- functions check for sea and walls for player
     //TODO: remove unneseccary redundant logic
     
-    if(canMoveUp(board, tile)){
+    if(canMoveUp(board)){
         Board up = board;
-        up = moveUp(board, tile);
-        states.push_back(up);
+        up = moveUp(up);
+        if(up.getPlayerTile().getValue() != -1){
 
-        cout<<"UP\n";
-        printBoard(up);
+            states.push_back(up);
+            cout<<"UP\n";
+            printBoard(up);
+        }
     }
 
-    if(canMoveDown(board, tile)){
+    if(canMoveDown(board)){
         Board down = board;
-        down = moveDown(board, tile);
+        down = moveDown(down);
+        if(down.getPlayerTile().getValue() != -1){
         states.push_back(down);
-
         cout<<"DOWN\n";
         printBoard(down);
+        }
     }
 
-    if(canMoveLeft(board, tile)){
+    if(canMoveLeft(board)){
         Board left = board;
-        left = moveLeft(board, tile);
+        left = moveLeft(left);
+        if(left.getPlayerTile().getValue() != -1){
         states.push_back(left);
-
         cout<<"LEFT\n";
         printBoard(left);
+        }
     }
 
-    if(canMoveRight(board, tile)){
+    if(canMoveRight(board)){
         Board right = board;
-        right = moveRight(board, tile);
+        right = moveRight(right);
+        if(right.getPlayerTile().getValue() != -1){
         states.push_back(right);
-
         cout<<"RIGHT\n";
         printBoard(right);
+        }
     }
 
     return states;
 }
 
+
+bool isEqual(Board b1, Board b2){
+    
+    int n = b1.getN();
+    int m = b2.getM();
+
+    for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                if(b1.getTile(i, j).getValue() != b2.getTile(i, j).getValue()){
+                    return false;
+                }
+            }
+    }
+
+    return true;
+}
 
 #endif
