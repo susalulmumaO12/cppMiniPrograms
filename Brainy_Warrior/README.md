@@ -14,21 +14,19 @@ Brainy Warrior
 
 ## Game Structure
 
-The game structure is split into folders for clean and easy maintnance, `structure` folder contains board.cpp, tile.cpp and state_node.cpp.
+The game structure is split into folders for clean and easy maintnance, under `src` folder there exists: `structure` folder, which contains board.cpp, tile.cpp...etc.
 
-While `logic` folder will contain the functionalities for the game to run, which make the user able to play the game.
+While `logic` folder contains the functionalities for the game to run, which make the user able to play the game.
 
-And finally, `game_solver` folder, which will contain some algorithms that solve some levels of the game, such as BFS, DFS, A_Star and more.
+And finally, `game_solver` folder, which contains some algorithms that solve some levels of the game, such as BFS, DFS, A_Star and more.
 
 ## Preview
 
 The game is printed on the console:
 
-<img src="./screenshot/lvl1.png" alt="level 1" height="250" />
-<img src="./screenshot/lvl2.png" alt="level 2" height="250" />
+<img src="./screenshot/lvl1.png" alt="level 1" height="250" /> <img src="./screenshot/lvl2.png" alt="level 2" height="250" />
 <br>
-<img src="./screenshot/win.png" alt="win state" height="250" />
-<img src="./screenshot/gameover.png" alt="lose state" height="250" />
+<img src="./screenshot/win.png" alt="win state" height="250" /> <img src="./screenshot/gameover.png" alt="lose state" height="250" />
 
 _In the picture above_ `5` _is considered a target/ enemy and_ `9` _is the player._
 
