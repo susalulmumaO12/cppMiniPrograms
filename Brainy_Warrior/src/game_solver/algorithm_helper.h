@@ -18,4 +18,18 @@ bool isVisited(list<Board> visitedStates, Board state){
     return false;
 
 }
+
+string stringBoard(Board& b) {
+    string boardHash;
+    int n = b.getN();
+    int m = b.getM();
+
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < m; j++) {
+            boardHash += to_string(b.getTile(i, j).getValue());
+            boardHash += ',';
+        }
+    }
+    return boardHash;
+}
 #endif

@@ -2,7 +2,7 @@
 #define BREADTH_FIRST_SEARCH_H
 
 #include<iostream>
-#include<list>
+#include<unordered_set>
 #include<queue>
 #include"../structure/board.h"
 #include"../include/main.h"
@@ -11,10 +11,10 @@
 void bfs(Board board){
 
     queue<Board> q;
-    q.push(board);
-    list<Board> visitedStates;
+    unordered_set<string> visitedStates;
 
-    visitedStates.push_back(board);
+    q.push(board);
+    visitedStates.insert(stringBoard(board));  
 
     while(!q.empty()){
 
@@ -29,9 +29,9 @@ void bfs(Board board){
 
         list<Board> states = get_next_states(current);
         for(auto state:states){
-
-            if(!isVisited(visitedStates, state)){
-                visitedStates.push_back(state);
+            string stateHash = stringBoard(state);
+            if (visitedStates.find(stateHash) == visitedStates.end()) {
+                visitedStates.insert(stateHash);
                 q.push(state);
             }
         }

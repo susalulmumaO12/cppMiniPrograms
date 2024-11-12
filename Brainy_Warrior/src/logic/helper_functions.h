@@ -150,6 +150,10 @@ list<Board> get_next_states(Board board){
             states.push_back(up);
             cout<<"UP\n";
             printBoard(up);
+
+            if(up.win()){
+            return states;
+            }
         }
     }
 
@@ -160,6 +164,10 @@ list<Board> get_next_states(Board board){
         states.push_back(down);
         cout<<"DOWN\n";
         printBoard(down);
+
+        if(down.win()){
+            return states;
+            }
         }
     }
 
@@ -170,6 +178,10 @@ list<Board> get_next_states(Board board){
         states.push_back(left);
         cout<<"LEFT\n";
         printBoard(left);
+
+        if(left.win()){
+            return states;
+            }
         }
     }
 
@@ -180,6 +192,10 @@ list<Board> get_next_states(Board board){
         states.push_back(right);
         cout<<"RIGHT\n";
         printBoard(right);
+
+            if(right.win()){
+                return states;
+            }
         }
     }
 

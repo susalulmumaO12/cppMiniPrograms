@@ -2,7 +2,7 @@
 #define DEPTH_FIRST_SEARCH_H
 
 #include<iostream>
-#include<list>
+#include<unordered_set>
 #include<stack>
 #include"../structure/board.h"
 #include"../include/main.h"
@@ -12,8 +12,10 @@
 void dfs(Board board){
 
     stack<Board> s;
+    unordered_set<string> visitedStates;
+
     s.push(board);
-    list<Board> visitedStates;
+    visitedStates.insert(stringBoard(board));  
 
     while(!s.empty()){
 
@@ -28,9 +30,9 @@ void dfs(Board board){
 
         list<Board> states = get_next_states(current);
         for(auto state:states){
-
-            if(!isVisited(visitedStates, state)){
-                visitedStates.push_back(state);
+            string stateHash = stringBoard(state);
+            if (visitedStates.find(stateHash) == visitedStates.end()) {
+                visitedStates.insert(stateHash);
                 s.push(state);
             }
         }
