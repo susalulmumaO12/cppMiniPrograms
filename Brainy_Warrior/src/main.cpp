@@ -88,29 +88,34 @@ int main() {
         }
     }
 
+        int difficulty;
+        cout<<"Choose difficulty level: \n\033[46m1) Easy (tile move style)\033[0m\n\033[41m2) Hard (slide style)\033[0m\n";
+        cin>>difficulty;
+
     cout << "Board for " << levelName << ":\n";
     printBoard(board);
 
     // USER PLAYING
     if(playingOption == 1){
-        bool win = false;
-        while(!win){
+
+        
+        while(!board.win()){
             Tile& player = board.getPlayerTile();
-            win = board.win();
 
             if(player.getValue() == -1){
                 cout<<"\033[31mGAME OVER! You drowned...\033[0m\n";
                 return 0;
             }
 
-            if(win){
+            char m; cin>>m;
+            board = difficulty == 1? move(board, m): slide(board, m);
+            cout << "Player position: (" << player.getRow() << ", " << player.getCol() << ")" << endl;
+            printBoard(board);
+
+            if(board.win()){
                 cout<<"\033[38;5;226mYOU WIN!\033[0m\n";
                 return 0;
             }
-            char m; cin>>m;
-            board = move(board, m);
-            cout << "Player position: (" << player.getRow() << ", " << player.getCol() << ")" << endl;
-            printBoard(board);
         }
 
     } else if (playingOption == 2){

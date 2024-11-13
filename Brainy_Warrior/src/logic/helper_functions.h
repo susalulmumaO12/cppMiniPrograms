@@ -14,6 +14,10 @@ using namespace std;
 
 Board slideRight(Board& b){
 
+    if(!canMoveRight(b)){
+        cout<<"\033[44mInvalid move!\033[0m\n";
+        return b;
+    }
     Tile& tile = b.getPlayerTile();
     int i=tile.getRow();
     int j=tile.getCol();
@@ -27,16 +31,12 @@ Board slideRight(Board& b){
             tile.setValue(-1);
             swapTiles(b, tile, b.getTile(i, j));
             return b;
-        } else if(next == 1){
-            continue;
         } else if(next == 4){
             swapTiles(b, tile, b.getTile(i, k-1));
-            tile.setCol(k-1);
             return b;
         } else if(next == 5 || next == 6){
             b.getTile(i, k).setValue(1);
             swapTiles(b, tile, b.getTile(i, k));
-            tile.setCol(k);
             return b;
         }
     }
@@ -44,6 +44,11 @@ Board slideRight(Board& b){
 }
 
 Board slideLeft(Board& b){
+
+    if(!canMoveLeft(b)){
+        cout<<"\033[44mInvalid move!\033[0m\n";
+        return b;
+    }
 
     Tile& tile = b.getPlayerTile();
     int i=tile.getRow();
@@ -58,16 +63,12 @@ Board slideLeft(Board& b){
 			//cout<<"DBG new tile value is: "<<tile.getValue()<<endl;
             swapTiles(b, tile, b.getTile(i, j));
             return b;
-        } else if(next == 1){
-            continue;
         } else if(next == 4){
             swapTiles(b, tile, b.getTile(i, k+1));
-            tile.setCol(k+1);
             return b;
         } else if(next == 5 || next == 6){
             b.getTile(i, k).setValue(1);
             swapTiles(b, tile, b.getTile(i, k));
-            tile.setCol(k);
             return b;
         }
     }
@@ -75,7 +76,10 @@ Board slideLeft(Board& b){
 }
 
 Board slideUp(Board& b){
-    
+    if(!canMoveUp(b)){
+        cout<<"\033[44mInvalid move!\033[0m\n";
+        return b;
+    }
     Tile& tile = b.getPlayerTile();
     int i=tile.getRow();
     int j=tile.getCol();
@@ -88,16 +92,12 @@ Board slideUp(Board& b){
             tile.setValue(-1);
             swapTiles(b, tile, b.getTile(i, j));
             return b;
-        } else if(next == 1){
-            continue;
         } else if(next == 4){
             swapTiles(b, tile, b.getTile(k+1, j));
-            tile.setRow(k+1);
             return b;
         } else if(next == 5 || next == 6){
             b.getTile(k, j).setValue(1);
             swapTiles(b, tile, b.getTile(k, j));
-            tile.setRow(k);
             return b;
         }
     }
@@ -105,7 +105,10 @@ Board slideUp(Board& b){
 }
 
 Board slideDown(Board& b){
-
+    if(!canMoveDown(b)){
+        cout<<"\033[44mInvalid move!\033[0m\n";
+        return b;
+    }
     Tile& tile = b.getPlayerTile();
     int i=tile.getRow();
     int j=tile.getCol();
@@ -119,16 +122,12 @@ Board slideDown(Board& b){
             tile.setValue(-1);
             swapTiles(b, tile, b.getTile(i, j));
             return b;
-        } else if(next == 1){
-            continue;
         } else if(next == 4){
             swapTiles(b, tile, b.getTile(k-1, j));
-            tile.setRow(k-1);
             return b;
         } else if(next == 5 || next == 6){
             b.getTile(k, j).setValue(1);
             swapTiles(b, tile, b.getTile(k, j));
-            tile.setRow(k);
             return b;
         }
     }
@@ -217,6 +216,22 @@ bool isEqual(Board b1, Board b2){
     }
 
     return true;
+}
+
+Board slide(Board& b, char m){
+    switch(m){
+        case 'w':
+            return slideUp(b);
+        case 's':
+            return slideDown(b);
+        case 'a':
+            return slideLeft(b);
+        case 'd':
+            return slideRight(b);
+        default:
+            cout<<"invalid move char";
+            return b;
+    }
 }
 
 #endif
