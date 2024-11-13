@@ -4,21 +4,14 @@ Brainy Warrior
 [Brainy Warrior](https://www.coolmathgames.com/0-brainy-warrior) is a puzzle game, the goal of the game is to defeat all enemies, by moving (sliding) towards them, if you don't have an enemy to defeat or a wall to stop you from running, you'll fall right into the water.
 
 **Table of Contents:**
-- [Game Structure](#game-structure)
 - [Preview](#preview)
+- [Game Structure](#game-structure)
+- [Game Flow](#game-flow)
 - [How to build](#how-to-build)
 - [Code Breakdown](#code-breakdown)
 - [Resources](#resources)
 - [Draft of the thinking process](#draft-of-the-thinking-process)
-
-
-## Game Structure
-
-The game structure is split into folders for clean and easy maintnance, under `src` folder there exists: `structure` folder, which contains board.cpp, tile.cpp...etc.
-
-While `logic` folder contains the functionalities for the game to run, which make the user able to play the game.
-
-And finally, `game_solver` folder, which contains some algorithms that solve some levels of the game, such as BFS, DFS, A_Star and more.
+- [Future Improvements](#future-improvements)
 
 ## Preview
 
@@ -29,6 +22,25 @@ The game is printed on the console:
 <img src="./screenshot/win.png" alt="win state" height="250" /> <img src="./screenshot/gameover.png" alt="lose state" height="250" />
 
 _In the picture above_ `5` _is considered a target/ enemy and_ `9` _is the player._
+
+## Game Structure
+
+The game structure is split into folders for clean and easy maintnance, under `src` folder there exists: `structure` folder, which contains board.cpp, tile.cpp...etc.
+
+While `logic` folder contains the functionalities for the game to run, which make the user able to play the game.
+
+And finally, `game_solver` folder, which contains some algorithms that solve some levels of the game, such as BFS, DFS, A_Star and more.
+
+## Game Flow
+<!-- 
+TODO display a flow chart 
+-->
+
+The game starts with a prompt asking the the user: `Enter a level number between 1 and 6:`, then the user chooses to either play the game themself or let the computer play it.
+
+**IF** the user chose to play it, they're asked to choose difficulty level: Easy mode, and Hard mode, easy mode is basically moving tile by tile, hard mode is sliding over the board.
+
+**ELSE IF** they chose the computer to play it, they choose between available algorithms.
 
 ## How to build
 
@@ -62,6 +74,7 @@ Movement functions are split into: canMove-, move-, slide-.
     canMove-()? move-: pop up "invalid move!";
     move-{
         if next is sea: game over!;
+        else if next is target: replace target tile;
         else return newBoard;
     }
 ```
@@ -85,3 +98,12 @@ The difference is: _slide_ function keeps checking the next tile until it meets 
 ## Draft of the thinking process
 
 <img src="./screenshot/draft.jpg" alt="level 1" height="500" />
+
+## Future Improvements
+
+There are various ways to improve the game which is currently under construction:
+
+- Make TUI, using ncurses possibly.
+- Improve the looks of the console version
+- Optimize time complexity of computer playing
+- Implement levels with wizard (above 5 on the original game website)
