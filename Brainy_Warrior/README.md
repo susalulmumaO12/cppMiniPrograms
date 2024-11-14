@@ -94,6 +94,8 @@ The difference is: _slide_ function keeps checking the next tile until it meets 
 - [nlohmann github repository](https://github.com/nlohmann/json)
 - [ANSI escape code](https://en.wikipedia.org/wiki/ANSI_escape_code)
 - [Working with Conan and CMake](https://www.codeproject.com/Articles/5385907/Managing-Cplusplus-Projects-with-Conan-and-CMake)
+- [A* (A-Star) algorithm](https://en.wikipedia.org/wiki/A*_search_algorithm)
+- [A* by Patrick Lester](https://web.archive.org/web/20051230012332/https://www.policyalmanac.org/games/aStarTutorial.htm)
 
 ## Draft of the thinking process
 
