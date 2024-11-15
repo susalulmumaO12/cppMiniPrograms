@@ -17,10 +17,10 @@ void printTile(int value) {
         case 0: cout << "\033[48;5;45m\033[38;5;75m 0 \033[0m\033[0m"; break;  // 0:sea
         case 1: cout << "\033[48;5;42m\033[38;5;36m 1 \033[0m\033[0m"; break;  // 1:land
         case 4: cout << "\033[48;5;226m\033[38;5;220m 4 \033[0m\033[0m"; break;  // 4:wall
-        case 5: cout << "\033[35m 5 \033[0m"; break;  // 5:target
+        case 5: cout << "\033[48;5;96m\033[1;38;5;89m 5 \033[0m\033[0m"; break;  // 5:target
         case 6: cout << "\033[38;5;226m * \033[0m"; break;  // 6:star
-        case 9: cout << "\033[48;5;42m\033[1;38;5;9m 9 \033[0m\033[0m"; break;  // 9:player
-        case -1: cout << "\033[9m X \033[0m"; break;  // -1:dead player
+        case 9: cout << "\033[48;5;216m\033[1;38;5;9m 9 \033[0m\033[0m"; break;  // 9:player
+        case -1: cout << "\033[48;5;9m\033[1;38;5;216m X \033[0m\033[0m"; break;  // -1:dead player
         default: cout << value << " "; break;
     }
 }

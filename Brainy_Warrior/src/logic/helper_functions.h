@@ -1,6 +1,8 @@
 #ifndef HELPER_FUNCTIONS_H
 #define HELPER_FUNCTIONS_H
 
+#define DEBUG false
+
 #include<iostream>
 //#include"../structure/node_state.h"
 #include<list>
@@ -24,8 +26,11 @@ list<Board> get_next_states(Board board){
         if(up.getPlayerTile().getValue() != -1){
 
             states.push_back(up);
+            if(DEBUG){
+
             cout<<"UP\n";
             printBoard(up);
+            }
 
             if(up.win()){
             return states;
@@ -38,8 +43,10 @@ list<Board> get_next_states(Board board){
         down = moveDown(down);
         if(down.getPlayerTile().getValue() != -1){
         states.push_back(down);
+        if(DEBUG){
         cout<<"DOWN\n";
         printBoard(down);
+        }
 
         if(down.win()){
             return states;
@@ -52,8 +59,12 @@ list<Board> get_next_states(Board board){
         left = moveLeft(left);
         if(left.getPlayerTile().getValue() != -1){
         states.push_back(left);
+
+        if(DEBUG){
+
         cout<<"LEFT\n";
         printBoard(left);
+        }
 
         if(left.win()){
             return states;
@@ -66,8 +77,11 @@ list<Board> get_next_states(Board board){
         right = moveRight(right);
         if(right.getPlayerTile().getValue() != -1){
         states.push_back(right);
+        if(DEBUG){
+
         cout<<"RIGHT\n";
         printBoard(right);
+        }
 
             if(right.win()){
                 return states;
