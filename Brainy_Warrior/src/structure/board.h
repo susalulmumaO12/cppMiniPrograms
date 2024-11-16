@@ -3,6 +3,7 @@
 
 #include "tile.h"
 #include <vector>
+#include <list>
 
 class Board {
 private:
@@ -17,6 +18,8 @@ public:
 
     Tile& getTile(int i, int j); 
     Tile& getPlayerTile();
+
+    list<Tile&> getTargets();
 
     bool win();
     void setTile(Tile& tile, int value);

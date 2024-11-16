@@ -42,6 +42,19 @@ Tile& Board::getPlayerTile() {
         }
 }
 
+list<Tile&> getTargets(){
+    list<Tile&> targets;
+    for (int i = 0; i < board.getN(); i++) {
+        for (int j = 0; j < board.getM(); j++) {
+            if (board.getTile(i, j).getValue() == 5) {
+               targets.push_back(board.getTile(i, j));
+            }
+        }
+    }
+
+    return target;
+}
+
 bool Board::win() {
     bool isWin = true;
     for (int i = 0; i < n; i++) {
