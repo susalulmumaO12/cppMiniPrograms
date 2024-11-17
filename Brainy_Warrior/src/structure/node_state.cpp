@@ -1,6 +1,6 @@
 #include<iostream>
-#include"Node_State.h"
-#include"board.cpp"
+#include"node_state.h"
+#include"board.h"
 
 Node_State::Node_State(Board board, Node_State* parent, int g, int h){
 	this->board=board;
@@ -19,14 +19,15 @@ Node_State* Node_State::getParent(){
 }
 
 
-int Node_State::getG() const{ 
+int Node_State::getG(){ 
 	return g; 
 }
 
-int Node_State::getH() const{
+int Node_State::getH(){
 	return h;
 }
 
-int Node_State::getF() const{
+int Node_State::getF(){
+
 	return f;
 }
