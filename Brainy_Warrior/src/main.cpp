@@ -7,6 +7,7 @@
 #include "./logic/moves.h"
 #include "./game_solver/breadth_first_search.h"
 #include "./game_solver/depth_first_search.h"
+#include "./game_solver/uniform_cost_search.h"
 
 using json = nlohmann::json;
 
@@ -88,16 +89,16 @@ int main() {
         }
     }
 
-        int difficulty;
-        cout<<"Choose difficulty level: \n\033[46m1) Easy (tile move style)\033[0m\n\033[41m2) Hard (slide style)\033[0m\n";
-        cin>>difficulty;
+        
 
     cout << "Board for " << levelName << ":\n";
     printBoard(board);
 
     // USER PLAYING
     if(playingOption == 1){
-
+int difficulty;
+        cout<<"Choose difficulty level: \n\033[46m1) Easy (tile move style)\033[0m\n\033[41m2) Hard (slide style)\033[0m\n";
+        cin>>difficulty;
         
         while(!board.win()){
             Tile& player = board.getPlayerTile();
@@ -121,11 +122,12 @@ int main() {
     } else if (playingOption == 2){
 
         int algorithm;
-        cout<<"Choose algorithm: 1) BFS, 2) DFS, 3) Next states\n";
+        cout<<"Choose algorithm: 1) BFS, 2) DFS, 3) UCS 4) Next states\n";
         cin>>algorithm;
         if(algorithm == 1) bfs(board);
         else if(algorithm == 2) dfs(board);
-        else if(algorithm == 3) get_next_states(board);
+        else if(algorithm == 3) ucs(board);
+        else if(algorithm == 4) get_next_states(board);
     }
     
     return 0;

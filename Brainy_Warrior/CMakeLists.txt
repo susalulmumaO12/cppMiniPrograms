@@ -15,7 +15,7 @@ find_package(nlohmann_json REQUIRED)
 # Define target
 add_executable(Brainy_Warrior 
     ${SOURCE_DIR}/main.cpp 
-    ${STRUCTURE_DIR}/board.cpp 
+    ${STRUCTURE_DIR}/board.cpp
     ${STRUCTURE_DIR}/node_state.cpp
     ${STRUCTURE_DIR}/tile.cpp
     ${LOGIC_DIR}/helper_functions.h
@@ -23,6 +23,7 @@ add_executable(Brainy_Warrior
     ${GAME_SOLVER_DIR}/breadth_first_search.h
     ${GAME_SOLVER_DIR}/depth_first_search.h
     ${GAME_SOLVER_DIR}/algorithm_helper.h
+    ${GAME_SOLVER_DIR}/uniform_cost_search.h
     ${GAME_SOLVER_DIR}/A_star_search.h
 )
 
