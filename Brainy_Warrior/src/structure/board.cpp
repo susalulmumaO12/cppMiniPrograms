@@ -9,7 +9,7 @@ Board::Board(int n, int m) {
     this->m = m;
 
     // Initialize 2d board
-    board = std::vector<std::vector<Tile>>(n, std::vector<Tile>(m));
+    board = vector<vector<Tile>>(n, vector<Tile>(m));
 
     // Initialize tiles
     for (int i = 0; i < n; i++) {
@@ -42,18 +42,6 @@ Tile& Board::getPlayerTile() {
         }
 }
 
-list<Tile&> getTargets(){
-    list<Tile&> targets;
-    for (int i = 0; i < board.getN(); i++) {
-        for (int j = 0; j < board.getM(); j++) {
-            if (board.getTile(i, j).getValue() == 5) {
-               targets.push_back(board.getTile(i, j));
-            }
-        }
-    }
-
-    return target;
-}
 
 bool Board::win() {
     bool isWin = true;

@@ -18,7 +18,7 @@ private:
 public:
     Node_State(Board board, Node_State* parent, int g, int h);
 
-    Board getBoard();
+    Board& getBoard();
     Node_State* getParent();
     int getG();
     int getH();

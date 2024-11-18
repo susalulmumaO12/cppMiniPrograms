@@ -2,15 +2,12 @@
 #include"node_state.h"
 #include"board.h"
 
-Node_State::Node_State(Board board, Node_State* parent, int g, int h){
-	this->board=board;
-	this->parent=parent;
-	this->g=g;
-	this->h=h;
-	this->f=g+h;
+Node_State::Node_State(Board board, Node_State* parent, int g, int h)
+    : board(board), parent(parent), g(g), h(h) {
+    f = g + h; // Assuming f is calculated this way
 }
 
-Board Node_State::getBoard(){
+Board& Node_State::getBoard(){
 	return board;
 }
 
