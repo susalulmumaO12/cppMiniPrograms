@@ -17,9 +17,9 @@ Brainy Warrior
 
 The game is printed on the console:
 
-<img src="./screenshot/lvl1.png" alt="level 1" height="250" /> <img src="./screenshot/lvl2.png" alt="level 2" height="250" />
+<img src="./screenshot/lvl1.png" alt="level 1" height="150" /> <img src="./screenshot/lvl2.png" alt="level 2" height="150" />
 <br>
-<img src="./screenshot/win.png" alt="win state" height="250" /> <img src="./screenshot/gameover.png" alt="lose state" height="250" />
+<img src="./screenshot/win.png" alt="win state" height="150" /> <img src="./screenshot/gameover.png" alt="lose state" height="150" />
 
 _In the picture above_ `5` _is considered a target/ enemy and_ `9` _is the player._
 
@@ -65,7 +65,7 @@ The C++ code should compile successfully, make sure by starting the game, run th
 ## Code Breakdown
 
 
-Movement functions are split into: canMove-, move-, slide-.
+### Movement functions:
 
 **canMove-** functions check for walls and edges of the board but they do not consider neighboring sea an invalid move. So they should be used in user movement functions.
 
@@ -78,6 +78,13 @@ Movement functions are split into: canMove-, move-, slide-.
         else return newBoard;
     }
 ```
+_move_ function only moves one tile at a time.
+
+### Algorithms:
+
+**Breadth-First-Search:**
+
+**BFS** function takes in a _board_, and generates costless states and itarates over them in a queue until _win_ state is met, and maintains an unordered set of stringBoard to avoid revisiting the same node, **stringBoard** is basically the board as a **1D** array of chars put into a string row by row.
 While **slide** functions are different:
 ```
     canMove-()? slide- : pop up "invalid move!";
