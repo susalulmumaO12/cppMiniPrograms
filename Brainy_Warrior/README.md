@@ -85,16 +85,15 @@ _move_ function only moves one tile at a time.
 **Breadth-First-Search:**
 
 **BFS** function takes in a _board_, and generates costless states and itarates over them in a queue until _win_ state is met, and maintains an unordered set of stringBoard to avoid revisiting the same node, **stringBoard** is basically the board as a **1D** array of chars put into a string row by row.
-While **slide** functions are different:
-```
-    canMove-()? slide- : pop up "invalid move!";
-    slide-{
-        if sea in way: game over!;
-        else if target in way: replace target tile;
-        else: slide-;
-    }
-```
-The difference is: _slide_ function keeps checking the next tile until it meets a stop condition, but _move_ function only moves one tile at a time.
+
+**Depth-First-Search:**
+
+**DFS** function also takes in a _board_, the only difference in implementation between DFS and BFS is that it uses a stack to store the generated costless states and _itarates_ over them (not recursivley).
+
+**Uniform-Cost-Search:**
+
+**UCS** implementation is pretty similar to BFS, as it also uses a queue, key difference is that it's a priority queue (min heap), hence, it generates costly states, with a different value for each direction of movement.
+
 
 ## Resources
 
@@ -106,7 +105,7 @@ The difference is: _slide_ function keeps checking the next tile until it meets 
 
 ## Draft of the thinking process
 
-<img src="./screenshot/draft.jpg" alt="level 1" height="500" />
+<img src="./screenshot/page1.png" alt="level 1" height="300" /> <img src="./screenshot/page2.png" alt="level 1" height="300" /> <img src="./screenshot/page3.png" alt="level 1" height="300" />
 
 ## Future Improvements
 
