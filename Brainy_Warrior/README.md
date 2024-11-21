@@ -94,6 +94,9 @@ _move_ function only moves one tile at a time.
 
 **UCS** implementation is pretty similar to BFS, as it also uses a queue, key difference is that it's a priority queue (min heap), hence, it generates costly states, with a different value for each direction of movement.
 
+**A_Star-Search:**
+
+**A\*** or **A_Star** is implemented with a priority queue and an unordered map, key point difference from uniform cost search is that it calculates heuristic and not just cost, theoretically passing the closest target first then continuing the same steps for the rest of the targets should work, but it's only some code that I haven't tested yet...
 
 ## Resources
 
@@ -115,3 +118,7 @@ There are various ways to improve the game which is currently under construction
 - Improve the looks of the console version
 - Optimize time complexity of computer playing
 - Implement levels with wizard (above 5 on the original game website)
+
+## Old looks
+
+<img src="./screenshot/lvl1old.png" alt="level 1" height="100" /> <img src="./screenshot/lvl2old.png" alt="level 2" height="100" /> <img src="./screenshot/winold.png" alt="win state" height="100" /> <img src="./screenshot/gameoverold.png" alt="lose state" height="100" />
