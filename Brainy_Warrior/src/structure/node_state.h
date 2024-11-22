@@ -26,7 +26,7 @@ public:
 
 	//defining < operator
     bool operator<(const Node_State& other) const {
-        return f > other.f;
+        return f < other.f;
     }
 };
 
