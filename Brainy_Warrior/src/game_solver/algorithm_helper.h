@@ -135,4 +135,10 @@ list<Node_State> get_next_cost_states(Node_State* board){
 
     return states;
 }
+
+int calculate_cost(Node_State node){
+
+    Node_State* parent = node.getParent();
+    return node.getG() + parent->getG();
+}
 #endif
