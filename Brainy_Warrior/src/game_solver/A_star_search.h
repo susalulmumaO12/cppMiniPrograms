@@ -21,26 +21,39 @@ int distance(Tile t1, Tile t2){
     return abs(t1.getRow()-t2.getRow()) + abs(t1.getCol()-t2.getCol());
 }
 
-void a_star(Board board) {
+// Function to remove a target from the vector
+void removeTarget(vector<pair<int, Tile>>& targets, Tile& target) {
+    targets.erase(remove_if(targets.begin(), targets.end(),
+                             [&target](pair<int, Tile>& p) {
+                                 return p.second.getCol() == target.getCol() &&
+                                        p.second.getRow() == target.getRow();
+                             }), 
+                   targets.end());
+}
+
+void a_star(Board& board) {
     priority_queue<Node_State> openList;
     unordered_map<string, bool> closedList;
 
     Tile player = board.getPlayerTile();
-    std::list<Tile> targets = getTargets(board);
 
-    while (!targets.empty()) {
-        Tile goal;
-        int closest = INT_MAX;
-        for (const auto& target : targets) {
-            int dist = distance(player, target);
-            if (dist < closest) {
-                // find the closest target
-                closest = dist;
-                goal = target;
+    vector<pair<int ,Tile>> targets;
+    for (int i = 0; i < board.getN(); ++i) {
+        for (int j = 0; j < board.getM(); ++j) {
+            if (board.getTile(i, j).getValue() == 5) {
+                targets.emplace_back(distance(player, board.getTile(i,j)), board.getTile(i,j));
             }
         }
+    } 
 
-        //start searching
+    while (!targets.empty()) {
+        auto minTarget = std::min_element(targets.begin(), targets.end(),
+                                           [](const pair<int, Tile>& a, const pair<int, Tile>& b) {
+                                               return a.first < b.first;
+                                           });
+        Tile goal = minTarget->second;
+
+        // Start searching
         Node_State startNode(board, nullptr, 0, distance(player, goal));
         openList.push(startNode);
 
@@ -53,28 +66,34 @@ void a_star(Board board) {
 
             if (closedList[boardKey]) continue;
             closedList[boardKey] = true;
+            printBoard(currentBoard);
 
-            // did player get rid of a target?
+            // Did player get rid of a target?
             if (currentBoard.getPlayerTile().getCol() == goal.getCol() && currentBoard.getPlayerTile().getRow() == goal.getRow()) {
-                targets.remove(goal);
+                removeTarget(targets, goal);
                 player = currentBoard.getPlayerTile();
 
+                //recalculate distances for remaining targets
+                for (auto& target : targets) {
+                    target.first = distance(player, target.second);
+                }
                 break;
             }
 
-            // if not, keep looking
+            // If not, keep looking
             list<Board> nextStates = get_next_states(currentBoard);
             for (auto& nextBoard : nextStates) {
                 string nextKey = stringBoard(nextBoard);
                 if (!closedList[nextKey]) {
                     int g = currentNode.getG() + 1;
+                    cout<<"\ncurrent g and next g: "<<currentNode.getG()<<" "<<g<<endl;
                     int h = distance(nextBoard.getPlayerTile(), goal);
                     Node_State nextNode(nextBoard, &currentNode, g, h);
                     openList.push(nextNode);
                 }
             }
         }
-
+        //win state
         if (targets.empty()) {
             cout << "\033[38;5;226mYOU WIN!\033[0m\n";
             return;

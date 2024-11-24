@@ -8,6 +8,7 @@
 #include "./game_solver/breadth_first_search.h"
 #include "./game_solver/depth_first_search.h"
 #include "./game_solver/uniform_cost_search.h"
+#include "./game_solver/A_star_search.h"
 
 using json = nlohmann::json;
 
@@ -122,12 +123,12 @@ int difficulty;
     } else if (playingOption == 2){
 
         int algorithm;
-        cout<<"Choose algorithm: 1) BFS, 2) DFS, 3) UCS 4) Next states\n";
+        cout<<"Choose algorithm: 1) BFS, 2) DFS, 3) UCS 4) A_star\n";
         cin>>algorithm;
         if(algorithm == 1) bfs(board);
         else if(algorithm == 2) dfs(board);
         else if(algorithm == 3) ucs(board);
-        else if(algorithm == 4) get_next_states(board);
+        else if(algorithm == 4) a_star(board);
     }
     
     return 0;

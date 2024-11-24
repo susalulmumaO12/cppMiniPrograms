@@ -37,20 +37,6 @@ string stringBoard(Board& b) {
     return boardHash;
 }
 
-
-list<Tile> getTargets(Board board){
-    list<Tile> targets;
-    for (int i = 0; i < board.getN(); i++) {
-        for (int j = 0; j < board.getM(); j++) {
-            if (board.getTile(i, j).getValue() == 5) {
-               targets.push_back(board.getTile(i, j));
-            }
-        }
-    }
-
-    return targets;
-}
-
 list<Node_State> get_next_cost_states(Node_State* board){
     list<Node_State> states;
     
