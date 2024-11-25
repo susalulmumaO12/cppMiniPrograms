@@ -16,84 +16,43 @@
 
 using namespace std;
 
-
-
-// Function to remove a target from the vector
-void removeTarget(vector<pair<int, Tile>>& targets, Tile& target) {
-    targets.erase(remove_if(targets.begin(), targets.end(),
-                             [&target](pair<int, Tile>& p) {
-                                 return p.second.getCol() == target.getCol() &&
-                                        p.second.getRow() == target.getRow();
-                             }), 
-                   targets.end());
-}
-
-void a_star(Board& board) {
+void a_star(Board board) {
     priority_queue<Node_State> openList;
     unordered_map<string, bool> closedList;
 
     Tile player = board.getPlayerTile();
+    list<Tile> targets = board.getTargetTiles();
 
-    vector<pair<int ,Tile>> targets;
-    for (int i = 0; i < board.getN(); ++i) {
-        for (int j = 0; j < board.getM(); ++j) {
-            if (board.getTile(i, j).getValue() == 5) {
-                targets.emplace_back(distance(player, board.getTile(i,j)), board.getTile(i,j));
-            }
-        }
-    } 
+    Node_State startNode(board, nullptr, 0, distance(player, targets.front()));
+    openList.push(startNode);
 
-    while (!targets.empty()) {
-        auto minTarget = std::min_element(targets.begin(), targets.end(),
-                                           [](const pair<int, Tile>& a, const pair<int, Tile>& b) {
-                                               return a.first < b.first;
-                                           });
-        Tile goal = minTarget->second;
+    while (!openList.empty()) {
+        Node_State currentNode = openList.top();
+        openList.pop();
 
-        // Start searching
-        Node_State startNode(board, nullptr, 0, distance(player, goal));
-        openList.push(startNode);
+        Board currentBoard = currentNode.getBoard();
+        string boardKey = stringBoard(currentBoard);
 
-        while (!openList.empty()) {
-            Node_State currentNode = openList.top();
-            openList.pop();
-
-            Board currentBoard = currentNode.getBoard();
-            string boardKey = stringBoard(currentBoard);
-
-            if (closedList[boardKey]) continue;
-            closedList[boardKey] = true;
-            printBoard(currentBoard);
-
-            // Did player get rid of a target?
-            if (currentBoard.getPlayerTile().getCol() == goal.getCol() && currentBoard.getPlayerTile().getRow() == goal.getRow()) {
-                removeTarget(targets, goal);
-                player = currentBoard.getPlayerTile();
-
-                //recalculate distances for remaining targets
-                for (auto& target : targets) {
-                    target.first = distance(player, target.second);
-                }
-                break;
-            }
-
-            // If not, keep looking
-            list<Board> nextStates = get_next_states(currentBoard);
-            for (auto& nextBoard : nextStates) {
-                string nextKey = stringBoard(nextBoard);
-                if (!closedList[nextKey]) {
-                    int g = currentNode.getG() + 1;
-                    cout<<"\ncurrent g and next g: "<<currentNode.getG()<<" "<<g<<endl;
-                    int h = distance(nextBoard.getPlayerTile(), goal);
-                    Node_State nextNode(nextBoard, &currentNode, g, h);
-                    openList.push(nextNode);
-                }
-            }
-        }
-        //win state
-        if (targets.empty()) {
+        if (currentBoard.win()) {
             cout << "\033[38;5;226mYOU WIN!\033[0m\n";
-            return;
+            cout << "Number of opened states: " << closedList.size() << endl;
+            exit(0);
+        }
+
+        if (closedList[boardKey]) continue;
+        closedList[boardKey] = true;
+        printBoard(currentBoard);
+
+        list<Board> nextStates = get_next_states(currentBoard);
+        for (auto& nextBoard : nextStates) {
+            Tile nextPlayer = nextBoard.getPlayerTile();
+            // recalculate heuristic for each target
+            for (const auto& target : targets) {
+                int g = currentNode.getG() + 1;
+                int h = distance(nextPlayer, target);
+                Node_State nextNode(nextBoard, &currentNode, g, h);
+                openList.push(nextNode);
+            }
         }
     }
 }
