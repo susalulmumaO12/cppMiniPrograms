@@ -16,10 +16,7 @@
 
 using namespace std;
 
-int distance(Tile t1, Tile t2){
-    //manhattan distance - we can only move in 4 directions
-    return abs(t1.getRow()-t2.getRow()) + abs(t1.getCol()-t2.getCol());
-}
+
 
 // Function to remove a target from the vector
 void removeTarget(vector<pair<int, Tile>>& targets, Tile& target) {

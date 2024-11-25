@@ -10,6 +10,18 @@
 
 using namespace std;
 
+//manhattan distance
+int distance(Tile t1, Tile t2){
+    //manhattan distance - we can only move in 4 directions
+    return abs(t1.getRow()-t2.getRow()) + abs(t1.getCol()-t2.getCol());
+}
+/* 
+//eculidean distance
+int distance(Tile t1, Tile t2){
+    
+    return sqrt((t1.getRow()-t2.getRow())*(t1.getRow()-t2.getRow()) +(t1.getCol()-t2.getCol())*(t1.getCol()-t2.getCol()));
+}
+ */
 bool isVisited(list<Board> visitedStates, Board state){
 
     for(auto vState:visitedStates){
