@@ -94,9 +94,13 @@ _move_ function only moves one tile at a time.
 
 **UCS** implementation is pretty similar to BFS, as it also uses a queue, key difference is that it's a priority queue (min heap), hence, it generates costly states, with a different value for each direction of movement.
 
+**Simple Hill Climbing:**
+
+**Simple Hill Climbing** is very similar to **UCS** except for one key difference, instead of comparing over the g value (cost from start to current node) in the priority queue, we compare over the heuristic value, in the basic implementation I used **Manhattan Distance** formula, **Euclidean** method can also be used but it ignores the movement style in our game.
+
 **A_Star-Search:**
 
-**A\*** or **A_Star** is implemented with a priority queue and an unordered map, key point difference from uniform cost search is that it calculates heuristic and not just cost, theoretically passing the closest target first then continuing the same steps for the rest of the targets should work, but it's only some code that I haven't tested yet...
+**A\*** or **A_Star** is implemented with a priority queue and an unordered map, key point difference from uniform cost search is that it calculates heuristic and not just cost, there are many methods to achieve A_Star in our game, I chose the simplest one, starting with the closest target and with each movement the closest target is updated.
 
 ## Resources
 
@@ -105,6 +109,7 @@ _move_ function only moves one tile at a time.
 - [Working with Conan and CMake](https://www.codeproject.com/Articles/5385907/Managing-Cplusplus-Projects-with-Conan-and-CMake)
 - [A* (A-Star) algorithm](https://en.wikipedia.org/wiki/A*_search_algorithm)
 - [A* by Patrick Lester](https://web.archive.org/web/20051230012332/https://www.policyalmanac.org/games/aStarTutorial.htm)
+- [Hill Climbing in AI](https://www.geeksforgeeks.org/introduction-hill-climbing-artificial-intelligence/)
 
 ## Draft of the thinking process
 
