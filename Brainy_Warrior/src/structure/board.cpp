@@ -1,5 +1,6 @@
 #include "board.h"
 #include<iostream>
+#include<list>
 #include "tile.h"
 
 using namespace std;
@@ -42,6 +43,17 @@ Tile& Board::getPlayerTile() {
         }
 }
 
+list<Tile> Board::getTargetTiles(){
+    list <Tile> targets;
+    for (int i = 0; i < n; ++i) {
+            for (int j = 0; j < m; ++j) {
+                if (board[i][j].getValue() == 5) {
+                    targets.push_back(board[i][j]);
+                }
+            }
+        }
+        return targets;
+}
 
 bool Board::win() {
     bool isWin = true;

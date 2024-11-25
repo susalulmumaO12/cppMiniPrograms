@@ -19,6 +19,7 @@ public:
 
     Tile& getTile(int i, int j); 
     Tile& getPlayerTile();
+    std::list<Tile> getTargetTiles();
 
     bool win();
     void setTile(Tile& tile, int value);
