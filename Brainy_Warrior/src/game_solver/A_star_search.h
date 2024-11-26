@@ -43,13 +43,14 @@ void a_star(Board board) {
         closedList[boardKey] = true;
         printBoard(currentBoard);
 
-        list<Board> nextStates = get_next_states(currentBoard);
-        for (auto& nextBoard : nextStates) {
-            Tile nextPlayer = nextBoard.getPlayerTile();
+        list<Node_State> nextStates = get_next_cost_states(&currentNode);
+        for (auto& nextState : nextStates) {
+            Tile nextPlayer = nextState.getBoard().getPlayerTile();
             // recalculate heuristic for each target
             for (const auto& target : targets) {
                 int g = currentNode.getG() + 1;
                 int h = distance(nextPlayer, target);
+                Board nextBoard = nextState.getBoard();
                 Node_State nextNode(nextBoard, &currentNode, g, h);
                 openList.push(nextNode);
             }
