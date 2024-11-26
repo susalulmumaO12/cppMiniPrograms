@@ -22,6 +22,23 @@ int distance(Tile t1, Tile t2){
     return sqrt((t1.getRow()-t2.getRow())*(t1.getRow()-t2.getRow()) +(t1.getCol()-t2.getCol())*(t1.getCol()-t2.getCol()));
 }
  */
+
+Board getPath(Node_State* win) {
+    Board path = win->getBoard();
+    Node_State* current = win;
+
+    std::cout << "Tracing back the path...\n";
+    while (current != nullptr) {
+        Tile playerTile = current->getBoard().getPlayerTile();
+        //std::cout << "DBG: Adding tile (" << playerTile.getRow() << ", " << playerTile.getCol() << ") to the path.\n";
+        path.getTile(playerTile.getRow(), playerTile.getCol()).setValue(8);
+        current = current->getParent();
+    }
+
+    std::cout << "Path tracing completed.\n";
+    return path;
+}
+
 bool isVisited(list<Board> visitedStates, Board state){
 
     for(auto vState:visitedStates){
@@ -57,7 +74,7 @@ list<Node_State> get_next_cost_states(Node_State* board){
         up = moveUp(up);
         if(up.getPlayerTile().getValue() != -1){
 
-            Node_State up_state(up, board, 1, 0);
+            Node_State up_state(up, board, board->getG() + 1, 0);
             states.push_back(up_state);
             if(DEBUG){
 
@@ -77,7 +94,7 @@ list<Node_State> get_next_cost_states(Node_State* board){
         if(down.getPlayerTile().getValue() != -1){
 
 
-            Node_State down_state(down, board, 2, 0);
+            Node_State down_state(down, board, board->getG() + 2, 0);
             states.push_back(down_state);
             if(DEBUG){
             cout<<"DOWN\n";
@@ -96,7 +113,7 @@ list<Node_State> get_next_cost_states(Node_State* board){
         if(left.getPlayerTile().getValue() != -1){
 
 
-            Node_State left_state(left, board, 5, 0);
+            Node_State left_state(left, board, board->getG() + 5, 0);
         states.push_back(left_state);
 
         if(DEBUG){
@@ -117,7 +134,7 @@ list<Node_State> get_next_cost_states(Node_State* board){
         if(right.getPlayerTile().getValue() != -1){
 
 
-            Node_State right_state(right, board, 3, 0);
+            Node_State right_state(right, board, board->getG() + 3, 0);
         states.push_back(right_state);
         if(DEBUG){
 
@@ -134,9 +151,12 @@ list<Node_State> get_next_cost_states(Node_State* board){
     return states;
 }
 
-int calculate_cost(Node_State node){
-
+int calculate_cost(Node_State node) {
     Node_State* parent = node.getParent();
+    if (parent == nullptr) {
+        return node.getG(); // If root node, return its g value
+    }
     return node.getG() + parent->getG();
 }
+
 #endif
