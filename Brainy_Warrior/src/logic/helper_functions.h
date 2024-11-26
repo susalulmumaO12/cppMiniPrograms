@@ -4,7 +4,7 @@
 #define DEBUG false
 
 #include<iostream>
-//#include"../structure/node_state.h"
+#include"../structure/node_state.h"
 #include<list>
 #include"../structure/board.h"
 #include"../structure/tile.h"
@@ -13,19 +13,16 @@
 
 using namespace std;
 
-list<Board> get_next_states(Board board){
-    list<Board> states;
-    //computer must check for valid moves
-    //a move is valid when it doesn't end the game in losing state
-    //canMove- functions check for valid moves, move- functions check for sea and walls for player
-    //TODO: remove unneseccary redundant logic
+list<Node_State> get_next_cost_states(Node_State* board){
+    list<Node_State> states;
     
-    if(canMoveUp(board)){
-        Board up = board;
+    if(canMoveUp(board->getBoard())){ //cost of moving up: 1
+        Board up = board->getBoard();
         up = moveUp(up);
         if(up.getPlayerTile().getValue() != -1){
 
-            states.push_back(up);
+            Node_State up_state(up, board, board->getG() + 1, 0);
+            states.push_back(up_state);
             if(DEBUG){
 
             cout<<"UP\n";
@@ -38,14 +35,17 @@ list<Board> get_next_states(Board board){
         }
     }
 
-    if(canMoveDown(board)){
-        Board down = board;
+    if(canMoveDown(board->getBoard())){ //cost of moving down: 2
+        Board down = board->getBoard();
         down = moveDown(down);
         if(down.getPlayerTile().getValue() != -1){
-        states.push_back(down);
-        if(DEBUG){
-        cout<<"DOWN\n";
-        printBoard(down);
+
+
+            Node_State down_state(down, board, board->getG() + 2, 0);
+            states.push_back(down_state);
+            if(DEBUG){
+            cout<<"DOWN\n";
+            printBoard(down);
         }
 
         if(down.win()){
@@ -54,11 +54,14 @@ list<Board> get_next_states(Board board){
         }
     }
 
-    if(canMoveLeft(board)){
-        Board left = board;
+    if(canMoveLeft(board->getBoard())){ //cost of moving left: 5
+        Board left = board->getBoard();
         left = moveLeft(left);
         if(left.getPlayerTile().getValue() != -1){
-        states.push_back(left);
+
+
+            Node_State left_state(left, board, board->getG() + 5, 0);
+        states.push_back(left_state);
 
         if(DEBUG){
 
@@ -72,11 +75,14 @@ list<Board> get_next_states(Board board){
         }
     }
 
-    if(canMoveRight(board)){
-        Board right = board;
+    if(canMoveRight(board->getBoard())){ //cost of moving right: 3
+        Board right = board->getBoard();
         right = moveRight(right);
         if(right.getPlayerTile().getValue() != -1){
-        states.push_back(right);
+
+
+            Node_State right_state(right, board, board->getG() + 3, 0);
+        states.push_back(right_state);
         if(DEBUG){
 
         cout<<"RIGHT\n";
@@ -91,7 +97,6 @@ list<Board> get_next_states(Board board){
 
     return states;
 }
-
 
 bool isEqual(Board b1, Board b2){
     
