@@ -7,7 +7,7 @@ Brainy Warrior
 - [Preview](#preview)
 - [Game Structure](#game-structure)
 - [Game Flow](#game-flow)
-- [How to build](#how-to-build)
+- [How to Run](#how-to-run)
 - [Code Breakdown](#code-breakdown)
 - [Resources](#resources)
 - [Draft of the thinking process](#draft-of-the-thinking-process)
@@ -34,6 +34,7 @@ And finally, `game_solver` folder, which contains some algorithms that solve som
 ## Game Flow
 <!-- 
 TODO display a flow chart 
+TODO screenshots of user prompts
 -->
 
 The game starts with a prompt asking the the user: `Enter a level number between 1 and 6:`, then the user chooses to either play the game themself or let the computer play it.
@@ -42,7 +43,11 @@ The game starts with a prompt asking the the user: `Enter a level number between
 
 **ELSE IF** they chose the computer to play it, they choose between available algorithms.
 
-## How to build
+## How to Run
+
+_Tested on Linux_
+
+### Depnedencies:
 
 Conan package manager and CMake are used for this process, to build the project run the following commands in `./Brainy_Warrior` one by one:
 ```sh
@@ -63,7 +68,6 @@ The C++ code should compile successfully, make sure by starting the game, run th
 ```
 
 ## Code Breakdown
-
 
 ### Movement functions:
 
@@ -102,6 +106,18 @@ _move_ function only moves one tile at a time.
 
 **A\*** or **A_Star** is implemented with a priority queue and an unordered map, key point difference from uniform cost search is that it calculates heuristic and not just cost, there are many methods to achieve A_Star in our game, I chose the simplest one, starting with the closest target and with each movement the closest target is updated.
 
+### Heuristics Calculation:
+
+In main.h there's a global variable that sets the heuristic calculation method based on user input, `distance` function takes two parameters of type `Tile`, `t1` and `t2`, here are the implemented methods so far:
+
+**Manhattan:**
+```cpp
+abs(t1.getRow()-t2.getRow()) + abs(t1.getCol()-t2.getCol());
+```
+**Eculidean:**
+```cpp
+sqrt((t1.getRow()-t2.getRow())*(t1.getRow()-t2.getRow()) +(t1.getCol()-t2.getCol())*(t1.getCol()-t2.getCol()));
+```
 ## Resources
 
 - [nlohmann github repository](https://github.com/nlohmann/json)
