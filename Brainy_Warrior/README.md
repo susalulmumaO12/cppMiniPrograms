@@ -118,6 +118,16 @@ abs(t1.getRow()-t2.getRow()) + abs(t1.getCol()-t2.getCol());
 ```cpp
 sqrt((t1.getRow()-t2.getRow())*(t1.getRow()-t2.getRow()) +(t1.getCol()-t2.getCol())*(t1.getCol()-t2.getCol()));
 ```
+
+### Path Retrieval
+
+To print the final path that the algorithm got from start node to end node (win state), the final state is passed to the `getPath` function, then it checks for player position in each iteration while accessing the parent node of each current node, resulting in this:
+
+
+<img src="./screenshot/lvl5.png" width="300" alt="path"/> [>] <img src="./screenshot/path.png" width="300" alt="path"/>
+
+_Pictures above show the path of BFS on level 5_
+
 ## Resources
 
 - [nlohmann github repository](https://github.com/nlohmann/json)
