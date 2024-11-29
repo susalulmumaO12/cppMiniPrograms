@@ -146,7 +146,6 @@ _Pictures above show the path of BFS on level 5_
 There are various ways to improve the game which is currently under construction:
 
 - Make TUI, using ncurses possibly.
-- Improve the looks of the console version
 - Optimize time complexity of computer playing
 - Implement levels with wizard (above 5 on the original game website)
 

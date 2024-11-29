@@ -72,16 +72,16 @@ int main() {
 
     // get user input for level number
     int levelChoice;
-    cout<<"Enter a level number between 1 and 15: ";
+    cout<<"\033[38;5;33mEnter a level number between 1 and 15: \033[0m";
     cin>>levelChoice;
 
     int playingOption;
-    cout<<"Playing options: 1) User, 2) Computer: ";
+    cout<<"\033[38;5;226mPlaying options: \033[0m\n\033[48;5;208m\033[38;5;231m1) User\033[0m\033[0m\n\033[48;5;33m\033[38;5;231m2) Computer\033[0m\033[0m\n";
     cin>>playingOption;
 
     // is level number valid?
     if (levelChoice < 1 || levelChoice > 15) {
-        cerr<<"Invalid level number!"<<endl;
+        cerr<<"\033[38;5;9mInvalid level number!\033[0m"<<endl;
         return 1;
     }
 
@@ -108,16 +108,21 @@ int main() {
         }
     }
 
-        
-
-    cout << "Board for " << levelName << ":\n";
+    if(playingOption == 2){
+        cout << "\033[38;5;226mBoard for\033[0m " << levelName << ":\n";
         printBoard(board);
+    }
 
     // USER PLAYING
     if(playingOption == 1){
 int difficulty;
-        cout<<"Choose difficulty level: \n\033[46m1) Easy (tile move style)\033[0m\n\033[41m2) Hard (slide style)\033[0m\n";
+        cout<<"\033[38;5;42mChoose difficulty level:\033[0m \n\033[48;5;30m\033[38;5;231m1) Easy (tile move style)\033[0m\033[0m\n\033[48;5;161m\033[38;5;231m2) Hard (slide style)\033[0m\033[0m\n";
         cin>>difficulty;
+        
+        cout << "\033[38;5;226mBoard for\033[0m " << levelName << ":\n";
+        printBoard(board);
+
+        cout<<"Type in a letter: w: UP, s: DOWN, a: LEFT, d: RIGHT\n";
 
         while(!board.win()){
             Tile& player = board.getPlayerTile();
@@ -143,7 +148,7 @@ int difficulty;
         distanceType = getDistanceType();
 
         int algorithm;
-        cout<<"Choose algorithm: 1) BFS, 2) DFS, 3) UCS 4) Hill Climbing 5) A_star\n";
+        cout<<"\033[38;5;189mChoose algorithm: \033[0m\n\033[48;5;220m\033[38;5;18m1) BFS\033[0m\033[0m \033[48;5;17m\033[38;5;220m2) DFS\033[0m\033[0m \033[48;5;175m\033[38;5;53m3) UCS\033[0m\033[0m \033[48;5;28m\033[38;5;52m4) Hill Climbing\033[0m\033[0m \033[48;5;160m\033[38;5;231m5) A_star\033[0m\033[0m\n";
         cin>>algorithm;
         if(algorithm == 1) bfs(board);
         else if(algorithm == 2) dfs(board);
