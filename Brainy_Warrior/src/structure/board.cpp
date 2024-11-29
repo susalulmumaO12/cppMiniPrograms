@@ -20,6 +20,22 @@ Board::Board(int n, int m) {
     }
 }
 
+Board::Board(const Board& other) {
+
+    n = other.n;
+    m = other.m;
+
+    // Initialize 2d board
+    board = vector<vector<Tile>>(n, vector<Tile>(m));
+
+    // Initialize tiles
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < m; j++) {
+            board[i][j] = other.board[i][j];
+        }
+    }
+}
+
 int Board::getN() {
     return n;
 }

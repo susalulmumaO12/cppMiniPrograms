@@ -13,6 +13,7 @@ private:
 
 public:
     Board(int n, int m);
+    Board(const Board& other);
 
     int getN();
     int getM();
@@ -23,6 +24,11 @@ public:
 
     bool win();
     void setTile(Tile& tile, int value);
+    
+    /* //defining = operator
+    Board operator=(const Board& other) const {
+        return Board(other);
+    } */
 };
 
 #endif
