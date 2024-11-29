@@ -4,50 +4,53 @@ Brainy Warrior
 [Brainy Warrior](https://www.coolmathgames.com/0-brainy-warrior) is a puzzle game, the goal of the game is to defeat all enemies, by moving (sliding) towards them, if you don't have an enemy to defeat or a wall to stop you from running, you'll fall right into the water.
 
 **Table of Contents:**
-- [Preview](#preview)
-- [Game Structure](#game-structure)
-- [Game Flow](#game-flow)
-- [How to Run](#how-to-run)
-- [Code Breakdown](#code-breakdown)
-- [Resources](#resources)
-- [Draft of the thinking process](#draft-of-the-thinking-process)
-- [Future Improvements](#future-improvements)
+
+- [**Preview**](#preview)
+- [**Game Flow**](#game-flow)
+- [**How to Run**](#how-to-run)
+    - [Requirements:](#requirements)
+    - [Build](#build)
+- [**Code Breakdown**](#code-breakdown)
+    - [Game Structure](#game-structure)
+    - [Movement Functions:](#movement-functions)
+    - [Algorithms:](#algorithms)
+    - [Heuristics Calculation:](#heuristics-calculation)
+    - [Path Retrieval](#path-retrieval)
+- [**Resources**](#resources)
+- [**Draft of the thinking process**](#draft-of-the-thinking-process)
+- [**Future Improvements**](#future-improvements)
+- [**Old Looks**](#old-looks)
 
 ## Preview
 
-The game is printed on the console:
+The game is printed on the console, and takes user input from keyboard on game options:
 
-<img src="./screenshot/lvl1.png" alt="level 1" height="150" /> <img src="./screenshot/lvl2.png" alt="level 2" height="150" />
+<img src="./screenshot/lvl1.png" alt="level 1" height="150" /> <img src="./screenshot/gameover.png" alt="lose state" height="150" />
 <br>
-<img src="./screenshot/win.png" alt="win state" height="150" /> &emsp; <img src="./screenshot/gameover.png" alt="lose state" height="150" />
+<img src="./screenshot/win.png" alt="win state" height="150" />&emsp; <img src="./screenshot/path.png" alt="path" height="150" />
 
-_In the picture above_ `5` _is considered a target/ enemy and_ `9` _is the player._
-
-## Game Structure
-
-The game structure is split into folders for clean and easy maintnance, under `src` folder there exists: `structure` folder, which contains board.cpp, tile.cpp...etc.
-
-While `logic` folder contains the functionalities for the game to run, which make the user able to play the game.
-
-And finally, `game_solver` folder, which contains some algorithms that solve some levels of the game, such as BFS, DFS, A_Star and more.
+_In the pictures above_ `5` _is considered a target/ enemy and_ `9` _is the player._
 
 ## Game Flow
 <!-- 
 TODO display a flow chart 
 TODO screenshots of user prompts
 -->
+Below is a flowchart that demonstrates the game flow ([display full size](./screenshot/flowchart.png)):
 
-The game starts with a prompt asking the the user: `Enter a level number between 1 and 6:`, then the user chooses to either play the game themself or let the computer play it.
-
-**IF** the user chose to play it, they're asked to choose difficulty level: Easy mode, and Hard mode, easy mode is basically moving tile by tile, hard mode is sliding over the board.
-
-**ELSE IF** they chose the computer to play it, they choose between available algorithms.
+<img src="./screenshot/flowchart.png" height="500" alt="flowchart"/>
 
 ## How to Run
 
 _Tested on Linux_
 
-### Depnedencies:
+### Requirements:
+
+- C++ 17 Compiler
+- CMake >= v3.12
+- Conan
+
+### Build
 
 Conan package manager and CMake are used for this process, to build the project run the following commands in `./Brainy_Warrior` one by one:
 ```sh
@@ -69,7 +72,11 @@ The C++ code should compile successfully, make sure by starting the game, run th
 
 ## Code Breakdown
 
-### Movement functions:
+### Game Structure
+
+The game utilizes a 2D board of tiles to maintain state in general. A `Tile` is an object of **{row, col, value}**. A `Board` is a 2D vector of type `Tile`, and `Node_State` is an object of **{Board, Parent, G, H, F}**, used for implementing algorithms.
+
+### Movement Functions:
 
 **canMove-** functions check for walls and edges of the board but they do not consider neighboring sea an invalid move. So they should be used in user movement functions.
 
@@ -85,6 +92,8 @@ The C++ code should compile successfully, make sure by starting the game, run th
 _move_ function only moves one tile at a time.
 
 ### Algorithms:
+
+>_**Caution!** any explanation on the algorithms below is specific to my implementation and is not necesserily accurate._
 
 **Breadth-First-Search:**
 
@@ -110,11 +119,18 @@ _move_ function only moves one tile at a time.
 
 In main.h there's a global variable that sets the heuristic calculation method based on user input, `distance` function takes two parameters of type `Tile`, `t1` and `t2`, here are the implemented methods so far:
 
-**Manhattan:**
+$$
+\text{Manhattan} = |x_1 - x_2| + |y_1 - y_2|
+$$
+
 ```cpp
 abs(t1.getRow()-t2.getRow()) + abs(t1.getCol()-t2.getCol());
 ```
 **Euclidean:**
+$$
+\text{Euclidean} = sqrt{((x_1 - x_2)^2 + (y_1 - y_2)^2)}
+$$
+
 ```cpp
 sqrt((t1.getRow()-t2.getRow())*(t1.getRow()-t2.getRow()) +(t1.getCol()-t2.getCol())*(t1.getCol()-t2.getCol()));
 ```
@@ -130,12 +146,18 @@ _Pictures above show the path of BFS on level 5_
 
 ## Resources
 
+**General:**
 - [nlohmann github repository](https://github.com/nlohmann/json)
 - [ANSI escape code](https://en.wikipedia.org/wiki/ANSI_escape_code)
 - [Working with Conan and CMake](https://www.codeproject.com/Articles/5385907/Managing-Cplusplus-Projects-with-Conan-and-CMake)
+
+**Algorithms:**
 - [A* (A-Star) algorithm](https://en.wikipedia.org/wiki/A*_search_algorithm)
 - [A* by Patrick Lester](https://web.archive.org/web/20051230012332/https://www.policyalmanac.org/games/aStarTutorial.htm)
 - [Hill Climbing in AI](https://www.geeksforgeeks.org/introduction-hill-climbing-artificial-intelligence/)
+
+**Worth Reading papers:**
+- [Multi-Target Pathfinding: Evaluating A-star Versus BFS](http://mau.diva-portal.org/smash/get/diva2:1897067/FULLTEXT02.pdf)
 
 ## Draft of the thinking process
 
@@ -148,7 +170,9 @@ There are various ways to improve the game which is currently under construction
 - Make TUI, using ncurses possibly.
 - Optimize time complexity of computer playing
 - Implement levels with wizard (above 5 on the original game website)
+- Track score for players based on name, and number of steps
+- Improve the experience on the console
 
-## Old looks
+## Old Looks
 
 <img src="./screenshot/lvl1old.png" alt="level 1" height="100" /> <img src="./screenshot/lvl2old.png" alt="level 2" height="100" /> <img src="./screenshot/winold.png" alt="win state" height="100" /> <img src="./screenshot/gameoverold.png" alt="lose state" height="100" />
