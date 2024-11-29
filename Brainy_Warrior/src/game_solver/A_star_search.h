@@ -27,15 +27,16 @@ void a_star(Board board) {
     openList.push(startNode);
 
     while (!openList.empty()) {
-        Node_State currentNode = openList.top();
+        Node_State current(openList.top());
         openList.pop();
 
-        Board currentBoard = currentNode.getBoard();
+        Board currentBoard = current.getBoard();
         string boardKey = stringBoard(currentBoard);
 
         if (currentBoard.win()) {
             cout << "\033[38;5;226mYOU WIN!\033[0m\n";
             cout << "Number of opened states: " << closedList.size() << endl;
+            printBoard(getPath(&current));
             exit(0);
         }
 
@@ -43,15 +44,15 @@ void a_star(Board board) {
         closedList[boardKey] = true;
         printBoard(currentBoard);
 
-        list<Node_State> nextStates = get_next_cost_states(&currentNode);
+        list<Node_State> nextStates = get_next_cost_states(&current);
         for (auto& nextState : nextStates) {
             Tile nextPlayer = nextState.getBoard().getPlayerTile();
             // recalculate heuristic for each target
             for (const auto& target : targets) {
-                int g = currentNode.getG() + 1;
+                int g = current.getG() + 1;
                 int h = distance(nextPlayer, target);
                 Board nextBoard = nextState.getBoard();
-                Node_State nextNode(nextBoard, &currentNode, g, h);
+                Node_State nextNode(nextBoard, &current, g, h);
                 openList.push(nextNode);
             }
         }

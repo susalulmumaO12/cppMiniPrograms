@@ -24,14 +24,23 @@ int distance(Tile t1, Tile t2){
  */
 
 Board getPath(Node_State* win) {
-    Board path = win->getBoard();
+    if (win == nullptr) {
+        std::cerr << "Error: win is null.\n";
+        return Board(0, 0);
+    }
+
+    //set a board to edit on it
+    Board path(win->getBoard());
     Node_State* current = win;
 
     std::cout << "Tracing back the path...\n";
     while (current != nullptr) {
+
+        //get player tile to color it and draw the path
         Tile playerTile = current->getBoard().getPlayerTile();
-        //std::cout << "DBG: Adding tile (" << playerTile.getRow() << ", " << playerTile.getCol() << ") to the path.\n";
         path.getTile(playerTile.getRow(), playerTile.getCol()).setValue(8);
+        
+        //move up to parent
         current = current->getParent();
     }
 

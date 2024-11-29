@@ -27,7 +27,7 @@ void ucs(Board board){
     visitedStates.insert(stringBoard(board));
 
     while(!pq.empty()){
-        Node_State current = pq.top();
+        Node_State current(pq.top());
         printBoard(current.getBoard());
         pq.pop();
 
@@ -35,7 +35,7 @@ void ucs(Board board){
             cout<<"\033[38;5;226mYOU WIN!\033[0m\n";
             cout<<"Number of opened states: "<<visitedStates.size()<<endl;
             cout<<"Path:\n";
-            //printBoard(getPath(&current));
+            printBoard(getPath(&current));
             exit(0);
         }
 

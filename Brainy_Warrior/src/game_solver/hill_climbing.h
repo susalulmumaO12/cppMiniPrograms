@@ -28,7 +28,7 @@ void hill_climbing(Board board) {
     visitedStates.insert(stringBoard(board));
 
     while(!pq.empty()){
-        Node_State current = pq.top();
+        Node_State current(pq.top());
         printBoard(current.getBoard());
         pq.pop();
 
@@ -51,6 +51,7 @@ void hill_climbing(Board board) {
         if (current.getBoard().win()) {
             cout << "\033[38;5;226mYOU WIN!\033[0m\n";
             cout << "Number of opened states: " << visitedStates.size() << endl;
+            printBoard(getPath(&current));
             exit(0);
         }
 

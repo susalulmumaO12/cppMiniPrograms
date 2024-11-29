@@ -19,12 +19,14 @@ void bfs(Board board){
 
     while(!q.empty()){
 
-        Node_State current = q.front();
+        Node_State current(q.front());
         printBoard(current.getBoard());
         q.pop();
 
         if(current.getBoard().win()){
             cout<<"\033[38;5;226mYOU WIN!\033[0m\n";
+            cout << "Number of opened states: " << visitedStates.size() << endl;
+            printBoard(getPath(&current));
             exit(0);
         }
 

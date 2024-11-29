@@ -21,12 +21,14 @@ void dfs(Board board){
 
     while(!s.empty()){
 
-        Node_State current = s.top();
+        Node_State current(s.top());
         printBoard(current.getBoard());
         s.pop();
 
         if(current.getBoard().win()){
             cout<<"\033[38;5;226mYOU WIN!\033[0m\n";
+            cout << "Number of opened states: " << visitedStates.size() << endl;
+            printBoard(getPath(&current));
             exit(0);
         }
 
