@@ -30,10 +30,6 @@ public:
         return f > other.f;
     }
 
-    /* //defining = operator
-    Node_State operator=(const Node_State& other) const {
-        return Node_State(other);
-    } */
 };
 
 #endif

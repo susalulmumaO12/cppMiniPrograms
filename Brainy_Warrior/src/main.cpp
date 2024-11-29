@@ -122,7 +122,7 @@ int difficulty;
         cout << "\033[38;5;226mBoard for\033[0m " << levelName << ":\n";
         printBoard(board);
 
-        cout<<"Type in a letter: w: UP, s: DOWN, a: LEFT, d: RIGHT\n";
+        cout<<"Type in a letter using either of the following ways: WASD, IJKL\n";
 
         while(!board.win()){
             Tile& player = board.getPlayerTile();

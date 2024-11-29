@@ -2,6 +2,7 @@
 #define MOVES_H
 
 #include<iostream>
+#include <string>
 #include<list>
 #include"../structure/board.h"
 #include"../structure/tile.h"
@@ -338,18 +339,27 @@ Board slideDown(Board& b){
 }
 
 Board slide(Board& b, char m){
-    switch(m){
+    switch(tolower(m)){
+        case 'i':
         case 'w':
             return slideUp(b);
+            break;
+        case 'k':
         case 's':
             return slideDown(b);
+            break;
+        case 'j':
         case 'a':
             return slideLeft(b);
+            break;
+        case 'l':
         case 'd':
             return slideRight(b);
+            break;
         default:
             cout<<"invalid move char";
             return b;
+            break;
     }
 }
 

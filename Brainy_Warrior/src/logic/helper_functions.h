@@ -114,6 +114,4 @@ bool isEqual(Board b1, Board b2){
     return true;
 }
 
-
-
 #endif
