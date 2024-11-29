@@ -10,18 +10,22 @@
 
 using namespace std;
 
-//manhattan distance
-int distance(Tile t1, Tile t2){
-    //manhattan distance - we can only move in 4 directions
-    return abs(t1.getRow()-t2.getRow()) + abs(t1.getCol()-t2.getCol());
+int distance(Tile t1, Tile t2) {
+    switch (distanceType) {
+        case man:
+            // Manhattan distance - we can only move in 4 directions
+            return abs(t1.getRow() - t2.getRow()) + abs(t1.getCol() - t2.getCol());
+        
+        case euc:
+            // Euclidean distance
+            return static_cast<int>(sqrt((t1.getRow() - t2.getRow()) * (t1.getRow() - t2.getRow()) +
+                                          (t1.getCol() - t2.getCol()) * (t1.getCol() - t2.getCol())));
+        
+        default:
+            // Default case (should not happen)
+            return 0;
+    }
 }
-/* 
-//eculidean distance
-int distance(Tile t1, Tile t2){
-    
-    return sqrt((t1.getRow()-t2.getRow())*(t1.getRow()-t2.getRow()) +(t1.getCol()-t2.getCol())*(t1.getCol()-t2.getCol()));
-}
- */
 
 Board getPath(Node_State* win) {
     if (win == nullptr) {

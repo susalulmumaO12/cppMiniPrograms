@@ -114,7 +114,7 @@ In main.h there's a global variable that sets the heuristic calculation method b
 ```cpp
 abs(t1.getRow()-t2.getRow()) + abs(t1.getCol()-t2.getCol());
 ```
-**Eculidean:**
+**Euclidean:**
 ```cpp
 sqrt((t1.getRow()-t2.getRow())*(t1.getRow()-t2.getRow()) +(t1.getCol()-t2.getCol())*(t1.getCol()-t2.getCol()));
 ```

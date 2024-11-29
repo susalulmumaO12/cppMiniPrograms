@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <nlohmann/json.hpp>
+#include "../include/main.h"
 #include "./structure/tile.h"
 #include "./structure/board.h"
 #include "./logic/helper_functions.h"
@@ -14,6 +15,21 @@
 using json = nlohmann::json;
 
 using namespace std;
+
+dist getDistanceType() {
+    int choice;
+    std::cout << "Select heuristic calculation: \n\033[48;5;124m\033[38;5;15m1) Manhattan\033[0m\033[0m \033[48;5;142m\033[38;5;15m2) Euclidean\033[0m\033[0m \n";
+    std::cin >> choice;
+
+    if (choice == 1) {
+        return man;
+    } else if (choice == 2) {
+        return euc;
+    } else {
+        std::cout << "Invalid choice, defaulting to Manhattan." << std::endl;
+        return man; // Default to Manhattan if invalid input
+    }
+}
 
 void printTile(int value) {
     switch (value) {
@@ -95,14 +111,14 @@ int main() {
         
 
     cout << "Board for " << levelName << ":\n";
-    printBoard(board);
+        printBoard(board);
 
     // USER PLAYING
     if(playingOption == 1){
 int difficulty;
         cout<<"Choose difficulty level: \n\033[46m1) Easy (tile move style)\033[0m\n\033[41m2) Hard (slide style)\033[0m\n";
         cin>>difficulty;
-        
+
         while(!board.win()){
             Tile& player = board.getPlayerTile();
 
@@ -113,7 +129,7 @@ int difficulty;
 
             char m; cin>>m;
             board = difficulty == 1? move(board, m): slide(board, m);
-            cout << "Player position: (" << player.getRow() << ", " << player.getCol() << ")" << endl;
+            //cout << "Player position: (" << player.getRow() << ", " << player.getCol() << ")" << endl;
             printBoard(board);
 
             if(board.win()){
@@ -123,6 +139,8 @@ int difficulty;
         }
 
     } else if (playingOption == 2){
+
+        distanceType = getDistanceType();
 
         int algorithm;
         cout<<"Choose algorithm: 1) BFS, 2) DFS, 3) UCS 4) Hill Climbing 5) A_star\n";
