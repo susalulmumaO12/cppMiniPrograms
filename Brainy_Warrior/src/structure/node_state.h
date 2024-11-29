@@ -17,6 +17,7 @@ private:
 
 public:
     Node_State(Board board, Node_State* parent, int g, int h);
+    Node_State(const Node_State& other);
 
     Board& getBoard();
     Node_State* getParent();
@@ -28,6 +29,11 @@ public:
     bool operator<(const Node_State& other) const {
         return f > other.f;
     }
+
+    /* //defining = operator
+    Node_State operator=(const Node_State& other) const {
+        return Node_State(other);
+    } */
 };
 
 #endif
