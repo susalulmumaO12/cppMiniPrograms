@@ -1,6 +1,15 @@
-Brainy Warrior
-==============
+<pre><strong>
 
+
+__________               .__                __      __                     .__              
+\______   \____________  |__| ____ ___.__. /  \    /  \_____ ______________|__| ___________ 
+ |    |  _/\_  __ \__  \ |  |/    <   |  | \   \/\/   /\__  \\_  __ \_  __ \  |/  _ \_  __ \
+ |    |   \ |  | \// __ \|  |   |  \___  |  \        /  / __ \|  | \/|  | \/  (  <_> )  | \/
+ |______  / |__|  (____  /__|___|  / ____|   \__/\  /  (____  /__|   |__|  |__|\____/|__|   
+        \/             \/        \/\/             \/        \/                              
+
+</strong>
+</pre>
 [Brainy Warrior](https://www.coolmathgames.com/0-brainy-warrior) is a puzzle game, the goal of the game is to defeat all enemies, by moving (sliding) towards them, if you don't have an enemy to defeat or a wall to stop you from running, you'll fall right into the water.
 
 **Table of Contents:**
@@ -8,13 +17,13 @@ Brainy Warrior
 - [**Preview**](#preview)
 - [**Game Flow**](#game-flow)
 - [**How to Run**](#how-to-run)
-    - [Requirements:](#requirements)
+    - [Requirements](#requirements)
     - [Build](#build)
 - [**Code Breakdown**](#code-breakdown)
     - [Game Structure](#game-structure)
-    - [Movement Functions:](#movement-functions)
-    - [Algorithms:](#algorithms)
-    - [Heuristics Calculation:](#heuristics-calculation)
+    - [Movement Functions](#movement-functions)
+    - [Algorithms](#algorithms)
+    - [Heuristics Calculation](#heuristics-calculation)
     - [Path Retrieval](#path-retrieval)
 - [**Resources**](#resources)
 - [**Draft of the thinking process**](#draft-of-the-thinking-process)
@@ -44,7 +53,7 @@ Below is a flowchart that demonstrates the game flow ([display full size](./scre
 
 _Tested on Linux_
 
-### Requirements:
+### Requirements
 
 - C++ 17 Compiler
 - CMake >= v3.12
@@ -76,7 +85,7 @@ The C++ code should compile successfully, make sure by starting the game, run th
 
 The game utilizes a 2D board of tiles to maintain state in general. A `Tile` is an object of **{row, col, value}**. A `Board` is a 2D vector of type `Tile`, and `Node_State` is an object of **{Board, Parent, G, H, F}**, used for implementing algorithms.
 
-### Movement Functions:
+### Movement Functions
 
 **canMove-** functions check for walls and edges of the board but they do not consider neighboring sea an invalid move. So they should be used in user movement functions.
 
@@ -91,7 +100,7 @@ The game utilizes a 2D board of tiles to maintain state in general. A `Tile` is 
 ```
 _move_ function only moves one tile at a time.
 
-### Algorithms:
+### Algorithms
 
 >_**Caution!** any explanation on the algorithms below is specific to my implementation and is not necesserily accurate._
 
@@ -115,7 +124,7 @@ _move_ function only moves one tile at a time.
 
 **A\*** or **A_Star** is implemented with a priority queue and an unordered map, key point difference from uniform cost search is that it calculates heuristic and not just cost, there are many methods to achieve A_Star in our game, I chose the simplest one, starting with the closest target and with each movement the closest target is updated.
 
-### Heuristics Calculation:
+### Heuristics Calculation
 
 In main.h there's a global variable that sets the heuristic calculation method based on user input, `distance` function takes two parameters of type `Tile`, `t1` and `t2`, here are the implemented methods so far:
 
