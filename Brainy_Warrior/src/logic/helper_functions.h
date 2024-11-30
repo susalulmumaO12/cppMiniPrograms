@@ -4,6 +4,7 @@
 #define DEBUG false
 
 #include<iostream>
+#include<list>
 #include"../structure/node_state.h"
 #include<list>
 #include"../structure/board.h"
@@ -98,20 +99,60 @@ list<Node_State> get_next_cost_states(Node_State* board){
     return states;
 }
 
-bool isEqual(Board b1, Board b2){
-    
-    int n = b1.getN();
-    int m = b2.getM();
+int distance(Tile t1, Tile t2) {
+    switch (distanceType) {
+        case man:
+            // Manhattan distance - we can only move in 4 directions
+            return abs(t1.getRow() - t2.getRow()) + abs(t1.getCol() - t2.getCol());
+        
+        case euc:
+            // Euclidean distance
+            return static_cast<int>(sqrt((t1.getRow() - t2.getRow()) * (t1.getRow() - t2.getRow()) +
+                                          (t1.getCol() - t2.getCol()) * (t1.getCol() - t2.getCol())));
+        
+        default:
+            // Default case (should not happen)
+            return 0;
+    }
+}
+
+Board getPath(Node_State* win) {
+    if (win == nullptr) {
+        std::cerr << "Error: win is null.\n";
+        return Board(0, 0);
+    }
+
+    //set a board to edit on it
+    Board path(win->getBoard());
+    Node_State* current = win;
+
+    std::cout << "Tracing back the path...\n";
+    while (current != nullptr) {
+
+        //get player tile to color it and draw the path
+        Tile playerTile = current->getBoard().getPlayerTile();
+        path.getTile(playerTile.getRow(), playerTile.getCol()).setValue(8);
+        
+        //move up to parent
+        current = current->getParent();
+    }
+
+    std::cout << "Path tracing completed.\n";
+    return path;
+}
+
+string stringBoard(Board& b) {
+    string boardHash;
+    int n = b.getN();
+    int m = b.getM();
 
     for (int i = 0; i < n; i++) {
             for (int j = 0; j < m; j++) {
-                if(b1.getTile(i, j).getValue() != b2.getTile(i, j).getValue()){
-                    return false;
-                }
+            boardHash += to_string(b.getTile(i, j).getValue());
+            boardHash += ',';
             }
     }
-
-    return true;
+    return boardHash;
 }
 
 #endif
