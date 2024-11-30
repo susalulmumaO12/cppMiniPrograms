@@ -5,6 +5,9 @@
 #include "nlohmann/json.hpp"
 #include "../src/structure/board.h"
 
+//slide or move tile by tile
+bool SLIDE = false;
+
 enum dist {man, euc, diag};
 
 void printBoard(Board board);

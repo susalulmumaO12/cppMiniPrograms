@@ -108,6 +108,11 @@ int main() {
         }
     }
 
+    int difficulty;
+    cout<<"\033[38;5;42mChoose difficulty level:\033[0m \n\033[48;5;30m\033[38;5;231m1) Easy (tile move style)\033[0m\033[0m\n\033[48;5;161m\033[38;5;231m2) Hard (slide style)\033[0m\033[0m\n";
+    cin>>difficulty;
+    difficulty == 1? SLIDE = false : SLIDE = true;
+
     if(playingOption == 2){
         cout << "\033[38;5;226mBoard for\033[0m " << levelName << ":\n";
         printBoard(board);
@@ -115,9 +120,6 @@ int main() {
 
     // USER PLAYING
     if(playingOption == 1){
-int difficulty;
-        cout<<"\033[38;5;42mChoose difficulty level:\033[0m \n\033[48;5;30m\033[38;5;231m1) Easy (tile move style)\033[0m\033[0m\n\033[48;5;161m\033[38;5;231m2) Hard (slide style)\033[0m\033[0m\n";
-        cin>>difficulty;
         
         cout << "\033[38;5;226mBoard for\033[0m " << levelName << ":\n";
         printBoard(board);
@@ -133,7 +135,7 @@ int difficulty;
             }
 
             char m; cin>>m;
-            board = difficulty == 1? move(board, m): slide(board, m);
+            board = move(board, m);
             //cout << "Player position: (" << player.getRow() << ", " << player.getCol() << ")" << endl;
             printBoard(board);
 

@@ -6,7 +6,6 @@
 #include<iostream>
 #include<list>
 #include"../structure/node_state.h"
-#include<list>
 #include"../structure/board.h"
 #include"../structure/tile.h"
 #include"../include/main.h"
@@ -19,7 +18,7 @@ list<Node_State> get_next_cost_states(Node_State* board){
     
     if(canMoveUp(board->getBoard())){ //cost of moving up: 1
         Board up(board->getBoard());
-        up = moveUp(up);
+        up = !SLIDE? moveUp(up)  : slideUp(up);
         if(up.getPlayerTile().getValue() != -1){
 
             Node_State up_state(up, board, board->getG() + 1, 0);
@@ -38,7 +37,7 @@ list<Node_State> get_next_cost_states(Node_State* board){
 
     if(canMoveDown(board->getBoard())){ //cost of moving down: 2
         Board down(board->getBoard());
-        down = moveDown(down);
+        down = !SLIDE? moveDown(down) : slideDown(down);
         if(down.getPlayerTile().getValue() != -1){
 
 
@@ -57,7 +56,7 @@ list<Node_State> get_next_cost_states(Node_State* board){
 
     if(canMoveLeft(board->getBoard())){ //cost of moving left: 5
         Board left(board->getBoard());
-        left = moveLeft(left);
+        left = !SLIDE? moveLeft(left) : slideLeft(left);
         if(left.getPlayerTile().getValue() != -1){
 
 
@@ -78,7 +77,7 @@ list<Node_State> get_next_cost_states(Node_State* board){
 
     if(canMoveRight(board->getBoard())){ //cost of moving right: 3
         Board right(board->getBoard());
-        right = moveRight(right);
+        right = !SLIDE? moveRight(right) : slideRight(right);
         if(right.getPlayerTile().getValue() != -1){
 
 
@@ -147,10 +146,10 @@ string stringBoard(Board& b) {
     int m = b.getM();
 
     for (int i = 0; i < n; i++) {
-            for (int j = 0; j < m; j++) {
+        for (int j = 0; j < m; j++) {
             boardHash += to_string(b.getTile(i, j).getValue());
             boardHash += ',';
-            }
+        }
     }
     return boardHash;
 }

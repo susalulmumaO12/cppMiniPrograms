@@ -200,22 +200,6 @@ Board moveLeft(Board& b){
     return b;
 }
 
-Board move(Board& b, char m){
-    switch(m){
-        case 'w':
-            return moveUp(b);
-        case 's':
-            return moveDown(b);
-        case 'a':
-            return moveLeft(b);
-        case 'd':
-            return moveRight(b);
-        default:
-            cout<<"invalid move char";
-            return b;
-    }
-}
-
 Board slideRight(Board& b){
 
     if(!canMoveRight(b)){
@@ -338,23 +322,23 @@ Board slideDown(Board& b){
     return b;
 }
 
-Board slide(Board& b, char m){
+Board move(Board& b, char m){
     switch(tolower(m)){
         case 'i':
         case 'w':
-            return slideUp(b);
+            return !SLIDE? moveUp(b) : slideUp(b);
             break;
         case 'k':
         case 's':
-            return slideDown(b);
+            return !SLIDE? moveDown(b) : slideDown(b);
             break;
         case 'j':
         case 'a':
-            return slideLeft(b);
+            return !SLIDE? moveLeft(b) : slideLeft(b);
             break;
         case 'l':
         case 'd':
-            return slideRight(b);
+            return !SLIDE? moveRight(b) : slideRight(b);
             break;
         default:
             cout<<"invalid move char";
@@ -362,5 +346,4 @@ Board slide(Board& b, char m){
             break;
     }
 }
-
 #endif
