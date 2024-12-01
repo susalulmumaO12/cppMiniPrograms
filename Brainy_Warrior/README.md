@@ -126,22 +126,72 @@ _move_ function only moves one tile at a time.
 
 ### Heuristics Calculation
 
-In main.h there's a global variable that sets the heuristic calculation method based on user input, `distance` function takes two parameters of type `Tile`, `t1` and `t2`, here are the implemented methods so far:
+>**Note:** the game restricts movement to 4 directions, Manhattan Distance is the most logical way to calculate distance, the other methods are experimental only. 
+
+When user selcets compuetr as the player, the game prompts the user to choose heuristic calculation method, `distance` function takes two parameters of type `Tile`, `t1` and `t2`, here are the implemented methods so far:
+
+**Manhattan Distance:**
+
+Measures the total grid-based distance (only horizontal and vertical moves are allowed).
+
+<div align="center"><img src="https://www.maartengrootendorst.com/images/posts/2021-01-02-distances/manhattan.svg" width="150" style="background:white"></div>
 
 $$
-\text{Manhattan} = |x_1 - x_2| + |y_1 - y_2|
+\text{D} = |x_1 - x_2| + |y_1 - y_2| 
+$$
+$$
+\text{D(x, y)} = \sum_{i=1}^k |x_i - y_i|
 $$
 
 ```cpp
 abs(t1.getRow()-t2.getRow()) + abs(t1.getCol()-t2.getCol());
 ```
-**Euclidean:**
+**Euclidean Distance:**
+
+Measures the straight-line distance between two points.
+
+<div align="center"><img src="https://www.maartengrootendorst.com/images/posts/2021-01-02-distances/euclidean.svg" width="150" style="background:white"></div>
+
 $$
-\text{Euclidean} = sqrt{((x_1 - x_2)^2 + (y_1 - y_2)^2)}
+\text{D} = \sqrt{(x_1 - x_2)^2 + (y_1 - y_2)^2}
+$$
+$$
+\text{D(x, y)} = \sqrt{\sum_{i=1}^n (x_i - y_i)^2}
+$$
+```cpp
+sqrt((t1.getRow()-t2.getRow())*(t1.getRow()-t2.getRow()) +(t1.getCol()-t2.getCol())*(t1.getCol()-t2.getCol()));
+```
+**Minkowski Distance:**
+
+A generalized distance metric where Manhattan and Euclidean distances are special cases (`p=1` and `p=2`, respectively).
+Formula: 
+
+<div align="center"><img src="https://www.maartengrootendorst.com/images/posts/2021-01-02-distances/minkowski.svg" width="150" style="background:white"></div>
+
+$$
+D = \left( \sum_{i=1}^n |x_i - y_i|^p \right)^{1/p}
 $$
 
 ```cpp
-sqrt((t1.getRow()-t2.getRow())*(t1.getRow()-t2.getRow()) +(t1.getCol()-t2.getCol())*(t1.getCol()-t2.getCol()));
+double sum = 0.0;
+for (size_t i = 0; i < v1.size(); ++i) {
+    sum += pow(abs(v1[i] - v2[i]), minkowskiP);
+}
+return static_cast<int>(pow(sum, 1.0 / minkowskiP)); // P = 3
+```
+
+**Chebyshev Distance:**
+
+The Chebyshev distance calculation, commonly known as the "maximum metric" in mathematics, measures distance between two points as the maximum difference over any of their axis values. In a 2D grid, for instance, if we have two points (x1, y1), and (x2, y2), the Chebyshev distance between is max(y2 - y1, x2 - x1).
+
+<div align="center"><img src="https://www.maartengrootendorst.com/images/posts/2021-01-02-distances/chebyshev.svg" width="150" style="background:white"></div>
+
+$$
+\text{D} = \max_{i}(|x_i - y_i|)
+$$
+
+```cpp
+max((t2.getRow() - t1.getRow(), (t2.getCol() - t1.getCol())));
 ```
 
 ### Path Retrieval
@@ -159,6 +209,7 @@ _Pictures above show the path of BFS on level 5_
 - [nlohmann github repository](https://github.com/nlohmann/json)
 - [ANSI escape code](https://en.wikipedia.org/wiki/ANSI_escape_code)
 - [Working with Conan and CMake](https://www.codeproject.com/Articles/5385907/Managing-Cplusplus-Projects-with-Conan-and-CMake)
+- [ASCII art Generator (for the banner)](https://patorjk.com/software/taag/#p=display&f=Graffiti&t=Brainy%20Warrior)
 
 **Algorithms:**
 - [A* (A-Star) algorithm](https://en.wikipedia.org/wiki/A*_search_algorithm)
@@ -167,6 +218,8 @@ _Pictures above show the path of BFS on level 5_
 
 **Worth Reading papers:**
 - [Multi-Target Pathfinding: Evaluating A-star Versus BFS](http://mau.diva-portal.org/smash/get/diva2:1897067/FULLTEXT02.pdf)
+- [9 Distance Measures in Data Science](https://www.maartengrootendorst.com/blog/distances/)
+- [Measuring Distance](https://chris3606.github.io/GoRogue/articles/grid_components/measuring-distance.html)
 
 ## Draft of the thinking process
 

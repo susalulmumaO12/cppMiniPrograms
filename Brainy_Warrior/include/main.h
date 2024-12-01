@@ -8,7 +8,7 @@
 //slide or move tile by tile
 bool SLIDE = false;
 
-enum dist {man, euc, diag};
+enum dist { man, euc, mink, cheb };
 
 void printBoard(Board board);
 

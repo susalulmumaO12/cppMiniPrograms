@@ -18,16 +18,29 @@ using namespace std;
 
 dist getDistanceType() {
     int choice;
-    std::cout << "Select heuristic calculation: \n\033[48;5;124m\033[38;5;15m1) Manhattan\033[0m\033[0m \033[48;5;142m\033[38;5;15m2) Euclidean\033[0m\033[0m \n";
-    std::cin >> choice;
 
-    if (choice == 1) {
-        return man;
-    } else if (choice == 2) {
-        return euc;
-    } else {
-        std::cout << "Invalid choice, defaulting to Manhattan." << std::endl;
-        return man; // Default to Manhattan if invalid input
+    // Displaying the menu with ANSI styling
+    cout << "\033[1;37mSelect heuristic calculation:\033[0m\n";
+    cout << "\033[48;5;124m\033[38;5;15m1) Manhattan\033[0m\033[0m ";
+    cout << "\033[48;5;34m\033[38;5;15m2) Euclidean\033[0m\033[0m ";
+    cout << "\033[48;5;208m\033[38;5;15m3) Minkowski (p=3)\033[0m\033[0m ";
+    cout << "\033[48;5;27m\033[38;5;15m4) Chebyshev\033[0m\033[0m ";
+    
+    cin >> choice;
+
+    // Returning the corresponding distance type
+    switch (choice) {
+        case 1:
+            return man; // Manhattan
+        case 2:
+            return euc; // Euclidean
+        case 3:
+            return mink; // Minkowski
+        case 4:
+            return cheb; // Chebyshev
+        default:
+            std::cout << "\033[31mInvalid choice, defaulting to Manhattan.\033[0m\n";
+            return man; // Default to Manhattan
     }
 }
 
@@ -61,7 +74,7 @@ void printBoard(Board board){
 
 int main() {
 
-    cout<<"\n\n__________               .__                __      __                     .__              \n\\______   \\____________  |__| ____ ___.__. /  \\    /  \\_____ ______________|__| ___________ \n |    |  _/\\_  __ \\__  \\ |  |/    <   |  | \\   \\/\\/   /\\__  \\_  __ \\_  __ \\  |/  _ \\_  __  \\\n |    |   \\ |  | \\// __ \\|  |   |  \\___  |  \\        /  / __ \\|  | \\/|  | \\/  (  <_> )  | \\/\n |______  / |__|  (____  /__|___|  / ____|   \\__/\\  /  (____  /__|   |__|  |__|\\____/|__|   \n        \\/             \\/        \\/\\/             \\/        \\/                              \n\n";
+    cout<<"\033[38;5;33m\n\n__________               .__                __      __                     .__              \n\\______   \\____________  |__| ____ ___.__. /  \\    /  \\_____ ______________|__| ___________ \n |    |  _/\\_  __ \\__  \\ |  |/    <   |  | \\   \\/\\/   /\\__  \\_  __ \\_  __ \\  |/  _ \\_  __  \\\n |    |   \\ |  | \\// __ \\|  |   |  \\___  |  \\        /  / __ \\|  | \\/|  | \\/  (  <_> )  | \\/\n |______  / |__|  (____  /__|___|  / ____|   \\__/\\  /  (____  /__|   |__|  |__|\\____/|__|   \n        \\/             \\/        \\/\\/             \\/        \\/                              \n\n\033[1m";
     ifstream inputFile("../src/levels.json");
     if (!inputFile.is_open()) {
         cerr << "Error opening levels.json file!" << endl;
@@ -74,7 +87,7 @@ int main() {
 
     // get user input for level number
     int levelChoice;
-    cout<<"\033[38;5;33mEnter a level number between 1 and 15: \033[0m";
+    cout<<"\033[38;5;33mEnter a level number between 1 and 15: \033[1m";
     cin>>levelChoice;
 
     int playingOption;
@@ -138,7 +151,6 @@ int main() {
 
             char m; cin>>m;
             board = move(board, m);
-            //cout << "Player position: (" << player.getRow() << ", " << player.getCol() << ")" << endl;
             printBoard(board);
 
             if(board.win()){

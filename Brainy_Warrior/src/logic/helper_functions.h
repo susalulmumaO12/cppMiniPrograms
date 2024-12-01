@@ -5,6 +5,8 @@
 
 #include<iostream>
 #include<list>
+#include<vector>
+#include<cmath>
 #include"../structure/node_state.h"
 #include"../structure/board.h"
 #include"../structure/tile.h"
@@ -99,6 +101,11 @@ list<Node_State> get_next_cost_states(Node_State* board){
 }
 
 int distance(Tile t1, Tile t2) {
+    int minkowskiP = 3;
+    // Extract coordinates as vectors for generalized calculations
+    vector<int> v1 = {t1.getRow(), t1.getCol()};
+    vector<int> v2 = {t2.getRow(), t2.getCol()};
+
     switch (distanceType) {
         case man:
             // Manhattan distance - we can only move in 4 directions
@@ -109,6 +116,20 @@ int distance(Tile t1, Tile t2) {
             return static_cast<int>(sqrt((t1.getRow() - t2.getRow()) * (t1.getRow() - t2.getRow()) +
                                           (t1.getCol() - t2.getCol()) * (t1.getCol() - t2.getCol())));
         
+        case mink: {
+            // Minkowski distance (generalized form)
+            double sum = 0.0;
+            for (size_t i = 0; i < v1.size(); ++i) {
+                sum += pow(abs(v1[i] - v2[i]), minkowskiP);
+            }
+            return static_cast<int>(pow(sum, 1.0 / minkowskiP));
+        }
+
+        case cheb: {
+            
+            return static_cast<int>(max((t2.getRow() - t1.getRow()), (t2.getCol() - t1.getCol())));
+        }
+
         default:
             // Default case (should not happen)
             return 0;
