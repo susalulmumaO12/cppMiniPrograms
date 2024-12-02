@@ -87,18 +87,19 @@ int main() {
 
     // get user input for level number
     int levelChoice;
-    cout<<"\033[38;5;33mEnter a level number between 1 and 15: \033[1m";
+    cout<<"\033[38;5;33mEnter a level number between 1 and 16: \033[1m";
     cin>>levelChoice;
+
+    // is level number valid?
+    if (levelChoice < 1 || levelChoice > 16) {
+        cerr<<"\033[38;5;9mInvalid level number!\033[0m"<<endl;
+        return 1;
+    }
 
     int playingOption;
     cout<<"\033[38;5;226mPlaying options: \033[0m\n\033[48;5;208m\033[38;5;231m1) User\033[0m\033[0m\n\033[48;5;33m\033[38;5;231m2) Computer\033[0m\033[0m\n";
     cin>>playingOption;
 
-    // is level number valid?
-    if (levelChoice < 1 || levelChoice > 15) {
-        cerr<<"\033[38;5;9mInvalid level number!\033[0m"<<endl;
-        return 1;
-    }
 
     // construct a string with level name "level i"
     string levelName = "level " + to_string(levelChoice);

@@ -36,6 +36,7 @@ void a_star(Board board) {
         if (currentBoard.win()) {
             cout << "\033[38;5;226mYOU WIN!\033[0m\n";
             cout << "Number of opened states: " << closedList.size() << endl;
+            cout<< "cost: " << current.getF()<<endl;
             printBoard(getPath(&current));
             exit(0);
         }
@@ -49,7 +50,7 @@ void a_star(Board board) {
             Tile nextPlayer = nextState.getBoard().getPlayerTile();
             // recalculate heuristic for each target
             for (const auto& target : targets) {
-                int g = current.getG() + 1;
+                int g = nextState.getG();
                 int h = distance(nextPlayer, target);
                 Board nextBoard = nextState.getBoard();
                 Node_State nextNode(nextBoard, &current, g, h);

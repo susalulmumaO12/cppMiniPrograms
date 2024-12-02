@@ -34,6 +34,7 @@ void ucs(Board board){
         if(current.getBoard().win()){
             cout<<"\033[38;5;226mYOU WIN!\033[0m\n";
             cout<<"Number of opened states: "<<visitedStates.size()<<endl;
+            cout<< "cost: " << current.getF()<<endl;
             cout<<"Path:\n";
             printBoard(getPath(&current));
             exit(0);
@@ -44,7 +45,7 @@ void ucs(Board board){
             string stateHash = stringBoard(state.getBoard());
             if (visitedStates.find(stateHash) == visitedStates.end()) {
                 visitedStates.insert(stateHash);
-                Node_State newState(state.getBoard(), &current, calculate_cost(state), 0);
+                Node_State newState(state.getBoard(), &current, state.getG(), 0);
                 pq.push(newState);
             }
         }
