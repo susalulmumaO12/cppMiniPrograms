@@ -148,18 +148,37 @@ Board getPath(Node_State* win) {
 
     std::cout << "Tracing back the path...\n";
     while (current != nullptr) {
-
-        //get player tile to color it and draw the path
         Tile playerTile = current->getBoard().getPlayerTile();
         path.getTile(playerTile.getRow(), playerTile.getCol()).setValue(8);
-        
-        //move up to parent
-        current = current->getParent();
+
+        // Move up to parent
+        Node_State* parent = current->getParent();
+        if (parent == nullptr) break; // Exit if there's no parent
+
+        Tile parentTile = parent->getBoard().getPlayerTile();
+
+        //Color the path between playerTile and parentTile
+        if (playerTile.getRow() == parentTile.getRow()) { // Same row
+            int startCol = std::min(playerTile.getCol(), parentTile.getCol());
+            int endCol = std::max(playerTile.getCol(), parentTile.getCol());
+            for (int i = startCol; i <= endCol; i++) {
+                path.getTile(playerTile.getRow(), i).setValue(8);
+            }
+        } else if (playerTile.getCol() == parentTile.getCol()) { // Same column
+            int startRow = std::min(playerTile.getRow(), parentTile.getRow());
+            int endRow = std::max(playerTile.getRow(), parentTile.getRow());
+            for (int i = startRow; i <= endRow; i++) {
+                path.getTile(i, playerTile.getCol()).setValue(8);
+            }
+        }
+
+        current = parent; // Move to the next node
     }
 
     std::cout << "Path tracing completed.\n";
     return path;
 }
+
 
 string stringBoard(Board& b) {
     string boardHash;
