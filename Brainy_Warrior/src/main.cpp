@@ -48,9 +48,11 @@ void printTile(int value) {
     switch (value) {
         case 0: cout << "\033[48;5;45m\033[38;5;75m 0 \033[0m\033[0m"; break;  // 0:sea
         case 1: cout << "\033[48;5;42m\033[38;5;36m 1 \033[0m\033[0m"; break;  // 1:land
+        case 3: cout << "\033[48;5;22m\033[38;5;165m O \033[0m\033[0m"; break;  // 3:wizard tile
         case 4: cout << "\033[48;5;226m\033[38;5;220m 4 \033[0m\033[0m"; break;  // 4:wall
         case 5: cout << "\033[48;5;96m\033[1;38;5;89m 5 \033[0m\033[0m"; break;  // 5:target
         case 6: cout << "\033[38;5;226m * \033[0m"; break;  // 6:star
+        case 7: cout << "\033[48;5;165m\033[1;38;5;22m W \033[0m\033[0m"; break;  // 7:wizard
         case 8: cout << "\033[48;5;200m\033[1;38;5;9m 8 \033[0m\033[0m"; break;  // 8:won player
         case 9: cout << "\033[48;5;216m\033[1;38;5;9m 9 \033[0m\033[0m"; break;  // 9:player
         case -1: cout << "\033[48;5;9m\033[1;38;5;216m X \033[0m\033[0m"; break;  // -1:dead player
@@ -91,7 +93,7 @@ int main() {
     cin>>levelChoice;
 
     // is level number valid?
-    if (levelChoice < 1 || levelChoice > 16) {
+    if (levelChoice < 1 || levelChoice > 17) {
         cerr<<"\033[38;5;9mInvalid level number!\033[0m"<<endl;
         return 1;
     }

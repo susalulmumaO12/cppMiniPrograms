@@ -7,6 +7,7 @@
 
 //slide or move tile by tile
 bool SLIDE = false;
+bool WIZMOVED = false;
 
 enum dist { man, euc, mink, cheb };
 

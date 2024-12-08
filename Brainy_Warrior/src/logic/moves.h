@@ -103,7 +103,8 @@ Board moveUp(Board& b){
     } else if(next == 1){
         swapTiles(b, tile, b.getTile(i-1, j));
         return b;
-    } else if(next == 5 || next == 6){
+    } else if(next == 5 || next == 7){
+        if(next == 7) WIZMOVED = true;
         b.getTile(i-1, j).setValue(1);
         swapTiles(b, tile, b.getTile(i-1, j));
         return b;
@@ -133,7 +134,8 @@ Board moveDown(Board& b){
     } else if(next == 1){
         swapTiles(b, tile, b.getTile(i+1, j));
         return b;
-    } else if(next == 5 || next == 6){
+    } else if(next == 5 || next == 7){
+        if(next == 7) WIZMOVED = true;
         b.getTile(i+1, j).setValue(1);
         swapTiles(b, tile, b.getTile(i+1, j));
         return b;
@@ -162,7 +164,8 @@ Board moveRight(Board& b){
     } else if(next == 1){
         swapTiles(b, tile, b.getTile(i, j+1));
         return b;
-    } else if(next == 5 || next == 6){
+    } else if(next == 5 || next == 7){
+        if(next == 7) WIZMOVED = true;
         b.getTile(i, j+1).setValue(1);
         swapTiles(b, tile, b.getTile(i, j+1));
         return b;
@@ -191,7 +194,8 @@ Board moveLeft(Board& b){
     } else if(next == 1){
         swapTiles(b, tile, b.getTile(i, j-1));
         return b;
-    } else if(next == 5 || next == 6){
+    } else if(next == 5 || next == 7){
+        if(next == 7) WIZMOVED = true;
         b.getTile(i, j-1).setValue(1);
         swapTiles(b, tile, b.getTile(i, j-1));
         return b;
@@ -222,7 +226,8 @@ Board slideRight(Board& b){
         } else if(next == 4){
             swapTiles(b, tile, b.getTile(i, k-1));
             return b;
-        } else if(next == 5 || next == 6){
+        } else if(next == 5 || next == 7){
+            if(next == 7) WIZMOVED = true;
             b.getTile(i, k).setValue(1);
             swapTiles(b, tile, b.getTile(i, k));
             return b;
@@ -254,7 +259,8 @@ Board slideLeft(Board& b){
         } else if(next == 4){
             swapTiles(b, tile, b.getTile(i, k+1));
             return b;
-        } else if(next == 5 || next == 6){
+        } else if(next == 5 || next == 7){
+            if(next == 7) WIZMOVED = true;
             b.getTile(i, k).setValue(1);
             swapTiles(b, tile, b.getTile(i, k));
             return b;
@@ -283,7 +289,8 @@ Board slideUp(Board& b){
         } else if(next == 4){
             swapTiles(b, tile, b.getTile(k+1, j));
             return b;
-        } else if(next == 5 || next == 6){
+        } else if(next == 5 || next == 7){
+            if(next == 7) WIZMOVED = true;
             b.getTile(k, j).setValue(1);
             swapTiles(b, tile, b.getTile(k, j));
             return b;
@@ -313,13 +320,47 @@ Board slideDown(Board& b){
         } else if(next == 4){
             swapTiles(b, tile, b.getTile(k-1, j));
             return b;
-        } else if(next == 5 || next == 6){
+        } else if(next == 5 || next == 7){
+            if(next == 7) WIZMOVED = true;
             b.getTile(k, j).setValue(1);
             swapTiles(b, tile, b.getTile(k, j));
             return b;
         }
     }
     return b;
+}
+
+Board moveWizard(Board& board){
+
+    if(WIZMOVED){
+        cout<<"Used up your wizard moves!\n";
+        return board;
+    }
+    int n = board.getN();
+    int m = board.getM();
+    Tile currentWizard; 
+    Tile nextWizard;
+
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < m; j++) {
+            if(board.getTile(i, j).getValue() == 7){
+                currentWizard = board.getTile(i, j);
+                break;
+            }
+        }
+    }
+
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < m; j++) {
+            if(board.getTile(i, j).getValue() == 3){
+                nextWizard = board.getTile(i, j);
+                break;
+            }
+        }
+    }
+
+    swapTiles(board , currentWizard, nextWizard);
+    return board;
 }
 
 Board move(Board& b, char m){
@@ -340,10 +381,15 @@ Board move(Board& b, char m){
         case 'd':
             return !SLIDE? moveRight(b) : slideRight(b);
             break;
+        case 'z':
+            return moveWizard(b);
+            break;
         default:
             cout<<"invalid move char";
             return b;
             break;
     }
 }
+
+
 #endif

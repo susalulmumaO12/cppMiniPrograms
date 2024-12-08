@@ -146,7 +146,7 @@ Board getPath(Node_State* win) {
     Board path(win->getBoard());
     Node_State* current = win;
 
-    std::cout << "Tracing back the path...\n";
+    cout << "Tracing back the path...\n";
     while (current != nullptr) {
         Tile playerTile = current->getBoard().getPlayerTile();
         path.getTile(playerTile.getRow(), playerTile.getCol()).setValue(8);
@@ -159,23 +159,25 @@ Board getPath(Node_State* win) {
 
         //Color the path between playerTile and parentTile
         if (playerTile.getRow() == parentTile.getRow()) { // Same row
-            int startCol = std::min(playerTile.getCol(), parentTile.getCol());
-            int endCol = std::max(playerTile.getCol(), parentTile.getCol());
+            int startCol = min(playerTile.getCol(), parentTile.getCol());
+            int endCol = max(playerTile.getCol(), parentTile.getCol());
             for (int i = startCol; i <= endCol; i++) {
                 path.getTile(playerTile.getRow(), i).setValue(8);
             }
         } else if (playerTile.getCol() == parentTile.getCol()) { // Same column
-            int startRow = std::min(playerTile.getRow(), parentTile.getRow());
-            int endRow = std::max(playerTile.getRow(), parentTile.getRow());
+            int startRow = min(playerTile.getRow(), parentTile.getRow());
+            int endRow = max(playerTile.getRow(), parentTile.getRow());
             for (int i = startRow; i <= endRow; i++) {
                 path.getTile(i, playerTile.getCol()).setValue(8);
             }
         }
 
         current = parent; // Move to the next node
+        /* printBoard(path);
+        system("sleep 3s; clear"); */
     }
 
-    std::cout << "Path tracing completed.\n";
+    cout << "Path tracing completed.\n";
     return path;
 }
 
