@@ -7,7 +7,7 @@
 #include"../structure/board.h"
 #include"../logic/helper_functions.h"
 #include"../include/main.h"
-#include"algorithm_helper.h"
+
 
 void bfs(Board board){
 
