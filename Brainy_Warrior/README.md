@@ -203,6 +203,11 @@ To print the final path that the algorithm got from start node to end node (win 
 
 _Pictures above show the path of BFS on level 5_
 
+### Wizard Movement
+
+When a board is initialized, Wizard tiles are collected for later use, they're put in a circular queue, and the Wizard moves upon that, unless the player has used up the Wizard, they can still move the Wizard clockwise.
+
+
 ## Resources
 
 **General:**
