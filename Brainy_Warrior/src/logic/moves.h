@@ -330,36 +330,39 @@ Board slideDown(Board& b){
     return b;
 }
 
+circularq getWizardTiles(Board& board){
+
+    int n = board.getN();
+    int m = board.getM();
+
+    circularq wizTiles;
+
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < m; j++) {
+            if(board.getTile(i, j).getValue() == 3 || board.getTile(i, j).getValue() == 7){
+                if(board.getTile(i, j).getValue() == 7) currentWizard = board.getTile(i, j);
+
+                wizTiles.push(board.getTile(i, j));
+            }
+        }
+    }
+
+    wizTiles.tiles.empty() ? WIZMOVED = true : WIZMOVED = false;
+    return wizTiles;
+}
+
 Board moveWizard(Board& board){
 
     if(WIZMOVED){
         cout<<"Used up your wizard moves!\n";
         return board;
     }
-    int n = board.getN();
-    int m = board.getM();
-    Tile currentWizard; 
-    Tile nextWizard;
+    Tile nextWizard; 
 
-    for (int i = 0; i < n; i++) {
-        for (int j = 0; j < m; j++) {
-            if(board.getTile(i, j).getValue() == 7){
-                currentWizard = board.getTile(i, j);
-                break;
-            }
-        }
-    }
-
-    for (int i = 0; i < n; i++) {
-        for (int j = 0; j < m; j++) {
-            if(board.getTile(i, j).getValue() == 3){
-                nextWizard = board.getTile(i, j);
-                break;
-            }
-        }
-    }
+    nextWizard = WIZARDTILES.nextTile();
 
     swapTiles(board , currentWizard, nextWizard);
+    currentWizard = nextWizard;
     return board;
 }
 

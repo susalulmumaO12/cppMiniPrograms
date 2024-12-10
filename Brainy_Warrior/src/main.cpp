@@ -126,6 +126,8 @@ int main() {
         }
     }
 
+   WIZARDTILES = getWizardTiles(board);
+
     int difficulty;
     cout<<"\033[38;5;42mChoose difficulty level:\033[0m \n\033[48;5;30m\033[38;5;231m1) Easy (tile move style)\033[0m\033[0m\n\033[48;5;161m\033[38;5;231m2) Hard (slide style)\033[0m\033[0m\n";
     cin>>difficulty;
