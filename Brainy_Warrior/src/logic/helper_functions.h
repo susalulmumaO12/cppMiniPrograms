@@ -4,6 +4,8 @@
 #define DEBUG false
 
 #include<iostream>
+#include <fstream>
+#include <nlohmann/json.hpp>
 #include<list>
 #include<vector>
 #include<cmath>
@@ -13,7 +15,47 @@
 #include"../include/main.h"
 #include"moves.h"
 
+using json = nlohmann::json;
+
 using namespace std;
+
+Board set_game_board(int levelChoice){
+    ifstream inputFile("../src/levels.json");
+    if (!inputFile.is_open()) {
+        cerr << "Error opening levels.json file!" << endl;
+        exit(0);
+    }
+
+    // construct a string with level name "level i"
+    string levelName = "level " + to_string(levelChoice);
+
+    // create an empty structure (null)
+    json j;
+    inputFile >> j;
+
+    if (j.find(levelName) == j.end()) {
+        cerr<<"Level "<<levelChoice<<" not found!"<<endl;
+        exit(0);
+    }
+
+
+
+    // level data from json file
+    auto& levelData = j[levelName];
+    int n = levelData.size();
+    int m = levelData[0].size();
+
+    // create board from json data
+    Board board(n, m);
+
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < m; j++) {
+            board.getTile(i, j).setValue(levelData[i][j]);
+        }
+    }
+
+    return board;
+}
 
 list<Node_State> get_next_cost_states(Node_State* board){
     list<Node_State> states;
