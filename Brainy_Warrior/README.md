@@ -228,7 +228,7 @@ When a board is initialized, Wizard tiles are collected for later use, they're p
 
 ## Draft of the thinking process
 
-<img src="./screenshot/page1.png" alt="level 1" height="300" /> <img src="./screenshot/page2.png" alt="level 1" height="300" /> <img src="./screenshot/page3.png" alt="level 1" height="300" />
+<img src="./screenshot/page1.png" alt="level 1" height="300" /> <img src="./screenshot/page2.png" alt="level 1" height="300" /> <img src="./screenshot/page3.png" alt="level 1" height="300" /> <img src="./screenshot/wizard.png" height="300" />
 
 ## Future Improvements
 
