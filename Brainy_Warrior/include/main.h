@@ -26,6 +26,7 @@ bool SLIDE = false;
 bool WIZMOVED = false;
 circularq WIZARDTILES;
 Tile currentWizard;
+int SCORE;
 
 enum dist { man, euc, mink, cheb };
 

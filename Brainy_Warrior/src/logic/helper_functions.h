@@ -13,7 +13,37 @@
 #include"../include/main.h"
 #include"moves.h"
 
+using json = nlohmann::json;
+
 using namespace std;
+
+void updateScore(const string& playerName, int newScore) {
+    json scores;
+
+    // Load existing scores
+    ifstream inputFile("../scores.json");
+    if (inputFile.is_open()) {
+        inputFile >> scores;
+        inputFile.close();
+    }
+
+    // Check and update the score
+    if (!scores["players"].contains(playerName)) {
+        scores["players"][playerName] = newScore;
+    } else if (scores["players"][playerName].get<int>() < newScore) {
+        cout << "New high score! " << newScore << endl;
+        scores["players"][playerName] = newScore;
+    } else {
+        cout << "Score: "<< SCORE << endl;
+    }
+
+    // Save updated scores back to the file
+    ofstream outputFile("../scores.json");
+    if (outputFile.is_open()) {
+        outputFile << scores.dump(4); // Indent with 4 spaces for readability
+        outputFile.close();
+    }
+}
 
 list<Node_State> get_next_cost_states(Node_State* board){
     list<Node_State> states;
