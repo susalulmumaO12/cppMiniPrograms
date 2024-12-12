@@ -17,7 +17,7 @@ using json = nlohmann::json;
 
 using namespace std;
 
-void updateScore(const string& playerName, int newScore) {
+void updateScore(const string& playerName, int level) {
     json scores;
 
     // Load existing scores
@@ -26,15 +26,22 @@ void updateScore(const string& playerName, int newScore) {
         inputFile >> scores;
         inputFile.close();
     }
+    string levelName = "level " + to_string(level);
+    string method = SLIDE? "slide" : "move";
 
     // Check and update the score
-    if (!scores["players"].contains(playerName)) {
-        scores["players"][playerName] = newScore;
-    } else if (scores["players"][playerName].get<int>() < newScore) {
-        cout << "New high score! " << newScore << endl;
-        scores["players"][playerName] = newScore;
-    } else {
-        cout << "Score: "<< SCORE << endl;
+    if (!scores["levels"][levelName].contains(playerName)) {
+        scores["levels"][levelName][playerName][method] = SCORE;
+    } 
+    else {
+        if(scores["levels"][levelName][playerName].contains(method)){
+            if (scores["levels"][levelName][playerName][method].get<int>() < SCORE) {
+                cout << "New high score! " << SCORE << endl;
+            }
+        } else {
+            cout << "Score: "<< SCORE << endl;
+        }
+            scores["levels"][levelName][playerName][method] = SCORE;
     }
 
     // Save updated scores back to the file

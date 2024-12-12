@@ -165,7 +165,7 @@ int main() {
 
             if(board.win()){
                 cout<<"\033[38;5;226mYOU WIN!\033[0m\n";
-                updateScore(name, SCORE);
+                updateScore(name, levelChoice);
                 return 0;
             }
         }
