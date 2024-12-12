@@ -57,6 +57,41 @@ Board set_game_board(int levelChoice){
     return board;
 }
 
+void updateScore(const string& playerName, int level) {
+    json scores;
+
+    // Load existing scores
+    ifstream inputFile("../scores.json");
+    if (inputFile.is_open()) {
+        inputFile >> scores;
+        inputFile.close();
+    }
+    string levelName = "level " + to_string(level);
+    string method = SLIDE? "slide" : "move";
+
+    // Check and update the score
+    if (!scores["levels"][levelName].contains(playerName)) {
+        scores["levels"][levelName][playerName][method] = SCORE;
+    } 
+    else {
+        if(scores["levels"][levelName][playerName].contains(method)){
+            if (scores["levels"][levelName][playerName][method].get<int>() < SCORE) {
+                cout << "New high score! " << SCORE << endl;
+            }
+        } else {
+            cout << "Score: "<< SCORE << endl;
+        }
+            scores["levels"][levelName][playerName][method] = SCORE;
+    }
+
+    // Save updated scores back to the file
+    ofstream outputFile("../scores.json");
+    if (outputFile.is_open()) {
+        outputFile << scores.dump(4); // Indent with 4 spaces for readability
+        outputFile.close();
+    }
+}
+
 list<Node_State> get_next_cost_states(Node_State* board){
     list<Node_State> states;
     

@@ -367,6 +367,7 @@ Board moveWizard(Board& board){
 }
 
 Board move(Board& b, char m){
+    SCORE++;
     switch(tolower(m)){
         case 'i':
         case 'w':

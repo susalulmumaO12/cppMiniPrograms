@@ -228,17 +228,17 @@ When a board is initialized, Wizard tiles are collected for later use, they're p
 
 ## Draft of the thinking process
 
-<img src="./screenshot/page1.png" alt="level 1" height="300" /> <img src="./screenshot/page2.png" alt="level 1" height="300" /> <img src="./screenshot/page3.png" alt="level 1" height="300" />
+<img src="./screenshot/page1.png" alt="level 1" height="300" /> <img src="./screenshot/page2.png" alt="level 1" height="300" /> <img src="./screenshot/page3.png" alt="level 1" height="300" /> <img src="./screenshot/wizard.png" height="300" />
 
 ## Future Improvements
 
 There are various ways to improve the game which is currently under construction:
 
-- Make TUI, using ncurses possibly.
-- Optimize time complexity of computer playing
-- Implement levels with wizard (above 5 on the original game website)
-- Track score for players based on name, and number of steps
-- Improve the experience on the console
+- [ ] Make TUI, using ncurses possibly.
+- [ ] Optimize time complexity of computer playing
+- [X] Implement levels with wizard (above 5 on the original game website)
+- [ ] Track score for players based on name, and number of steps
+- [ ] Improve the experience on the console
 
 ## Old Looks
 
