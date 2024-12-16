@@ -25,6 +25,8 @@ __________               .__                __      __                     .__
     - [Algorithms](#algorithms)
     - [Heuristics Calculation](#heuristics-calculation)
     - [Path Retrieval](#path-retrieval)
+    - [Wizard Movement](#wizard-movement)
+- [**Scoring System**](#scoring-system)
 - [**Resources**](#resources)
 - [**Draft of the thinking process**](#draft-of-the-thinking-process)
 - [**Future Improvements**](#future-improvements)
@@ -206,7 +208,25 @@ _Pictures above show the path of BFS on level 5_
 ### Wizard Movement
 
 When a board is initialized, Wizard tiles are collected for later use, they're put in a circular queue, and the Wizard moves upon that, unless the player has used up the Wizard, they can still move the Wizard clockwise.
+## Scoring System
 
+Scoring system only keeps track of hard mode for every level overtime, like this:
+
+_NOTE: easy mode will no longer exist, as it doesn't make sense, it was there for educational purposes only._
+
+<table>
+<thead>
+<th colspan="2">Level 3</th>
+</thead>
+<tbody>
+<tr><th>Name</th><th>Score</th></tr>
+<tr><td>Alice</td><td>3</td></tr>
+<tr><td>Bob</td><td>7</td></tr>
+<tr><td>Carol</td><td>15</td></tr>
+</tbody>
+</table>
+
+_Numbers above are trivial_
 
 ## Resources
 
@@ -215,6 +235,7 @@ When a board is initialized, Wizard tiles are collected for later use, they're p
 - [ANSI escape code](https://en.wikipedia.org/wiki/ANSI_escape_code)
 - [Working with Conan and CMake](https://www.codeproject.com/Articles/5385907/Managing-Cplusplus-Projects-with-Conan-and-CMake)
 - [ASCII art Generator (for the banner)](https://patorjk.com/software/taag/#p=display&f=Graffiti&t=Brainy%20Warrior)
+- [Alice and Bob](https://en.wikipedia.org/wiki/Alice_and_Bob)
 
 **Algorithms:**
 - [A* (A-Star) algorithm](https://en.wikipedia.org/wiki/A*_search_algorithm)
