@@ -33,22 +33,56 @@ void updateScore(const string& playerName, int level) {
     if (!scores["levels"][levelName].contains(playerName)) {
         scores["levels"][levelName][playerName][method] = SCORE;
     } 
-    else {
-        if(scores["levels"][levelName][playerName].contains(method)){
-            if (scores["levels"][levelName][playerName][method].get<int>() < SCORE) {
-                cout << "New high score! " << SCORE << endl;
+void updateScore(const string& playerName, int level) {
+    json scores;
+    string filePath = "../scores.json";
+
+    ifstream inputFile(filePath);
+    if (!inputFile.is_open()) {
+        //file doesn't exist, create it with an empty JSON object
+        ofstream outputFile(filePath);
+        if (outputFile.is_open()) {
+            //initialize with empty JSON
+            outputFile << "{}";
+            outputFile.close();
             }
         } else {
-            cout << "Score: "<< SCORE << endl;
+        try {
+            inputFile >> scores;
+        } catch (json::parse_error& e) {
+            //if the file is empty or has invalid JSON, initialize it
+            cerr << "Error parsing scores.json, reinitializing file." << endl;
+            scores = json::object();
         }
-            scores["levels"][levelName][playerName][method] = SCORE;
+        inputFile.close();
     }
 
-    // Save updated scores back to the file
-    ofstream outputFile("../scores.json");
+    // Update the player's score
+    string levelName = "level " + to_string(level);
+
+    // Ensure the structure exists and update the score
+    if (!scores.contains("levels")) {
+        scores["levels"] = json::object();
+        }
+    if (!scores["levels"].contains(levelName)) {
+        scores["levels"][levelName] = json::object();
+    }
+    if (!scores["levels"][levelName].contains(playerName) || 
+        scores["levels"][levelName][playerName]["score"].get<int>() < SCORE) {
+        scores["levels"][levelName][playerName]["score"] = SCORE;
+        cout << "New high score for " << playerName << " on " << levelName << ": " << SCORE << endl;
+    } else {
+        cout << playerName << "'s score remains: " 
+             << scores["levels"][levelName][playerName]["score"] << endl;
+    }
+
+    // Save the updated JSON back to the file
+    ofstream outputFile(filePath);
     if (outputFile.is_open()) {
-        outputFile << scores.dump(4); // Indent with 4 spaces for readability
+        outputFile << scores.dump(4);
         outputFile.close();
+    } else {
+        cerr << "Error: Unable to write to scores.json" << endl;
     }
 }
 
