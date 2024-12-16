@@ -26,7 +26,7 @@ __________               .__                __      __                     .__
     - [Heuristics Calculation](#heuristics-calculation)
     - [Path Retrieval](#path-retrieval)
     - [Wizard Movement](#wizard-movement)
-- [**Scoring System**](#scoring-system)
+- [**Scoring System and Stats**](#scoring-system-and-stats)
 - [**Resources**](#resources)
 - [**Draft of the thinking process**](#draft-of-the-thinking-process)
 - [**Future Improvements**](#future-improvements)
@@ -208,25 +208,27 @@ _Pictures above show the path of BFS on level 5_
 ### Wizard Movement
 
 When a board is initialized, Wizard tiles are collected for later use, they're put in a circular queue, and the Wizard moves upon that, unless the player has used up the Wizard, they can still move the Wizard clockwise.
-## Scoring System
+## Scoring System and Stats
 
-Scoring system only keeps track of hard mode for every level overtime, like this:
+Scoring system only keeps track of hard mode for every level overtime, and keeps stats for each player like number of times played and number of wins, like this:
 
 _NOTE: easy mode will no longer exist, as it doesn't make sense, it was there for educational purposes only._
 
 <table>
 <thead>
-<th colspan="2">Level 3</th>
+<th colspan="4" text-align="center">Level 3</th>
 </thead>
 <tbody>
-<tr><th>Name</th><th>Score</th></tr>
-<tr><td>Alice</td><td>3</td></tr>
-<tr><td>Bob</td><td>7</td></tr>
-<tr><td>Carol</td><td>15</td></tr>
+<tr><th>Name</th><th>Score</th><th>Tries</th><th>Wins</th></tr>
+<tr><td>Alice</td><td>3</td><td>1</td><td>1</td></tr>
+<tr><td>Bob</td><td>7</td><td>2</td><td>2</td></tr>
+<tr><td>Carol</td><td>15</td><td>5</td><td>1</td></tr>
 </tbody>
 </table>
 
 _Numbers above are trivial_
+
+_Highest score is in fact the least score, it indicates number of moves_
 
 ## Resources
 
@@ -258,7 +260,9 @@ There are various ways to improve the game which is currently under construction
 - [ ] Make TUI, using ncurses possibly.
 - [ ] Optimize time complexity of computer playing
 - [X] Implement levels with wizard (above 5 on the original game website)
-- [ ] Track score for players based on name, and number of steps
+- [X] Track score for players based on name, and number of steps
+- [ ] Print scores and stats
+- [ ] Main-menu
 - [ ] Improve the experience on the console
 
 ## Old Looks

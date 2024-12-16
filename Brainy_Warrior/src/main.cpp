@@ -156,6 +156,7 @@ int main() {
 
             if(player.getValue() == -1){
                 cout<<"\033[31mGAME OVER! You drowned...\033[0m\n";
+                updateStats(name, levelChoice, false);
                 return 0;
             }
 
@@ -165,7 +166,7 @@ int main() {
 
             if(board.win()){
                 cout<<"\033[38;5;226mYOU WIN!\033[0m\n";
-                updateScore(name, levelChoice);
+                updateStats(name, levelChoice, true);
                 return 0;
             }
         }
