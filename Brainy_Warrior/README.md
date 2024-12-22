@@ -104,7 +104,8 @@ _move_ function only moves one tile at a time.
 
 ### Algorithms
 
->_**Caution!** any explanation on the algorithms below is specific to my implementation and is not necesserily accurate._
+> [!IMPORTANT]
+> _any explanation on the algorithms below is specific to my implementation and is not necesserily accurate._
 
 **Breadth-First-Search:**
 
@@ -128,7 +129,8 @@ _move_ function only moves one tile at a time.
 
 ### Heuristics Calculation
 
->**Note:** the game restricts movement to 4 directions, Manhattan Distance is the most logical way to calculate distance, the other methods are experimental only. 
+> [!NOTE]
+> The game restricts movement to 4 directions, Manhattan Distance is the most logical way to calculate distance, the other methods are experimental only. 
 
 When user selcets compuetr as the player, the game prompts the user to choose heuristic calculation method, `distance` function takes two parameters of type `Tile`, `t1` and `t2`, here are the implemented methods so far:
 
@@ -212,7 +214,8 @@ When a board is initialized, Wizard tiles are collected for later use, they're p
 
 Scoring system only keeps track of hard mode for every level overtime, and keeps stats for each player like number of times played and number of wins, like this:
 
-_NOTE: easy mode will no longer exist, as it doesn't make sense, it was there for educational purposes only._
+> [!NOTE]
+> _Easy mode will no longer exist, as it doesn't make sense, it was there for educational purposes only._
 
 <table>
 <thead>
