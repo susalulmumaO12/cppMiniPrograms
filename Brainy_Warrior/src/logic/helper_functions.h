@@ -41,10 +41,12 @@ void printScores(int level){
         score_pairs.push_back({playerScore, playerName});
     }
 
+    sort(score_pairs.begin(), score_pairs.end());
+
     cout<< "Name | Score\n";
     for(auto player : score_pairs) {
         cout<< player.second <<" | " << player.first <<endl;
-    } 
+    }
 }
 
 void updateStats(const string& playerName, int level, bool win) {
@@ -66,13 +68,13 @@ void updateStats(const string& playerName, int level, bool win) {
         if (outputFile.is_open()) {
             outputFile << "{}";
             outputFile.close();
-            }
+        }
         stats = json::object();
     }
 
     if (!stats.contains("levels")) {
         stats["levels"] = json::object();
-        }
+    }
     if (!stats["levels"].contains(levelName)) {
         stats["levels"][levelName] = json::object();
     }
@@ -87,7 +89,8 @@ void updateStats(const string& playerName, int level, bool win) {
     }
 
     if (!stats["levels"][levelName][playerName].contains("score") || 
-        SCORE > stats["levels"][levelName][playerName]["score"].get<int>()) {
+        (SCORE < stats["levels"][levelName][playerName]["score"].get<int>() ||
+        stats["levels"][levelName][playerName]["score"].get<int>() == 0)) {
         cout << "New best score for " << playerName << "! Score: " << SCORE << endl;
         stats["levels"][levelName][playerName]["score"] = SCORE;
     }
