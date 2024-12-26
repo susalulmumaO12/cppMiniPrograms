@@ -17,22 +17,36 @@ using json = nlohmann::json;
 
 using namespace std;
 
-void updateScore(const string& playerName, int level) {
+void printScores(int level){
     json scores;
+    vector<pair<int, string>> score_pairs;
 
-    // Load existing scores
-    ifstream inputFile("../scores.json");
+    // Load existing stats
+    ifstream inputFile("../stats.json");
     if (inputFile.is_open()) {
         inputFile >> scores;
         inputFile.close();
     }
     string levelName = "level " + to_string(level);
-    string method = SLIDE? "slide" : "move";
 
-    // Check and update the score
-    if (!scores["levels"][levelName].contains(playerName)) {
-        scores["levels"][levelName][playerName][method] = SCORE;
+    if(!scores["levels"].contains(levelName)){
+        cout<<"No one played this level yet!\n";
+        return;
+    }
+
+    for(auto player : scores["levels"][levelName].items()) {
+        string playerName = player.key();
+        int playerScore = player.value()["score"];
+
+        score_pairs.push_back({playerScore, playerName});
+    }
+
+    cout<< "Name | Score\n";
+    for(auto player : score_pairs) {
+        cout<< player.second <<" | " << player.first <<endl;
     } 
+}
+
 void updateStats(const string& playerName, int level, bool win) {
     json stats;
     string filePath = "../stats.json";

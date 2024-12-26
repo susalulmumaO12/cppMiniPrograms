@@ -167,6 +167,10 @@ int main() {
             if(board.win()){
                 cout<<"\033[38;5;226mYOU WIN!\033[0m\n";
                 updateStats(name, levelChoice, true);
+
+                cout<< "Print scores? (y/n)\n";
+                char yn; cin>>yn;
+                tolower(yn) == 'y' ? printScores(levelChoice) : exit(0);
                 return 0;
             }
         }
