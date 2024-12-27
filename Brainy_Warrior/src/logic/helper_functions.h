@@ -19,7 +19,7 @@ using namespace std;
 
 void printScores(int level){
     json scores;
-    vector<pair<int, string>> score_pairs;
+    vector<pair<int, pair<int, pair< int, string>>>> score_pairs;
 
     // Load existing stats
     ifstream inputFile("../stats.json");
@@ -37,15 +37,17 @@ void printScores(int level){
     for(auto player : scores["levels"][levelName].items()) {
         string playerName = player.key();
         int playerScore = player.value()["score"];
+        int playerTries = player.value()["tries"];
+        int playerWins = player.value()["wins"];
 
-        score_pairs.push_back({playerScore, playerName});
+        score_pairs.push_back({playerScore, { playerTries, {playerWins ,playerName}}});
     }
 
     sort(score_pairs.begin(), score_pairs.end());
 
-    cout<< "Name | Score\n";
+    cout<< "Name | Score | Tries | Wins\n";
     for(auto player : score_pairs) {
-        cout<< player.second <<" | " << player.first <<endl;
+        cout<< player.second.second.second <<" | " << player.first << " | " << player.second.first << " | " << player.second.second.first <<endl;
     }
 }
 
