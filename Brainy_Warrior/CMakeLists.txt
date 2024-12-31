@@ -22,7 +22,6 @@ add_executable(Brainy_Warrior
     ${LOGIC_DIR}/moves.h
     ${GAME_SOLVER_DIR}/breadth_first_search.h
     ${GAME_SOLVER_DIR}/depth_first_search.h
-    ${GAME_SOLVER_DIR}/algorithm_helper.h
     ${GAME_SOLVER_DIR}/uniform_cost_search.h
     ${GAME_SOLVER_DIR}/hill_climbing.h
     ${GAME_SOLVER_DIR}/A_star_search.h

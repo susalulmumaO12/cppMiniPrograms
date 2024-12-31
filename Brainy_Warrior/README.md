@@ -25,6 +25,8 @@ __________               .__                __      __                     .__
     - [Algorithms](#algorithms)
     - [Heuristics Calculation](#heuristics-calculation)
     - [Path Retrieval](#path-retrieval)
+    - [Wizard Movement](#wizard-movement)
+- [**Scoring System and Stats**](#scoring-system-and-stats)
 - [**Resources**](#resources)
 - [**Draft of the thinking process**](#draft-of-the-thinking-process)
 - [**Future Improvements**](#future-improvements)
@@ -102,7 +104,8 @@ _move_ function only moves one tile at a time.
 
 ### Algorithms
 
->_**Caution!** any explanation on the algorithms below is specific to my implementation and is not necesserily accurate._
+> [!IMPORTANT]
+> _any explanation on the algorithms below is specific to my implementation and is not necesserily accurate._
 
 **Breadth-First-Search:**
 
@@ -126,7 +129,8 @@ _move_ function only moves one tile at a time.
 
 ### Heuristics Calculation
 
->**Note:** the game restricts movement to 4 directions, Manhattan Distance is the most logical way to calculate distance, the other methods are experimental only. 
+> [!NOTE]
+> The game restricts movement to 4 directions, Manhattan Distance is the most logical way to calculate distance, the other methods are experimental only. 
 
 When user selcets compuetr as the player, the game prompts the user to choose heuristic calculation method, `distance` function takes two parameters of type `Tile`, `t1` and `t2`, here are the implemented methods so far:
 
@@ -206,7 +210,28 @@ _Pictures above show the path of BFS on level 5_
 ### Wizard Movement
 
 When a board is initialized, Wizard tiles are collected for later use, they're put in a circular queue, and the Wizard moves upon that, unless the player has used up the Wizard, they can still move the Wizard clockwise.
+## Scoring System and Stats
 
+Scoring system only keeps track of hard mode for every level overtime, and keeps stats for each player like number of times played and number of wins, like this:
+
+> [!NOTE]
+> _Easy mode will no longer exist, as it doesn't make sense, it was there for educational purposes only._
+
+<table>
+<thead>
+<th colspan="4" text-align="center">Level 3</th>
+</thead>
+<tbody>
+<tr><th>Name</th><th>Score</th><th>Tries</th><th>Wins</th></tr>
+<tr><td>Alice</td><td>3</td><td>1</td><td>1</td></tr>
+<tr><td>Bob</td><td>7</td><td>2</td><td>2</td></tr>
+<tr><td>Carol</td><td>15</td><td>5</td><td>1</td></tr>
+</tbody>
+</table>
+
+_Numbers above are trivial_
+
+_Highest score is in fact the least score, it indicates number of moves_
 
 ## Resources
 
@@ -215,6 +240,7 @@ When a board is initialized, Wizard tiles are collected for later use, they're p
 - [ANSI escape code](https://en.wikipedia.org/wiki/ANSI_escape_code)
 - [Working with Conan and CMake](https://www.codeproject.com/Articles/5385907/Managing-Cplusplus-Projects-with-Conan-and-CMake)
 - [ASCII art Generator (for the banner)](https://patorjk.com/software/taag/#p=display&f=Graffiti&t=Brainy%20Warrior)
+- [Alice and Bob](https://en.wikipedia.org/wiki/Alice_and_Bob)
 
 **Algorithms:**
 - [A* (A-Star) algorithm](https://en.wikipedia.org/wiki/A*_search_algorithm)
@@ -237,7 +263,9 @@ There are various ways to improve the game which is currently under construction
 - [ ] Make TUI, using ncurses possibly.
 - [ ] Optimize time complexity of computer playing
 - [X] Implement levels with wizard (above 5 on the original game website)
-- [ ] Track score for players based on name, and number of steps
+- [X] Track score for players based on name, and number of steps
+- [X] Print scores and stats
+- [ ] Main-menu
 - [ ] Improve the experience on the console
 
 ## Old Looks

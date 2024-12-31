@@ -57,38 +57,93 @@ Board set_game_board(int levelChoice){
     return board;
 }
 
-void updateScore(const string& playerName, int level) {
+void printScores(int level){
     json scores;
+    vector<pair<int, pair<int, pair< int, string>>>> score_pairs;
 
-    // Load existing scores
-    ifstream inputFile("../scores.json");
+    // Load existing stats
+    ifstream inputFile("../stats.json");
     if (inputFile.is_open()) {
         inputFile >> scores;
         inputFile.close();
     }
     string levelName = "level " + to_string(level);
-    string method = SLIDE? "slide" : "move";
 
-    // Check and update the score
-    if (!scores["levels"][levelName].contains(playerName)) {
-        scores["levels"][levelName][playerName][method] = SCORE;
-    } 
-    else {
-        if(scores["levels"][levelName][playerName].contains(method)){
-            if (scores["levels"][levelName][playerName][method].get<int>() < SCORE) {
-                cout << "New high score! " << SCORE << endl;
-            }
-        } else {
-            cout << "Score: "<< SCORE << endl;
-        }
-            scores["levels"][levelName][playerName][method] = SCORE;
+    if(!scores["levels"].contains(levelName)){
+        cout<<"No one played this level yet!\n";
+        return;
     }
 
-    // Save updated scores back to the file
-    ofstream outputFile("../scores.json");
+    for(auto player : scores["levels"][levelName].items()) {
+        string playerName = player.key();
+        int playerScore = player.value()["score"];
+        int playerTries = player.value()["tries"];
+        int playerWins = player.value()["wins"];
+
+        score_pairs.push_back({playerScore, { playerTries, {playerWins ,playerName}}});
+    }
+
+    sort(score_pairs.begin(), score_pairs.end());
+
+    cout<< "Name | Score | Tries | Wins\n";
+    for(auto player : score_pairs) {
+        cout<< player.second.second.second <<" | " << player.first << " | " << player.second.first << " | " << player.second.second.first <<endl;
+    }
+}
+
+void updateStats(const string& playerName, int level, bool win) {
+    json stats;
+    string filePath = "../stats.json";
+    string levelName = "level " + to_string(level);
+
+    ifstream inputFile(filePath);
+    if (inputFile.is_open()) {
+        try {
+            inputFile >> stats;
+        } catch (json::parse_error& e) {
+            cerr << "Error parsing stats.json. Initializing a new file." << endl;
+            stats = json::object();
+        }
+        inputFile.close();
+    } else {
+        ofstream outputFile(filePath);
+        if (outputFile.is_open()) {
+            outputFile << "{}";
+            outputFile.close();
+        }
+        stats = json::object();
+    }
+
+    if (!stats.contains("levels")) {
+        stats["levels"] = json::object();
+    }
+    if (!stats["levels"].contains(levelName)) {
+        stats["levels"][levelName] = json::object();
+    }
+    if (!stats["levels"][levelName].contains(playerName)) {
+        stats["levels"][levelName][playerName] = {{"tries", 0}, {"wins", 0}, {"score", 0}};
+    }
+
+    stats["levels"][levelName][playerName]["tries"] = stats["levels"][levelName][playerName]["tries"].get<int>() + 1;
+
+    if (win) {
+        stats["levels"][levelName][playerName]["wins"] = stats["levels"][levelName][playerName]["wins"].get<int>() + 1;
+    }
+
+    if (!stats["levels"][levelName][playerName].contains("score") || 
+        (SCORE < stats["levels"][levelName][playerName]["score"].get<int>() ||
+        stats["levels"][levelName][playerName]["score"].get<int>() == 0)) {
+        cout << "New best score for " << playerName << "! Score: " << SCORE << endl;
+        stats["levels"][levelName][playerName]["score"] = SCORE;
+    }
+
+    //save the updated stats
+    ofstream outputFile(filePath);
     if (outputFile.is_open()) {
-        outputFile << scores.dump(4); // Indent with 4 spaces for readability
+        outputFile << stats.dump(4);
         outputFile.close();
+    } else {
+        cerr << "Error: Unable to write to stats.json" << endl;
     }
 }
 
