@@ -1,14 +1,10 @@
 #include <iostream>
 #include "../include/main.h"
+#include "algorithms.h"
 #include "./structure/tile.h"
 #include "./structure/board.h"
 #include "./logic/helper_functions.h"
 #include "./logic/moves.h"
-#include "./game_solver/breadth_first_search.h"
-#include "./game_solver/depth_first_search.h"
-#include "./game_solver/uniform_cost_search.h"
-#include "./game_solver/A_star_search.h"
-#include "./game_solver/hill_climbing.h"
 
 using namespace std;
 
