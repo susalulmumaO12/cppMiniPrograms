@@ -1,5 +1,4 @@
-#ifndef A_STAR_SEARCH_H
-#define A_STAR_SEARCH_H
+#include "algorithms.h"
 
 #include<iostream>
 #include<queue>
@@ -11,6 +10,7 @@
 #include"../structure/board.h"
 #include"../structure/node_state.h"
 #include"../structure/tile.h"
+#include"../logic/helper_functions.h"
 #include"../include/main.h"
 
 
@@ -59,5 +59,3 @@ void a_star(Board board) {
         }
     }
 }
-
-#endif

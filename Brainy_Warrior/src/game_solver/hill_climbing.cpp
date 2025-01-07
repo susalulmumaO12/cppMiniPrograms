@@ -1,5 +1,4 @@
-#ifndef HILL_CLIMBING_H
-#define HILL_CLIMBING_H
+#include "algorithms.h"
 
 #include<iostream>
 #include<queue>
@@ -12,8 +11,8 @@
 #include"../structure/board.h"
 #include"../structure/node_state.h"
 #include"../structure/tile.h"
-#include"../include/main.h"
 #include"../logic/helper_functions.h"
+#include"../include/main.h"
 
 
 using namespace std;
@@ -73,5 +72,3 @@ void hill_climbing(Board board) {
         }
     }
 }
-
-#endif

@@ -1,16 +1,16 @@
-#ifndef UNIFORM_COST_SEARCH_H
-#define UNIFORM_COST_SEARCH_H
+#include "algorithms.h"
 
 #include<iostream>
 #include<queue>
 #include<vector>
 #include<list>
 #include<climits>
-#include<unordered_map>
+#include<unordered_set>
 #include<string>
 #include"../structure/board.h"
 #include"../structure/node_state.h"
 #include"../structure/tile.h"
+#include"../logic/helper_functions.h"
 #include"../include/main.h"
 
 
@@ -54,5 +54,3 @@ void ucs(Board board){
 
 
 }
-
-#endif

@@ -1,27 +1,29 @@
-#ifndef BREADTH_FIRST_SEARCH_H
-#define BREADTH_FIRST_SEARCH_H
+#include "algorithms.h"
 
 #include<iostream>
 #include<unordered_set>
-#include<queue>
+#include<stack>
+#include"../structure/node_state.h"
 #include"../structure/board.h"
 #include"../logic/helper_functions.h"
 #include"../include/main.h"
 
 
-void bfs(Board board){
 
-    queue<Node_State> q;
+void dfs(Board board){
+
+    stack<Node_State> s;
     unordered_set<string> visitedStates;
+
     Node_State start(board, nullptr, 0, 0);
-    q.push(start);
+    s.push(start);
     visitedStates.insert(stringBoard(board));  
 
-    while(!q.empty()){
+    while(!s.empty()){
 
-        Node_State current(q.front());
+        Node_State current(s.top());
         printBoard(current.getBoard());
-        q.pop();
+        s.pop();
 
         if(current.getBoard().win()){
             cout<<"\033[38;5;226mYOU WIN!\033[0m\n";
@@ -35,11 +37,8 @@ void bfs(Board board){
             string stateHash = stringBoard(state.getBoard());
             if (visitedStates.find(stateHash) == visitedStates.end()) {
                 visitedStates.insert(stateHash);
-                q.push(state);
+                s.push(state);
             }
         }
-
     }
 }
-
-#endif
