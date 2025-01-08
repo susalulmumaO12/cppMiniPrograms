@@ -20,11 +20,11 @@ add_executable(Brainy_Warrior
     ${STRUCTURE_DIR}/tile.cpp
     ${LOGIC_DIR}/helper_functions.h
     ${LOGIC_DIR}/moves.h
-    ${GAME_SOLVER_DIR}/breadth_first_search.h
-    ${GAME_SOLVER_DIR}/depth_first_search.h
-    ${GAME_SOLVER_DIR}/uniform_cost_search.h
-    ${GAME_SOLVER_DIR}/hill_climbing.h
-    ${GAME_SOLVER_DIR}/A_star_search.h
+    ${GAME_SOLVER_DIR}/breadth_first_search.cpp
+    ${GAME_SOLVER_DIR}/depth_first_search.cpp
+    ${GAME_SOLVER_DIR}/uniform_cost_search.cpp
+    ${GAME_SOLVER_DIR}/hill_climbing.cpp
+    ${GAME_SOLVER_DIR}/A_star_search.cpp
 )
 
 #include headers
