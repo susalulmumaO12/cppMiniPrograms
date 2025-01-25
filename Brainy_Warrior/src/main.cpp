@@ -1,10 +1,18 @@
 #include <iostream>
-#include "../include/main.h"
 #include "algorithms.h"
-#include "./structure/tile.h"
-#include "./structure/board.h"
-#include "./logic/helper_functions.h"
-#include "./logic/moves.h"
+#include "tile.h"
+#include "board.h"
+#include "helper_functions.h"
+#include "moves.h"
+#include "main.h"
+
+// defining ddefault value for each global variable
+bool SLIDE = false;
+bool WIZMOVED = false;
+circularq WIZARDTILES;
+Tile currentWizard;
+int SCORE = 0;
+dist distanceType = man;
 
 using namespace std;
 
@@ -131,7 +139,7 @@ int main() {
                 return 0;
             }
         }
-
+    // COMPUTER PLAYING
     } else if (playingOption == 2){
 
         distanceType = getDistanceType();

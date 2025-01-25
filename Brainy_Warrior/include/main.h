@@ -22,17 +22,16 @@ struct circularq {
 };
 
 //slide or move tile by tile
-bool SLIDE = false;
-bool WIZMOVED = false;
-circularq WIZARDTILES;
-Tile currentWizard;
-int SCORE;
+extern bool SLIDE;
+extern bool WIZMOVED;
+extern circularq WIZARDTILES;
+extern Tile currentWizard;
+extern int SCORE;
 
 enum dist { man, euc, mink, cheb };
+extern dist distanceType;
 
 void printBoard(Board board);
-
 dist getDistanceType();
-dist distanceType;
 
 #endif
