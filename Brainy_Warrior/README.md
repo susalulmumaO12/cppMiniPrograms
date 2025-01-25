@@ -1,16 +1,15 @@
 <pre><strong>
 
-
-__________               .__                __      __                     .__              
-\______   \____________  |__| ____ ___.__. /  \    /  \_____ ______________|__| ___________ 
- |    |  _/\_  __ \__  \ |  |/    <   |  | \   \/\/   /\__  \\_  __ \_  __ \  |/  _ \_  __ \
- |    |   \ |  | \// __ \|  |   |  \___  |  \        /  / __ \|  | \/|  | \/  (  <_> )  | \/
- |______  / |__|  (____  /__|___|  / ____|   \__/\  /  (____  /__|   |__|  |__|\____/|__|   
-        \/             \/        \/\/             \/        \/                              
+        __________               .__                __      __                     .__              
+        \______   \____________  |__| ____ ___.__. /  \    /  \_____ ______________|__| ___________ 
+         |    |  _/\_  __ \__  \ |  |/    <   |  | \   \/\/   /\__  \\_  __ \_  __ \  |/  _ \_  __ \
+         |    |   \ |  | \// __ \|  |   |  \___  |  \        /  / __ \|  | \/|  | \/  (  <_> )  | \/
+         |______  / |__|  (____  /__|___|  / ____|   \__/\  /  (____  /__|   |__|  |__|\____/|__|   
+                \/             \/        \/\/             \/        \/                              
 
 </strong>
 </pre>
-[Brainy Warrior](https://www.coolmathgames.com/0-brainy-warrior) is a puzzle game, the goal of the game is to defeat all enemies, by moving (sliding) towards them, if you don't have an enemy to defeat or a wall to stop you from running, you'll fall right into the water.
+[Brainy Warrior](https://www.coolmathgames.com/0-brainy-warrior) is a puzzle game, the goal of the game is to defeat all enemies, by moving (sliding) towards them, if there is no enemy or wall standing in your way, you might fall into the sea!
 
 **Table of Contents:**
 
@@ -44,7 +43,6 @@ _In the pictures above_ `5` _is considered a target/ enemy and_ `9` _is the play
 
 ## Game Flow
 <!-- 
-TODO display a flow chart 
 TODO screenshots of user prompts
 -->
 Below is a flowchart that demonstrates the game flow ([display full size](./screenshot/flowchart.png)):
@@ -89,52 +87,56 @@ The game utilizes a 2D board of tiles to maintain state in general. A `Tile` is 
 
 ### Movement Functions
 
-**canMove-** functions check for walls and edges of the board but they do not consider neighboring sea an invalid move. So they should be used in user movement functions.
+Movement function `move` takes in either WASD or IJKL to process the direction of movement.
 
-**Move** functions operate in the following way:
+A directed movement function `moveX` (where X is the direction), checks if movement is valid, by calling `canMoveX`, then if valid it does the following:
+
+```pseudo
+next = 0? // sea
+    player = -1 // GAME OVER
+next = 1? // land
+    swap(player, next)
+next = 5, 7? // enemy, wizard
+    swap(player, next)
+    next = 7? WIZARDUSED = true // player can no longer use wizard
 ```
-    canMove-()? move-: pop up "invalid move!";
-    move-{
-        if next is sea: game over!;
-        else if next is target: replace target tile;
-        else return newBoard;
-    }
-```
-_move_ function only moves one tile at a time.
+
+> [!NOTE]
+> A valid movement means there's no wall blocking the way, hence player might fall into the sea.
 
 ### Algorithms
 
 > [!IMPORTANT]
-> _any explanation on the algorithms below is specific to my implementation and is not necesserily accurate._
+> _any explanation on the algorithms below is specific to my implementation and is not necessarily accurate._
 
-**Breadth-First-Search:**
+#### Breadth-First-Search:
 
 **BFS** function takes in a _board_, and generates costless states and itarates over them in a queue until _win_ state is met, and maintains an unordered set of stringBoard to avoid revisiting the same node, **stringBoard** is basically the board as a **1D** array of chars put into a string row by row.
 
-**Depth-First-Search:**
+#### Depth-First-Search:
 
 **DFS** function also takes in a _board_, the only difference in implementation between DFS and BFS is that it uses a stack to store the generated costless states and _itarates_ over them (not recursivley).
 
-**Uniform-Cost-Search:**
+#### Uniform-Cost-Search:
 
 **UCS** implementation is pretty similar to BFS, as it also uses a queue, key difference is that it's a priority queue (min heap), hence, it generates costly states, with a different value for each direction of movement.
 
-**Simple Hill Climbing:**
+#### Simple Hill Climbing:
 
 **Simple Hill Climbing** is very similar to **UCS** except for one key difference, instead of comparing over the g value (cost from start to current node) in the priority queue, we compare over the heuristic value, in the basic implementation I used **Manhattan Distance** formula, **Euclidean** method can also be used but it ignores the movement style in our game.
 
-**A_Star-Search:**
+#### A_Star-Search:
 
 **A\*** or **A_Star** is implemented with a priority queue and an unordered map, key point difference from uniform cost search is that it calculates heuristic and not just cost, there are many methods to achieve A_Star in our game, I chose the simplest one, starting with the closest target and with each movement the closest target is updated.
 
 ### Heuristics Calculation
 
 > [!NOTE]
-> The game restricts movement to 4 directions, Manhattan Distance is the most logical way to calculate distance, the other methods are experimental only. 
+> The game restricts movement to 4 directions, Manhattan Distance is the most logical way to calculate distance, the other methods are experimental only (for educational purposes).
 
 When user selcets compuetr as the player, the game prompts the user to choose heuristic calculation method, `distance` function takes two parameters of type `Tile`, `t1` and `t2`, here are the implemented methods so far:
 
-**Manhattan Distance:**
+#### Manhattan Distance:
 
 Measures the total grid-based distance (only horizontal and vertical moves are allowed).
 
@@ -150,7 +152,7 @@ $$
 ```cpp
 abs(t1.getRow()-t2.getRow()) + abs(t1.getCol()-t2.getCol());
 ```
-**Euclidean Distance:**
+#### Euclidean Distance:
 
 Measures the straight-line distance between two points.
 
@@ -165,7 +167,7 @@ $$
 ```cpp
 sqrt((t1.getRow()-t2.getRow())*(t1.getRow()-t2.getRow()) +(t1.getCol()-t2.getCol())*(t1.getCol()-t2.getCol()));
 ```
-**Minkowski Distance:**
+#### Minkowski Distance:
 
 A generalized distance metric where Manhattan and Euclidean distances are special cases (`p=1` and `p=2`, respectively).
 Formula: 
@@ -184,7 +186,7 @@ for (size_t i = 0; i < v1.size(); ++i) {
 return static_cast<int>(pow(sum, 1.0 / minkowskiP)); // P = 3
 ```
 
-**Chebyshev Distance:**
+#### Chebyshev Distance:
 
 The Chebyshev distance calculation, commonly known as the "maximum metric" in mathematics, measures distance between two points as the maximum difference over any of their axis values. In a 2D grid, for instance, if we have two points (x1, y1), and (x2, y2), the Chebyshev distance between is max(y2 - y1, x2 - x1).
 
@@ -210,6 +212,7 @@ _Pictures above show the path of BFS on level 5_
 ### Wizard Movement
 
 When a board is initialized, Wizard tiles are collected for later use, they're put in a circular queue, and the Wizard moves upon that, unless the player has used up the Wizard, they can still move the Wizard clockwise.
+
 ## Scoring System and Stats
 
 Scoring system only keeps track of hard mode for every level overtime, and keeps stats for each player like number of times played and number of wins, like this:
