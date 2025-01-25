@@ -1,17 +1,17 @@
-#ifndef A_STAR_SEARCH_H
-#define A_STAR_SEARCH_H
+#include "algorithms.h"
 
-#include<iostream>
-#include<queue>
-#include<vector>
-#include<list>
-#include<climits>
-#include<unordered_map>
-#include<string>
-#include"../structure/board.h"
-#include"../structure/node_state.h"
-#include"../structure/tile.h"
-#include"../include/main.h"
+#include <iostream>
+#include <queue>
+#include <vector>
+#include <list>
+#include <climits>
+#include <unordered_map>
+#include <string>
+#include "board.h"
+#include "node_state.h"
+#include "tile.h"
+#include "helper_functions.h"
+#include "main.h"
 
 
 using namespace std;
@@ -59,5 +59,3 @@ void a_star(Board board) {
         }
     }
 }
-
-#endif

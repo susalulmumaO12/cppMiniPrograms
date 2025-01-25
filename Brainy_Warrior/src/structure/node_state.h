@@ -1,8 +1,8 @@
 #ifndef NODE_STATE_H
 #define NODE_STATE_H
 
-#include<iostream>
-#include"board.h"
+#include <iostream>
+#include "board.h"
 
 class Node_State {
 private:

@@ -1,29 +1,30 @@
-#ifndef DEPTH_FIRST_SEARCH_H
-#define DEPTH_FIRST_SEARCH_H
+#include "algorithms.h"
 
-#include<iostream>
-#include<unordered_set>
-#include<stack>
-#include"../structure/board.h"
-#include"../include/main.h"
-#include"../logic/helper_functions.h"
+#include <iostream>
+#include <unordered_set>
+#include <queue>
+#include <list>
+#include "node_state.h"
+#include "board.h"
+#include "helper_functions.h"
+#include "main.h"
+
+using namespace std;
 
 
+void bfs(Board board){
 
-void dfs(Board board){
-
-    stack<Node_State> s;
+    queue<Node_State> q;
     unordered_set<string> visitedStates;
-
     Node_State start(board, nullptr, 0, 0);
-    s.push(start);
+    q.push(start);
     visitedStates.insert(stringBoard(board));  
 
-    while(!s.empty()){
+    while(!q.empty()){
 
-        Node_State current(s.top());
+        Node_State current(q.front());
         printBoard(current.getBoard());
-        s.pop();
+        q.pop();
 
         if(current.getBoard().win()){
             cout<<"\033[38;5;226mYOU WIN!\033[0m\n";
@@ -37,10 +38,9 @@ void dfs(Board board){
             string stateHash = stringBoard(state.getBoard());
             if (visitedStates.find(stateHash) == visitedStates.end()) {
                 visitedStates.insert(stateHash);
-                s.push(state);
+                q.push(state);
             }
         }
+
     }
 }
-
-#endif

@@ -1,12 +1,10 @@
-#ifndef MOVES_H
-#define MOVES_H
-
-#include<iostream>
+#include "moves.h"
+#include <iostream>
 #include <string>
-#include<list>
-#include"../structure/board.h"
-#include"../structure/tile.h"
-#include"../include/main.h"
+#include <list>
+#include "board.h"
+#include "tile.h"
+#include "main.h"
 
 using namespace std;
 
@@ -394,6 +392,3 @@ Board move(Board& b, char m){
             break;
     }
 }
-
-
-#endif
