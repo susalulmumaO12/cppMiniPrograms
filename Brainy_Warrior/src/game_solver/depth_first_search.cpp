@@ -1,13 +1,15 @@
 #include "algorithms.h"
 
-#include<iostream>
-#include<unordered_set>
-#include<stack>
-#include"../structure/node_state.h"
-#include"../structure/board.h"
-#include"../logic/helper_functions.h"
-#include"../include/main.h"
+#include <iostream>
+#include <unordered_set>
+#include <stack>
+#include <list>
+#include "node_state.h"
+#include "board.h"
+#include "helper_functions.h"
+#include "main.h"
 
+using namespace std;
 
 
 void dfs(Board board){

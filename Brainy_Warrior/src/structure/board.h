@@ -3,7 +3,7 @@
 
 #include "tile.h"
 #include <vector>
-#include<iostream>
+#include <iostream>
 #include <list>
 
 class Board {

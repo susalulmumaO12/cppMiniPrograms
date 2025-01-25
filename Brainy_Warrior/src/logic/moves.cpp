@@ -1,11 +1,10 @@
 #include "moves.h"
-#include<iostream>
+#include <iostream>
 #include <string>
-#include<list>
-#include"../structure/board.h"
-#include"../structure/tile.h"
-#include"main.h"
-#include "../main.cpp"
+#include <list>
+#include "board.h"
+#include "tile.h"
+#include "main.h"
 
 using namespace std;
 

@@ -1,19 +1,18 @@
 #include "helper_functions.h"
 #define DEBUG false
 
-#include<iostream>
+#include <iostream>
 #include <fstream>
 #include <nlohmann/json.hpp>
 #include <string>
-#include<list>
-#include<vector>
-#include<cmath>
-#include"../structure/node_state.h"
-#include"../structure/board.h"
-#include"../structure/tile.h"
-#include"main.h"
-#include"moves.h"
-#include "../main.cpp"
+#include <list>
+#include <vector>
+#include <cmath>
+#include "node_state.h"
+#include "board.h"
+#include "tile.h"
+#include "main.h"
+#include "moves.h"
 
 using json = nlohmann::json;
 
