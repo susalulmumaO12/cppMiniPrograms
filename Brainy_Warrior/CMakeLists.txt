@@ -18,8 +18,8 @@ add_executable(Brainy_Warrior
     ${STRUCTURE_DIR}/board.cpp
     ${STRUCTURE_DIR}/node_state.cpp
     ${STRUCTURE_DIR}/tile.cpp
-    ${LOGIC_DIR}/helper_functions.h
-    ${LOGIC_DIR}/moves.h
+    ${LOGIC_DIR}/helper_functions.cpp
+    ${LOGIC_DIR}/moves.cpp
     ${GAME_SOLVER_DIR}/breadth_first_search.cpp
     ${GAME_SOLVER_DIR}/depth_first_search.cpp
     ${GAME_SOLVER_DIR}/uniform_cost_search.cpp
@@ -28,7 +28,7 @@ add_executable(Brainy_Warrior
 )
 
 #include headers
-include_directories(${STRUCTURE_DIR} ${LOGIC_DIR} ${GAME_SOLVER_DIR})
+include_directories(${INCLUDE_DIR} ${STRUCTURE_DIR} ${LOGIC_DIR} ${GAME_SOLVER_DIR})
 
 # Set target properties
 target_compile_options(Brainy_Warrior PUBLIC -Wall -std=c++17)
