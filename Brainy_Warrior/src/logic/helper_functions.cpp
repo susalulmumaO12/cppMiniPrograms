@@ -54,6 +54,36 @@ Board set_game_board(int levelChoice){
     return board;
 }
 
+void printTile(int value) {
+    switch (value) {
+        case 0: cout << "\033[48;5;45m\033[38;5;75m 0 \033[0m\033[0m"; break;  // 0:sea
+        case 1: cout << "\033[48;5;42m\033[38;5;36m 1 \033[0m\033[0m"; break;  // 1:land
+        case 3: cout << "\033[48;5;22m\033[38;5;165m O \033[0m\033[0m"; break;  // 3:wizard tile
+        case 4: cout << "\033[48;5;226m\033[38;5;220m 4 \033[0m\033[0m"; break;  // 4:wall
+        case 5: cout << "\033[48;5;96m\033[1;38;5;89m 5 \033[0m\033[0m"; break;  // 5:target
+        case 6: cout << "\033[38;5;226m * \033[0m"; break;  // 6:star
+        case 7: cout << "\033[48;5;165m\033[1;38;5;22m W \033[0m\033[0m"; break;  // 7:wizard
+        case 8: cout << "\033[48;5;200m\033[1;38;5;9m 8 \033[0m\033[0m"; break;  // 8:won player
+        case 9: cout << "\033[48;5;216m\033[1;38;5;9m 9 \033[0m\033[0m"; break;  // 9:player
+        case -1: cout << "\033[48;5;9m\033[1;38;5;216m X \033[0m\033[0m"; break;  // -1:dead player
+        default: cout << value << " "; break;
+    }
+}
+
+void printBoard(Board board){
+    int n = board.getN();
+    int m = board.getM();
+
+    for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                printTile(board.getTile(i, j).getValue());
+            }
+            cout << endl;
+    }
+
+    cout<<endl;
+}
+
 void printScores(int level){
     json scores;
     vector<pair<int, pair<int, pair< int, string>>>> score_pairs;
@@ -144,6 +174,34 @@ void updateStats(const string& playerName, int level, bool win) {
     }
 }
 
+dist getDistanceType() {
+    int choice;
+
+    // Displaying the menu with ANSI styling
+    cout << "\033[1;37mSelect heuristic calculation:\033[0m\n";
+    cout << "\033[48;5;124m\033[38;5;15m1) Manhattan\033[0m\033[0m ";
+    cout << "\033[48;5;34m\033[38;5;15m2) Euclidean\033[0m\033[0m ";
+    cout << "\033[48;5;208m\033[38;5;15m3) Minkowski (p=3)\033[0m\033[0m ";
+    cout << "\033[48;5;27m\033[38;5;15m4) Chebyshev\033[0m\033[0m ";
+    
+    cin >> choice;
+
+    // Returning the corresponding distance type
+    switch (choice) {
+        case 1:
+            return man; // Manhattan
+        case 2:
+            return euc; // Euclidean
+        case 3:
+            return mink; // Minkowski
+        case 4:
+            return cheb; // Chebyshev
+        default:
+            std::cout << "\033[31mInvalid choice, defaulting to Manhattan.\033[0m\n";
+            return man; // Default to Manhattan
+    }
+}
+
 list<Node_State> get_next_cost_states(Node_State* board){
     list<Node_State> states;
     
@@ -192,7 +250,7 @@ list<Node_State> get_next_cost_states(Node_State* board){
 
 
             Node_State left_state(left, board, board->getG() + 5, 0);
-        states.push_back(left_state);
+            states.push_back(left_state);
 
         if(DEBUG){
 

@@ -32,6 +32,5 @@ enum dist { man, euc, mink, cheb };
 extern dist distanceType;
 
 void printBoard(Board board);
-dist getDistanceType();
 
 #endif
