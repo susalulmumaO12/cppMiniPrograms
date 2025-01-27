@@ -115,7 +115,7 @@ next = 5, 7? // enemy, wizard
 
 #### Depth-First-Search:
 
-**DFS** function also takes in a _board_, the only difference in implementation between DFS and BFS is that it uses a stack to store the generated costless states and _itarates_ over them (not recursivley).
+**DFS** function also takes in a _board_, the only difference in implementation between DFS and BFS is that it uses a stack to store the generated costless states and _itarates_ over them (not recursively).
 
 #### Uniform-Cost-Search:
 
