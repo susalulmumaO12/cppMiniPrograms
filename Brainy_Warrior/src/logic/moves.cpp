@@ -79,129 +79,6 @@ bool canMoveRight(Board b){
     return false;
 }
 
-
-Board moveUp(Board& b){
-
-    Tile& tile = b.getPlayerTile();
-    bool valid = canMoveUp(b);
-    if(!valid){
-        cout<<"\033[31mINVALID MOVE!\033[0m\n";
-        return b;
-    }
-
-    int i=tile.getRow();
-    int j=tile.getCol();
-    
-    int next = b.getTile(i-1, j).getValue();
-
-    if(next == 0){
-        // if upmost tile is 0: set player value to -1
-        b.getTile(i, j).setValue(-1);
-        return b;
-    } else if(next == 1){
-        swapTiles(b, tile, b.getTile(i-1, j));
-        return b;
-    } else if(next == 5 || next == 7){
-        if(next == 7) WIZMOVED = true;
-        b.getTile(i-1, j).setValue(1);
-        swapTiles(b, tile, b.getTile(i-1, j));
-        return b;
-    }
-
-    return b;
-}
-
-Board moveDown(Board& b){
-
-    Tile& tile = b.getPlayerTile();
-    bool valid = canMoveDown(b);
-    if(!valid){
-        cout<<"\033[31mINVALID MOVE!\033[0m\n";
-        return b;
-    }
-
-    int i=tile.getRow();
-    int j=tile.getCol();
-
-    int next = b.getTile(i+1, j).getValue();
-
-    if(next == 0){
-        // if downmost tile is 0: set player value to -1
-        tile.setValue(-1);
-        return b;
-    } else if(next == 1){
-        swapTiles(b, tile, b.getTile(i+1, j));
-        return b;
-    } else if(next == 5 || next == 7){
-        if(next == 7) WIZMOVED = true;
-        b.getTile(i+1, j).setValue(1);
-        swapTiles(b, tile, b.getTile(i+1, j));
-        return b;
-    }
-    
-    return b;
-}
-
-Board moveRight(Board& b){
-
-    Tile& tile = b.getPlayerTile();
-    bool valid = canMoveRight(b);
-    if(!valid){
-        cout<<"\033[31mINVALID MOVE!\033[0m\n";
-        return b;
-    }
-    int i=tile.getRow();
-    int j=tile.getCol();
-
-    int next = b.getTile(i, j+1).getValue();
-
-    if(next == 0){
-		// if rightmost tile is 0: set player value to -1
-        b.getTile(i, j).setValue(-1);
-        return b;
-    } else if(next == 1){
-        swapTiles(b, tile, b.getTile(i, j+1));
-        return b;
-    } else if(next == 5 || next == 7){
-        if(next == 7) WIZMOVED = true;
-        b.getTile(i, j+1).setValue(1);
-        swapTiles(b, tile, b.getTile(i, j+1));
-        return b;
-    }
-
-    return b;
-}
-
-Board moveLeft(Board& b){
-
-    Tile& tile = b.getPlayerTile();
-    bool valid = canMoveLeft(b);
-    if(!valid){
-        cout<<"\033[31mINVALID MOVE!\033[0m\n";
-        return b;
-    }
-    int i=tile.getRow();
-    int j=tile.getCol();
-        
-    int next = b.getTile(i, j-1).getValue();
-
-    if(next == 0){
-        // if leftmost tile is 0: set player value to -1
-        b.getTile(i, j).setValue(-1);
-        return b;
-    } else if(next == 1){
-        swapTiles(b, tile, b.getTile(i, j-1));
-        return b;
-    } else if(next == 5 || next == 7){
-        if(next == 7) WIZMOVED = true;
-        b.getTile(i, j-1).setValue(1);
-        swapTiles(b, tile, b.getTile(i, j-1));
-        return b;
-    }
-    
-    return b;
-}
-
 Board slideRight(Board& b){
 
     if(!canMoveRight(b)){
@@ -369,19 +246,19 @@ Board move(Board& b, char m){
     switch(tolower(m)){
         case 'i':
         case 'w':
-            return !SLIDE? moveUp(b) : slideUp(b);
+            return slideUp(b);
             break;
         case 'k':
         case 's':
-            return !SLIDE? moveDown(b) : slideDown(b);
+            return slideDown(b);
             break;
         case 'j':
         case 'a':
-            return !SLIDE? moveLeft(b) : slideLeft(b);
+            return slideLeft(b);
             break;
         case 'l':
         case 'd':
-            return !SLIDE? moveRight(b) : slideRight(b);
+            return slideRight(b);
             break;
         case 'z':
             return moveWizard(b);

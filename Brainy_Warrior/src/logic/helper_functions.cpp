@@ -207,7 +207,7 @@ list<Node_State> get_next_cost_states(Node_State* board){
     
     if(canMoveUp(board->getBoard())){ //cost of moving up: 1
         Board up(board->getBoard());
-        up = !SLIDE? moveUp(up)  : slideUp(up);
+        up = slideUp(up);
         if(up.getPlayerTile().getValue() != -1){
 
             Node_State up_state(up, board, board->getG() + 1, 0);
@@ -226,7 +226,7 @@ list<Node_State> get_next_cost_states(Node_State* board){
 
     if(canMoveDown(board->getBoard())){ //cost of moving down: 2
         Board down(board->getBoard());
-        down = !SLIDE? moveDown(down) : slideDown(down);
+        down = slideDown(down);
         if(down.getPlayerTile().getValue() != -1){
 
 
@@ -245,7 +245,7 @@ list<Node_State> get_next_cost_states(Node_State* board){
 
     if(canMoveLeft(board->getBoard())){ //cost of moving left: 5
         Board left(board->getBoard());
-        left = !SLIDE? moveLeft(left) : slideLeft(left);
+        left = slideLeft(left);
         if(left.getPlayerTile().getValue() != -1){
 
 
@@ -266,7 +266,7 @@ list<Node_State> get_next_cost_states(Node_State* board){
 
     if(canMoveRight(board->getBoard())){ //cost of moving right: 3
         Board right(board->getBoard());
-        right = !SLIDE? moveRight(right) : slideRight(right);
+        right = slideRight(right);
         if(right.getPlayerTile().getValue() != -1){
 
 

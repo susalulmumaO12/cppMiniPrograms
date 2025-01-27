@@ -22,7 +22,6 @@ struct circularq {
 };
 
 //slide or move tile by tile
-extern bool SLIDE;
 extern bool WIZMOVED;
 extern circularq WIZARDTILES;
 extern Tile currentWizard;

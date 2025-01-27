@@ -7,7 +7,6 @@
 #include "main.h"
 
 // defining default value for each global variable
-bool SLIDE = false;
 bool WIZMOVED = false;
 circularq WIZARDTILES;
 Tile currentWizard;
@@ -24,6 +23,7 @@ const std::string instructions = "Type in a letter using either of the following
 const std::string gameOver = "\033[31mGAME OVER! You drowned...\033[0m";
 const std::string gameWin = "\033[38;5;226mYOU WIN!\033[0m";
 const std::string algorithms = "\033[38;5;189mChoose algorithm: \033[0m\n\033[48;5;220m\033[38;5;18m1) BFS\033[0m\033[0m \033[48;5;17m\033[38;5;220m2) DFS\033[0m\033[0m \033[48;5;175m\033[38;5;53m3) UCS\033[0m\033[0m \033[48;5;28m\033[38;5;52m4) Hill Climbing\033[0m\033[0m \033[48;5;160m\033[38;5;231m5) A_star\033[0m\033[0m";
+
 int main() {
     
     std::cout<<BrainyWarrior;
@@ -48,12 +48,6 @@ int main() {
     std::cin>>playingOption;
 
     WIZARDTILES = getWizardTiles(board);
-
-    // TODO: remove this
-    int difficulty;
-    std::cout<<"\033[38;5;42mChoose difficulty level:\033[0m \n\033[48;5;30m\033[38;5;231m1) Easy (tile move style)\033[0m\033[0m\n\033[48;5;161m\033[38;5;231m2) Hard (slide style)\033[0m\033[0m\n";
-    std::cin>>difficulty;
-    difficulty == 1? SLIDE = false : SLIDE = true;
 
     std::cout << "\033[38;5;226mBoard for level \033[0m " << levelChoice << ":\n";
     printBoard(board);
