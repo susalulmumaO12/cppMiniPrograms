@@ -215,10 +215,7 @@ When a board is initialized, Wizard tiles are collected for later use, they're p
 
 ## Scoring System and Stats
 
-Scoring system only keeps track of hard mode for every level overtime, and keeps stats for each player like number of times played and number of wins, like this:
-
-> [!NOTE]
-> _Easy mode will no longer exist, as it doesn't make sense, it was there for educational purposes only._
+Scoring system only keeps track for every level overtime, and keeps stats for each player like number of times played and number of wins, like this:
 
 <table>
 <thead>
