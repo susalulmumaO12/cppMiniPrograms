@@ -7,7 +7,8 @@ private:
     int value;
 
 public:
-    Tile(int row = 0, int col = 0, int value = 0);  // Default constructor with default values
+    // Default constructor with default values
+    Tile(int row = 0, int col = 0, int value = 0);  
 
     int getValue();
     void setValue(int value);

@@ -229,7 +229,7 @@ circularq getWizardTiles(Board& board){
 Board moveWizard(Board& board){
 
     if(WIZMOVED){
-        cout<<"Used up your wizard moves!\n";
+        cout<<"You used up your wizard moves!\n";
         return board;
     }
     Tile nextWizard; 

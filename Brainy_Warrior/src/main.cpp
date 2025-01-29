@@ -89,11 +89,13 @@ int main() {
         int algorithm;
         std::cout<<algorithms<<std::endl;
         std::cin>>algorithm;
-        if(algorithm == 1) bfs(board);
-        else if(algorithm == 2) dfs(board);
-        else if(algorithm == 3) ucs(board);
-        else if(algorithm == 4) hill_climbing(board);
-        else if(algorithm == 5) a_star(board);
+        switch(algorithm) {
+            case 1: bfs(board); break;
+            case 2: dfs(board); break;
+            case 3: ucs(board); break;
+            case 4: hill_climbing(board); break;
+            case 5: a_star(board); break;
+        }
     }
     
     return 0;
