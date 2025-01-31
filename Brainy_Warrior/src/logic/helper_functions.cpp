@@ -84,37 +84,70 @@ void printBoard(Board board){
     cout<<endl;
 }
 
-void printScores(int level){
-    json scores;
-    vector<pair<int, pair<int, pair< int, string>>>> score_pairs;
+void printStats(int level) {
+    json stats;
+    vector<pair<int, pair<int, pair<int, string>>>> score_pairs;
 
     // Load existing stats
     ifstream inputFile("../stats.json");
     if (inputFile.is_open()) {
-        inputFile >> scores;
+        inputFile >> stats;
         inputFile.close();
     }
-    string levelName = "level " + to_string(level);
 
-    if(!scores["levels"].contains(levelName)){
-        cout<<"No one played this level yet!\n";
-        return;
-    }
+    if (level > 0) {
+        string levelName = "level " + to_string(level);
 
-    for(auto player : scores["levels"][levelName].items()) {
-        string playerName = player.key();
-        int playerScore = player.value()["score"];
-        int playerTries = player.value()["tries"];
-        int playerWins = player.value()["wins"];
+        if (!stats["levels"].contains(levelName)) {
+            cout << "No one played this level yet!\n";
+            return;
+        }
 
-        score_pairs.push_back({playerScore, { playerTries, {playerWins ,playerName}}});
-    }
+        for (auto player : stats["levels"][levelName].items()) {
+            string playerName = player.key();
+            int playerScore = player.value()["score"];
+            int playerTries = player.value()["tries"];
+            int playerWins = player.value()["wins"];
 
-    sort(score_pairs.begin(), score_pairs.end());
+            score_pairs.push_back({playerScore, {playerTries, {playerWins, playerName}}});
+        }
 
-    cout<< "Name | Score | Tries | Wins\n";
-    for(auto player : score_pairs) {
-        cout<< player.second.second.second <<" | " << player.first << " | " << player.second.first << " | " << player.second.second.first <<endl;
+        sort(score_pairs.begin(), score_pairs.end());
+
+        cout << "Name | Score | Tries | Wins\n";
+        for (auto player : score_pairs) {
+            cout << player.second.second.second << " | " 
+                 << player.first << " | " 
+                 << player.second.first << " | " 
+                 << player.second.second.first << endl;
+        }
+
+    } else { // print all levels stats
+        for (auto levelItem : stats["levels"].items()) {
+            string levelName = levelItem.key();
+            score_pairs.clear();
+            
+            for (auto player : levelItem.value().items()) {  
+                string playerName = player.key();
+                int playerScore = player.value()["score"];
+                int playerTries = player.value()["tries"];
+                int playerWins = player.value()["wins"];
+
+                score_pairs.push_back({playerScore, {playerTries, {playerWins, playerName}}});
+            }
+
+            sort(score_pairs.begin(), score_pairs.end());
+
+            cout << "stats for " << levelName << ":\n";
+            cout << "Name | Score | Tries | Wins\n";
+            for (auto player : score_pairs) {
+                cout << player.second.second.second << " | " 
+                     << player.first << " | " 
+                     << player.second.first << " | " 
+                     << player.second.second.first << endl;
+            }
+            cout << endl;
+        }
     }
 }
 
