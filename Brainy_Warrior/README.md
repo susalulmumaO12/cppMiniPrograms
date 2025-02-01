@@ -261,12 +261,12 @@ _Highest score is in fact the least score, it indicates number of moves_
 There are various ways to improve the game which is currently under construction:
 
 - [ ] Make TUI, using ncurses possibly.
-- [ ] Optimize time complexity of computer playing
+- ~~[ ] Optimize time complexity of computer playing~~
 - [X] Implement levels with wizard (above 5 on the original game website)
 - [X] Track score for players based on name, and number of steps
 - [X] Print scores and stats
-- [ ] Main-menu
-- [ ] Improve the experience on the console
+- [X] Main-menu
+- [X] Print path for user
 
 ## Old Looks
 

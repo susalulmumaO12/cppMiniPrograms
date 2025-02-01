@@ -5,6 +5,7 @@
 #include "helper_functions.h"
 #include "moves.h"
 #include "main.h"
+#include <queue>
 
 // defining default value for each global variable
 bool WIZMOVED = false;
@@ -78,9 +79,28 @@ void levels() {
     if(playingOption == 1){
 
         std::cout<<instructions<<std::endl;
+        Node_State state(board, nullptr, 0, 0);
+        std::queue<Node_State> q;
+        q.push(state);
 
-        while(!board.win()){
+        while(!q.empty()){
             Tile& player = board.getPlayerTile();
+            Node_State current(q.front());
+            q.pop();
+
+            // WIN CASE
+            if(board.win()){
+                std::cout<<gameWin<<std::endl;
+                updateStats(name, levelChoice, true);
+                std::cout<<"print path? (y/n)\n";
+                char yn1; std::cin>>yn1;
+                if(tolower(yn1) == 'y') printBoard(getPath(&current));
+
+                std::cout<< "Print stats? (y/n)\n";
+                char yn2; std::cin>>yn2;
+                tolower(yn2) == 'y' ? printStats(levelChoice) : exit(0);
+                exit(0);
+            }
 
             // LOSE CASE
             if(player.getValue() == -1){
@@ -90,17 +110,10 @@ void levels() {
 
             char m; std::cin>>m;
             board = move(board, m);
+            Node_State movedBoard(board, &current, 0, 0);
+            q.push(movedBoard);
             printBoard(board);
 
-            // WIN CASE
-            if(board.win()){
-                std::cout<<gameWin<<std::endl;
-                updateStats(name, levelChoice, true);
-
-                std::cout<< "Print stats? (y/n)\n";
-                char yn; std::cin>>yn;
-                tolower(yn) == 'y' ? printStats(levelChoice) : exit(0);
-            }
         }
     // COMPUTER PLAYING
     } else if (playingOption == 2){
