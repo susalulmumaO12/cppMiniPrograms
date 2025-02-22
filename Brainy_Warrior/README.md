@@ -134,7 +134,7 @@ next = 5, 7? // enemy, wizard
 > [!NOTE]
 > The game restricts movement to 4 directions, Manhattan Distance is the most logical way to calculate distance, the other methods are experimental only (for educational purposes).
 
-When user selcets compuetr as the player, the game prompts the user to choose heuristic calculation method, `distance` function takes two parameters of type `Tile`, `t1` and `t2`, here are the implemented methods so far:
+When user selects computer as the player, the game prompts the user to choose heuristic calculation method, `distance` function takes two parameters of type `Tile`, `t1` and `t2`, here are the implemented methods so far:
 
 #### Manhattan Distance:
 
