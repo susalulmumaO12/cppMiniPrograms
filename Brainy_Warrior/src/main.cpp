@@ -6,6 +6,7 @@
 #include "moves.h"
 #include "main.h"
 #include <queue>
+#include <ncurses.h>
 
 // defining default value for each global variable
 bool WIZMOVED = false;
@@ -32,6 +33,21 @@ void stats();
 
 int main() {
     
+    // init screen and sets up screen
+    initscr();
+
+    // print to screen
+    printw("Hello World");
+
+    // refreshes the screen
+    refresh();
+
+    // pause the screen output
+    getch();
+
+    // deallocates memory and ends ncurses
+    endwin();
+
     std::cout<<BrainyWarrior;
     std::cout<<nameQuestion<<std::endl;
     std::cin>>name;

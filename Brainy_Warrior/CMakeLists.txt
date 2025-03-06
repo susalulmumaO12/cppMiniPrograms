@@ -11,6 +11,7 @@ set(INCLUDE_DIR include)
 
 # Access JSON package
 find_package(nlohmann_json REQUIRED)
+find_package(Curses REQUIRED)
 
 # Define target
 add_executable(Brainy_Warrior 
@@ -29,8 +30,10 @@ add_executable(Brainy_Warrior
 
 #include headers
 include_directories(${INCLUDE_DIR} ${STRUCTURE_DIR} ${LOGIC_DIR} ${GAME_SOLVER_DIR})
+include_directories(${CURSES_INCLUDE_DIR})
 
 # Set target properties
 target_compile_options(Brainy_Warrior PUBLIC -Wall -std=c++17)
 target_link_libraries(Brainy_Warrior nlohmann_json::nlohmann_json)
+target_link_libraries(Brainy_Warrior ${CURSES_LIBRARY})
 target_include_directories(Brainy_Warrior PUBLIC ${INCLUDE_DIR})

@@ -58,6 +58,7 @@ _Tested on Linux_
 - C++ 17 Compiler
 - CMake >= v3.12
 - Conan
+- ncurses
 
 ### Build
 
