@@ -7,6 +7,9 @@
 #include "main.h"
 #include <queue>
 #include <ncurses.h>
+#include <curses.h>
+#include <menu.h>
+
 
 // defining default value for each global variable
 bool WIZMOVED = false;
@@ -16,8 +19,13 @@ int SCORE = 0;
 dist distanceType = man;
 std::string name;
 
+#define NUM_OPTIONS 3
+#define BANNER_PAIR 1
+#define OPTION_PAIR 2
+#define SELECTED_OPTION_PAIR 3
+
 // print-strings all in one place
-const std::string BrainyWarrior = "\033[38;5;33m\n\n__________               .__                __      __                     .__              \n\\______   \\____________  |__| ____ ___.__. /  \\    /  \\_____ ______________|__| ___________ \n |    |  _/\\_  __ \\__  \\ |  |/    <   |  | \\   \\/\\/   /\\__  \\_  __ \\_  __ \\  |/  _ \\_  __  \\\n |    |   \\ |  | \\// __ \\|  |   |  \\___  |  \\        /  / __ \\|  | \\/|  | \\/  (  <_> )  | \\/\n |______  / |__|  (____  /__|___|  / ____|   \\__/\\  /  (____  /__|   |__|  |__|\\____/|__|   \n        \\/             \\/        \\/\\/             \\/        \\/                              \n\n\033[1m";
+const std::string BrainyWarrior = "__________               .__                __      __                     .__              \n\\______   \\____________  |__| ____ ___.__. /  \\    /  \\_____ ______________|__| ___________ \n |    |  _/\\_  __ \\__  \\ |  |/    <   |  | \\   \\/\\/   /\\__  \\_  __ \\_  __ \\  |/  _ \\_  __  \\\n |    |   \\ |  | \\// __ \\|  |   |  \\___  |  \\        /  / __ \\|  | \\/|  | \\/  (  <_> )  | \\/\n |______  / |__|  (____  /__|___|  / ____|   \\__/\\  /  (____  /__|   |__|  |__|\\____/|__|   \n        \\/             \\/        \\/\\/             \\/        \\/                              ";
 const std::string nameQuestion = "What's your name?";
 const std::string mainMenu = "1) Levels\n2) Stats\n3) Quit";
 const std::string levelsQuestion = "\033[38;5;33mEnter a level number between 1 and 17: \033[1m";
@@ -32,38 +40,116 @@ void levels();
 void stats();
 
 int main() {
-    
-    // init screen and sets up screen
+	/* Initialize curses */	
     initscr();
+	start_color();
+    cbreak();
+    noecho();
+	keypad(stdscr, TRUE); // support arrow keys for stdscr
+    curs_set(0);
+	
+    init_pair(BANNER_PAIR, COLOR_CYAN, COLOR_BLACK);
+    init_pair(OPTION_PAIR, COLOR_WHITE, COLOR_BLACK);
+    init_pair(SELECTED_OPTION_PAIR, COLOR_BLUE, COLOR_YELLOW);
+    init_pair(MENU_PAD_PAIR, COLOR_BLUE, COLOR_YELLOW);
 
-    // print to screen
-    printw("Hello World");
-
-    // refreshes the screen
+    attron(COLOR_PAIR(BANNER_PAIR));
+    mvaddstr(0, 0, BrainyWarrior.c_str());
+    attroff(COLOR_PAIR(BANNER_PAIR));
     refresh();
 
-    // pause the screen output
-    getch();
 
-    // deallocates memory and ends ncurses
+    // menu items
+    const char *options[NUM_OPTIONS] = {
+        "Play Levels",
+        "View Stats",
+        "Quit Game"
+    };
+
+    ITEM *items[NUM_OPTIONS + 1];
+    for (int i = 0; i < NUM_OPTIONS; ++i) {
+        items[i] = new_item(options[i], "");
+    }
+    items[NUM_OPTIONS] = nullptr;
+
+    MENU *menu = new_menu((ITEM **)items);
+
+    // Set appearance of menu items
+    set_menu_fore(menu, COLOR_PAIR(SELECTED_OPTION_PAIR));
+    set_menu_back(menu, COLOR_PAIR(OPTION_PAIR));
+    set_menu_pad(menu, COLOR_PAIR(MENU_PAD_PAIR));
+    
+    int winHeight = 10, winWidth = 40;
+    int startx = (COLS - winWidth) / 2;
+    int starty = (LINES - winHeight) / 2;
+    WINDOW *menuWin = newwin(winHeight, winWidth, starty, startx);
+    keypad(menuWin, TRUE);
+
+    set_menu_win(menu, menuWin);
+    set_menu_sub(menu, derwin(menuWin, 6, 38, 3, 1));
+    set_menu_mark(menu, " > ");
+
+    /* current menu looks like this
+    
+                                            ┌──────────┤   MAIN  MENU   ├──────────┐
+                                            │                                      │
+                                            │                                      │
+                                            │ > Play Levels                        │
+                                            │   View Stats                         │
+                                            │   Quit Game                          │
+                                            │                                      │
+                                            │                                      │
+                                            │                                      │
+                                            └──────────────────────────────────────┘
+
+    */
+    box(menuWin, 0, 0);
+    mvwprintw(menuWin, 0, (40 - strlen("   MAIN  MENU   ")) / 2, "%s", "   MAIN  MENU   ");
+	mvwaddch(menuWin, 0, 11, ACS_RTEE);
+	//mvwhline(menuWin, 0, 1, ACS_HLINE, 38);
+	mvwaddch(menuWin, 0, 28, ACS_LTEE);
+
+    post_menu(menu);
+    wrefresh(menuWin);
+
+
+    int choice = -1;
+    int c;
+    while ((c = wgetch(menuWin)) != '\n') {
+        switch (c) {
+            case KEY_DOWN:
+                menu_driver(menu, REQ_DOWN_ITEM);
+                break;
+            case KEY_UP:
+                menu_driver(menu, REQ_UP_ITEM);
+                break;
+        }
+        wrefresh(menuWin);
+    }
+
+    ITEM *selected = current_item(menu);
+    const char *selectedOption = item_name(selected);
+
+    if (strcmp(selectedOption, "Play Levels") == 0) {
+        choice = 1;
+    } else if (strcmp(selectedOption, "View Stats") == 0) {
+        choice = 2;
+    } else if (strcmp(selectedOption, "Quit Game") == 0) {
+        choice = 3;
+    }
+
+    unpost_menu(menu);
+    free_menu(menu);
+    for (int i = 0; i < NUM_OPTIONS; ++i) {
+        free_item(items[i]);
+    }
+
     endwin();
 
-    std::cout<<BrainyWarrior;
-    std::cout<<nameQuestion<<std::endl;
-    std::cin>>name;
-
-    std::cout<<mainMenu<<std::endl;
-    int mainMenuChoice;
-    std::cin>>mainMenuChoice;
-
-    switch(mainMenuChoice) {
-        case 1:
-            levels(); break;
-        case 2:
-            stats(); break;
-        case 3:
-            exit(0); break;
-
+    switch (choice) {
+        case 1: levels(); break;
+        case 2: stats(); break;
+        case 3: std::exit(0); break;
     }
         
     return 0;
