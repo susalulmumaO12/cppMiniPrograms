@@ -242,6 +242,8 @@ _Highest score is in fact the least score, it indicates number of moves_
 - [Working with Conan and CMake](https://www.codeproject.com/Articles/5385907/Managing-Cplusplus-Projects-with-Conan-and-CMake)
 - [ASCII art Generator (for the banner)](https://patorjk.com/software/taag/#p=display&f=Graffiti&t=Brainy%20Warrior)
 - [Alice and Bob](https://en.wikipedia.org/wiki/Alice_and_Bob)
+- [NCurses Doc](https://tldp.org/HOWTO/NCURSES-Programming-HOWTO/index.html)
+- [FinalCut C++ Library for TUI](https://github.com/gansm/finalcut): I did not use it but it's worth checking for lightweight C++ library for creating terminal-based applications.
 
 **Algorithms:**
 - [A* (A-Star) algorithm](https://en.wikipedia.org/wiki/A*_search_algorithm)
