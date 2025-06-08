@@ -19,7 +19,7 @@ int SCORE = 0;
 dist distanceType = man;
 std::string name;
 
-#define NUM_OPTIONS 3
+const char *main_options[] = {"Play Levels", "View Stats", "Quit Game", nullptr};
 #define BANNER_PAIR 1
 #define OPTION_PAIR 2
 #define SELECTED_OPTION_PAIR 3
@@ -39,38 +39,16 @@ const std::string algorithms = "\033[38;5;189mChoose algorithm: \033[0m\n\033[48
 void levels();
 void stats();
 
-int main() {
-	/* Initialize curses */	
-    initscr();
-	start_color();
-    cbreak();
-    noecho();
-	keypad(stdscr, TRUE); // support arrow keys for stdscr
-    curs_set(0);
-	
-    init_pair(BANNER_PAIR, COLOR_CYAN, COLOR_BLACK);
-    init_pair(OPTION_PAIR, COLOR_WHITE, COLOR_BLACK);
-    init_pair(SELECTED_OPTION_PAIR, COLOR_BLUE, COLOR_YELLOW);
-    init_pair(MENU_PAD_PAIR, COLOR_BLUE, COLOR_YELLOW);
+int custom_menu(const char* title, const char **options) {
+    clear();
 
-    attron(COLOR_PAIR(BANNER_PAIR));
-    mvaddstr(0, 0, BrainyWarrior.c_str());
-    attroff(COLOR_PAIR(BANNER_PAIR));
-    refresh();
-
-
-    // menu items
-    const char *options[NUM_OPTIONS] = {
-        "Play Levels",
-        "View Stats",
-        "Quit Game"
-    };
-
-    ITEM *items[NUM_OPTIONS + 1];
-    for (int i = 0; i < NUM_OPTIONS; ++i) {
-        items[i] = new_item(options[i], "");
+    ITEM **items = new ITEM*[100];
+    int numOptions = 0;
+    while (options[numOptions]) {
+        items[numOptions] = new_item(options[numOptions], "");
+        numOptions++;
     }
-    items[NUM_OPTIONS] = nullptr;
+    items[numOptions] = nullptr;
 
     MENU *menu = new_menu((ITEM **)items);
 
@@ -104,7 +82,7 @@ int main() {
 
     */
     box(menuWin, 0, 0);
-    mvwprintw(menuWin, 0, (40 - strlen("   MAIN  MENU   ")) / 2, "%s", "   MAIN  MENU   ");
+    mvwprintw(menuWin, 0, (40 - strlen(title)) / 2, "%s", title);
 	mvwaddch(menuWin, 0, 11, ACS_RTEE);
 	//mvwhline(menuWin, 0, 1, ACS_HLINE, 38);
 	mvwaddch(menuWin, 0, 28, ACS_LTEE);
@@ -127,21 +105,42 @@ int main() {
         wrefresh(menuWin);
     }
 
-    ITEM *selected = current_item(menu);
-    const char *selectedOption = item_name(selected);
-
-    if (strcmp(selectedOption, "Play Levels") == 0) {
-        choice = 1;
-    } else if (strcmp(selectedOption, "View Stats") == 0) {
-        choice = 2;
-    } else if (strcmp(selectedOption, "Quit Game") == 0) {
-        choice = 3;
-    }
+    int choice = item_index(current_item(menu));
 
     unpost_menu(menu);
     free_menu(menu);
-    for (int i = 0; i < NUM_OPTIONS; ++i) {
-        free_item(items[i]);
+    for (int j = 0; j < numOptions; ++j) {
+        free_item(items[j]);
+    }
+    delete[] items;
+    delwin(menuWin);
+
+    return choice;
+}
+
+int main() {
+	/* Initialize curses */	
+	initscr();
+	start_color();
+    cbreak();
+    noecho();
+	keypad(stdscr, TRUE); // support arrow keys for stdscr
+    curs_set(0);
+	
+    init_pair(BANNER_PAIR, COLOR_CYAN, COLOR_BLACK);
+    init_pair(OPTION_PAIR, COLOR_WHITE, COLOR_BLACK);
+    init_pair(SELECTED_OPTION_PAIR, COLOR_BLUE, COLOR_YELLOW);
+    init_pair(MENU_PAD_PAIR, COLOR_BLUE, COLOR_YELLOW);
+
+    attron(COLOR_PAIR(BANNER_PAIR));
+    mvaddstr(0, 0, BrainyWarrior.c_str());
+    attroff(COLOR_PAIR(BANNER_PAIR));
+
+    while (true) {
+        int choice = custom_menu("   MAIN  MENU   ", main_options);
+        if (choice == 0) levels();
+        else if (choice == 1) stats();
+        else break;
     }
 
     endwin();
