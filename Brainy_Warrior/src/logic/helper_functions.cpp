@@ -18,27 +18,24 @@ using json = nlohmann::json;
 
 using namespace std;
 
-Board set_game_board(int levelChoice){
+Board set_game_board(const std::string& levelKey){
     ifstream inputFile("../src/levels.json");
     if (!inputFile.is_open()) {
         cerr << "Error opening levels.json file!" << endl;
         exit(0);
     }
 
-    // construct a string with level name "level i"
-    string levelName = "level " + to_string(levelChoice);
-
     // create an empty structure (null)
     json j;
     inputFile >> j;
 
-    if (j.find(levelName) == j.end()) {
-        cerr<<"Level "<<levelChoice<<" not found!"<<endl;
+    if (j.find(levelKey) == j.end()) {
+        cerr<<"Level "<<levelKey<<" not found!"<<endl;
         exit(0);
     }
 
     // level data from json file
-    auto& levelData = j[levelName];
+    auto& levelData = j[levelKey]["layout"];
     int n = levelData.size();
     int m = levelData[0].size();
 
@@ -84,7 +81,7 @@ void printBoard(Board board){
     cout<<endl;
 }
 
-void printStats(int level) {
+void printStats(string& levelName) {
     json stats;
     vector<pair<int, pair<int, pair<int, string>>>> score_pairs;
 
@@ -95,8 +92,7 @@ void printStats(int level) {
         inputFile.close();
     }
 
-    if (level > 0) {
-        string levelName = "level " + to_string(level);
+    if (levelName != "0") { // TODO: this method is stupid
 
         if (!stats["levels"].contains(levelName)) {
             cout << "No one played this level yet!\n";
@@ -151,10 +147,9 @@ void printStats(int level) {
     }
 }
 
-void updateStats(const string& playerName, int level, bool win) {
+void updateStats(const string& playerName, string& levelName, bool win) {
     json stats;
     string filePath = "../stats.json";
-    string levelName = "level " + to_string(level);
 
     ifstream inputFile(filePath);
     if (inputFile.is_open()) {

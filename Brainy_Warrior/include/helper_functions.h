@@ -11,11 +11,11 @@
 #include "main.h"
 #include "moves.h"
 
-Board set_game_board(int levelChoice);
+Board set_game_board(const std::string& levelKey);
 void printTile(int value);
 void printBoard(Board board);
-void printStats(int level);
-void updateStats(const std::string& playerName, int level, bool win);
+void printStats(std::string& levelName);
+void updateStats(const std::string& playerName, std::string& levelName, bool win);
 dist getDistanceType();
 std::list<Node_State> get_next_cost_states(Node_State* board);
 int distance(Tile t1, Tile t2);
