@@ -15,6 +15,8 @@
 #include "main.h"
 
 
+using json = nlohmann::json;
+
 // defining default value for each global variable
 bool WIZMOVED = false;
 circularq WIZARDTILES;
@@ -40,7 +42,7 @@ const std::string gameOver = "\033[31mGAME OVER! You drowned...\033[0m";
 const std::string gameWin = "\033[38;5;226mYOU WIN!\033[0m";
 const std::string algorithms = "\033[38;5;189mChoose algorithm: \033[0m\n\033[48;5;220m\033[38;5;18m1) BFS\033[0m\033[0m \033[48;5;17m\033[38;5;220m2) DFS\033[0m\033[0m \033[48;5;175m\033[38;5;53m3) UCS\033[0m\033[0m \033[48;5;28m\033[38;5;52m4) Hill Climbing\033[0m\033[0m \033[48;5;160m\033[38;5;231m5) A_star\033[0m\033[0m";
 
-void levels();
+void level(const std::string& level);
 void stats();
 
 int main_menu() {
@@ -100,6 +102,136 @@ int main_menu() {
     return choice;
 }
 
+void ask_name() {
+    echo();
+    char buffer[100] = {0};
+    mvprintw((LINES - 18) / 2, (COLS - 18) / 2, "What's your name? ");
+    refresh();
+    
+    getstr(buffer);
+    name = buffer;
+    name.erase(0, name.find_first_not_of(" \t\n\r\f\v"));
+    name.erase(name.find_last_not_of(" \t\n\r\f\v") + 1);
+    
+    noecho();
+    clear();
+}
+
+void levels_menu() {
+    clear();
+    ask_name();
+    json levelsJson, statsJson;
+
+    std::ifstream levelsFile("../src/levels.json");
+
+    if (levelsFile.is_open()) {
+        levelsFile >> levelsJson;
+        levelsFile.close();
+    }
+
+    std::ifstream statsFile("../src/stats.json");
+    if (statsFile.is_open()) {
+        statsFile >> statsJson;
+        statsFile.close();
+    }
+
+    std::vector<std::string> levelKeys;
+    std::vector<std::string> labels;
+
+    for (const auto& [levelName, info] : levelsJson.items()) {
+        levelKeys.push_back(levelName);
+        std::string label = levelName + " ";
+
+        std::string difficulty = info.value("difficulty", "easy");
+        bool hasWizard = info.contains("wizard") && info["wizard"].get<bool>();
+        bool played = statsJson["levels"].contains(levelName) && statsJson["levels"][levelName].contains(name);
+
+        if (difficulty == "easy") label += " ▂   "; 
+        else if (difficulty == "medium") label += " ▂▃  ";
+        else label += " ▂▃▄ ";
+        
+        label += hasWizard ? " ★ " : " ☆ ";
+        label += played ? " ⚑ " : " ⚐ "; // TODO: fix not detecting played before
+
+        labels.push_back(label);
+    }
+
+    labels.push_back("Back"); // TODO: make an independent button for <Back>
+
+    int cols = 2;
+    int rows = (labels.size() + cols - 1) / cols;
+
+    std::vector<const char*> choices;
+    for (std::string const& str : labels) {
+      choices.push_back(str.data());
+    }
+
+    ITEM **items;
+    int c;				
+	MENU *menu;
+    WINDOW *menuWin;
+    int n_choices;
+    int winHeight = rows + 4;
+
+    int winWidth = 28 * cols + 2;
+    int startx = (COLS - winWidth) / 2;
+    int starty = (LINES - winHeight) / 2;
+    const char* title = "  Choose a level  ";
+
+    n_choices = choices.size();
+    items = (ITEM **)calloc(n_choices + 1, sizeof(ITEM *));
+    for(int i = 0; i < n_choices; ++i)
+        items[i] = new_item(choices[i], "");
+	items[n_choices] = (ITEM *)NULL;
+
+	menu = new_menu((ITEM **)items);
+    menuWin = newwin(winHeight, winWidth, starty, startx);
+    set_menu_format(menu, rows, cols);
+    set_menu_fore(menu, COLOR_PAIR(SELECTED_OPTION_PAIR));
+    set_menu_back(menu, COLOR_PAIR(OPTION_PAIR));
+    set_menu_mark(menu, " > ");
+    set_menu_win(menu, menuWin);
+    set_menu_sub(menu, derwin(menuWin, rows, winWidth - 4, 2, 2));
+
+    keypad(menuWin, TRUE);
+    box(menuWin, 0, 0);
+	mvwaddch(menuWin, 0, (winWidth - strlen(title)) / 3, ACS_RTEE);
+	mvwaddch(menuWin, 0, winWidth - ((winWidth - strlen(title)) / 3), ACS_LTEE);
+    mvwprintw(menuWin, 0, (winWidth - strlen(title)) / 2, "%s", title);
+
+    post_menu(menu);
+    wrefresh(menuWin);
+
+    while ((c = wgetch(menuWin)) != '\n') {
+        switch (c) {
+            case KEY_DOWN:  menu_driver(menu, REQ_DOWN_ITEM); break;
+            case KEY_UP:    menu_driver(menu, REQ_UP_ITEM); break;
+            case KEY_LEFT:  menu_driver(menu, REQ_LEFT_ITEM); break;
+            case KEY_RIGHT: menu_driver(menu, REQ_RIGHT_ITEM); break;
+            case KEY_NPAGE: menu_driver(menu, REQ_SCR_DPAGE); break;
+			case KEY_PPAGE: menu_driver(menu, REQ_SCR_UPAGE); break;
+        }
+        wrefresh(menuWin);
+    }
+
+    int choice = item_index(current_item(menu));
+
+    unpost_menu(menu);
+    free_menu(menu);
+    for (int i = 0; i < n_choices; ++i)
+        free_item(items[i]);
+    delete[] items;
+    delwin(menuWin);
+
+    endwin();
+
+    if (choice >= 0 && choice < (int)levelKeys.size()) {
+        std::string levelKey = levelKeys[choice];
+        clear();
+        level(levelKey);
+    }
+}
+
 int main() {
 	/* Initialize curses */	
     setlocale(LC_ALL, ""); // UTF-8 support
@@ -132,72 +264,48 @@ int main() {
     return 0;
 }
 
-void levels() {
-    // get user input for level number
-    int levelChoice;
-    std::cout<<levelsQuestion;
-    std::cin>>levelChoice;
-
-    // is level number valid?
-    if (levelChoice < 1 || levelChoice > 17) {
-        std::cerr<<invalidLevel<<std::endl;
-    }
-
-    Board board = set_game_board(levelChoice);
-    
-    int playingOption;
-    std::cout<<playingOptions<<std::endl;
-    std::cin>>playingOption;
+void level(const std::string& level) {
+    Board board = set_game_board(level);
 
     WIZARDTILES = getWizardTiles(board);
-
-    std::cout << "\033[38;5;226mBoard for level \033[0m " << levelChoice << ":\n";
     printBoard(board);
-
-    // USER PLAYING
-    if(playingOption == 1){
 
         std::cout<<instructions<<std::endl;
         Node_State state(board, nullptr, 0, 0);
         std::queue<Node_State> q;
         q.push(state);
-
         while(!q.empty()){
             Tile& player = board.getPlayerTile();
             Node_State current(q.front());
             q.pop();
-
             // WIN CASE
             if(board.win()){
                 std::cout<<gameWin<<std::endl;
-                updateStats(name, levelChoice, true);
+            updateStats(name, level, true);
                 std::cout<<"print path? (y/n)\n";
                 char yn1; std::cin>>yn1;
                 if(tolower(yn1) == 'y') printBoard(getPath(&current));
-
                 std::cout<< "Print stats? (y/n)\n";
                 char yn2; std::cin>>yn2;
-                tolower(yn2) == 'y' ? printStats(levelChoice) : exit(0);
+            tolower(yn2) == 'y' ? printStats(level) : exit(0);
                 exit(0);
             }
-
             // LOSE CASE
             if(player.getValue() == -1){
                 std::cout<<gameOver<<std::endl;
-                updateStats(name, levelChoice, false);
+            updateStats(name, level, false);
             }
-
             char m; std::cin>>m;
             board = move(board, m);
             Node_State movedBoard(board, &current, 0, 0);
             q.push(movedBoard);
             printBoard(board);
-
+    }
         }
-    // COMPUTER PLAYING
-    } else if (playingOption == 2){
 
-        distanceType = getDistanceType();
+void computer_play() {
+    // TODO deal with this
+    /* distanceType = getDistanceType();
         int algorithm;
         std::cout<<algorithms<<std::endl;
         std::cin>>algorithm;
@@ -207,12 +315,8 @@ void levels() {
             case 3: ucs(board); break;
             case 4: hill_climbing(board); break;
             case 5: a_star(board); break;
-        }
-    } else {
-        // implement back to main menu
-    }
+        } */
 }
-
 void stats() {
-    printStats(0);
+    //printStats("0"); // TODO deal with this
 }
