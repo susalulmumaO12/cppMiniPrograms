@@ -1,14 +1,18 @@
 #include <iostream>
+#include <fstream>
+#include <queue>
+#include <locale.h>
+#include <ncurses.h>
+#include <curses.h>
+#include <menu.h>
+#include <nlohmann/json.hpp>
+#include <vector>
 #include "algorithms.h"
 #include "tile.h"
 #include "board.h"
 #include "helper_functions.h"
 #include "moves.h"
 #include "main.h"
-#include <queue>
-#include <ncurses.h>
-#include <curses.h>
-#include <menu.h>
 
 
 // defining default value for each global variable
@@ -19,7 +23,7 @@ int SCORE = 0;
 dist distanceType = man;
 std::string name;
 
-const char *main_options[] = {"Play Levels", "View Stats", "Quit Game", nullptr};
+#define ARRAY_SIZE(a) (sizeof(a) / sizeof(a[0]))
 #define BANNER_PAIR 1
 #define OPTION_PAIR 2
 #define SELECTED_OPTION_PAIR 3
@@ -39,48 +43,34 @@ const std::string algorithms = "\033[38;5;189mChoose algorithm: \033[0m\n\033[48
 void levels();
 void stats();
 
-int custom_menu(const char* title, const char **options) {
+int main_menu() {
     clear();
-
-    ITEM **items = new ITEM*[100];
-    int numOptions = 0;
-    while (options[numOptions]) {
-        items[numOptions] = new_item(options[numOptions], "");
-        numOptions++;
-    }
-    items[numOptions] = nullptr;
-
-    MENU *menu = new_menu((ITEM **)items);
-
-    // Set appearance of menu items
-    set_menu_fore(menu, COLOR_PAIR(SELECTED_OPTION_PAIR));
-    set_menu_back(menu, COLOR_PAIR(OPTION_PAIR));
-    set_menu_pad(menu, COLOR_PAIR(MENU_PAD_PAIR));
+    const char *choices[] = {"Play Levels", "Computer Play","View Stats", "Quit Game"};
     
+    ITEM **items;
+    int c;				
+	MENU *menu;
+    WINDOW *menuWin;
+    int n_choices;
     int winHeight = 10, winWidth = 40;
     int startx = (COLS - winWidth) / 2;
     int starty = (LINES - winHeight) / 2;
-    WINDOW *menuWin = newwin(winHeight, winWidth, starty, startx);
-    keypad(menuWin, TRUE);
+    const char* title = "   MAIN  MENU   ";
 
+    n_choices = ARRAY_SIZE(choices);
+    items = (ITEM **)calloc(n_choices + 1, sizeof(ITEM *));
+    for(int i = 0; i < n_choices; ++i)
+        items[i] = new_item(choices[i], "");
+	items[n_choices] = (ITEM *)NULL;
+	menu = new_menu((ITEM **)items);
+    menuWin = newwin(winHeight, winWidth, starty, startx);
+    set_menu_fore(menu, COLOR_PAIR(SELECTED_OPTION_PAIR));
+    set_menu_back(menu, COLOR_PAIR(OPTION_PAIR));
+    set_menu_mark(menu, " > ");
     set_menu_win(menu, menuWin);
     set_menu_sub(menu, derwin(menuWin, 6, 38, 3, 1));
-    set_menu_mark(menu, " > ");
 
-    /* current menu looks like this
-    
-                                            ┌──────────┤   MAIN  MENU   ├──────────┐
-                                            │                                      │
-                                            │                                      │
-                                            │ > Play Levels                        │
-                                            │   View Stats                         │
-                                            │   Quit Game                          │
-                                            │                                      │
-                                            │                                      │
-                                            │                                      │
-                                            └──────────────────────────────────────┘
-
-    */
+    keypad(menuWin, TRUE);
     box(menuWin, 0, 0);
     mvwprintw(menuWin, 0, (40 - strlen(title)) / 2, "%s", title);
 	mvwaddch(menuWin, 0, 11, ACS_RTEE);
@@ -90,17 +80,10 @@ int custom_menu(const char* title, const char **options) {
     post_menu(menu);
     wrefresh(menuWin);
 
-
-    int choice = -1;
-    int c;
     while ((c = wgetch(menuWin)) != '\n') {
         switch (c) {
-            case KEY_DOWN:
-                menu_driver(menu, REQ_DOWN_ITEM);
-                break;
-            case KEY_UP:
-                menu_driver(menu, REQ_UP_ITEM);
-                break;
+            case KEY_DOWN:  menu_driver(menu, REQ_DOWN_ITEM); break;
+            case KEY_UP:    menu_driver(menu, REQ_UP_ITEM); break;
         }
         wrefresh(menuWin);
     }
@@ -109,9 +92,8 @@ int custom_menu(const char* title, const char **options) {
 
     unpost_menu(menu);
     free_menu(menu);
-    for (int j = 0; j < numOptions; ++j) {
-        free_item(items[j]);
-    }
+    for (int i = 0; i < n_choices; ++i)
+        free_item(items[i]);
     delete[] items;
     delwin(menuWin);
 
@@ -120,6 +102,7 @@ int custom_menu(const char* title, const char **options) {
 
 int main() {
 	/* Initialize curses */	
+    setlocale(LC_ALL, ""); // UTF-8 support
 	initscr();
 	start_color();
     cbreak();
@@ -129,7 +112,7 @@ int main() {
 	
     init_pair(BANNER_PAIR, COLOR_CYAN, COLOR_BLACK);
     init_pair(OPTION_PAIR, COLOR_WHITE, COLOR_BLACK);
-    init_pair(SELECTED_OPTION_PAIR, COLOR_BLUE, COLOR_YELLOW);
+    init_pair(SELECTED_OPTION_PAIR, COLOR_WHITE, COLOR_RED);
     init_pair(MENU_PAD_PAIR, COLOR_BLUE, COLOR_YELLOW);
 
     attron(COLOR_PAIR(BANNER_PAIR));
@@ -137,20 +120,15 @@ int main() {
     attroff(COLOR_PAIR(BANNER_PAIR));
 
     while (true) {
-        int choice = custom_menu("   MAIN  MENU   ", main_options);
-        if (choice == 0) levels();
-        else if (choice == 1) stats();
-        else break;
+
+        int choice = main_menu();
+        if (choice == 0) levels_menu(); // LEVELS
+        //else if (choice == 1) computer_play(); // COMPUTER
+        else if (choice == 2) stats(); // STATS
+        else break; // QUIT
     }
 
     endwin();
-
-    switch (choice) {
-        case 1: levels(); break;
-        case 2: stats(); break;
-        case 3: std::exit(0); break;
-    }
-        
     return 0;
 }
 
