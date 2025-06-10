@@ -18,7 +18,7 @@ using json = nlohmann::json;
 
 using namespace std;
 
-Board set_game_board(const std::string& levelKey){
+Board set_game_board(std::string levelKey){
     ifstream inputFile("../src/levels.json");
     if (!inputFile.is_open()) {
         cerr << "Error opening levels.json file!" << endl;
@@ -81,7 +81,7 @@ void printBoard(Board board){
     cout<<endl;
 }
 
-void printStats(string& levelName) {
+void printStats(string levelName) {
     json stats;
     vector<pair<int, pair<int, pair<int, string>>>> score_pairs;
 
@@ -147,7 +147,7 @@ void printStats(string& levelName) {
     }
 }
 
-void updateStats(const string& playerName, string& levelName, bool win) {
+void updateStats(const string& playerName, string levelName, bool win) {
     json stats;
     string filePath = "../stats.json";
 
