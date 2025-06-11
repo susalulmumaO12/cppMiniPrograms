@@ -156,8 +156,6 @@ void levels_menu() {
         labels.push_back(label);
     }
 
-    labels.push_back("Back"); // TODO: make an independent button for <Back>
-
     int cols = 2;
     int rows = (labels.size() + cols - 1) / cols;
 
@@ -166,12 +164,13 @@ void levels_menu() {
       choices.push_back(str.data());
     }
 
-    ITEM **items;
+    ITEM **items, **backItems;
     int c;				
-	MENU *menu;
+	MENU *menu, *back;
     WINDOW *menuWin;
     int n_choices;
-    int winHeight = rows + 4;
+    int winHeight = rows + 6;
+    bool focusOnBack = false;
 
     int winWidth = 28 * cols + 2;
     int startx = (COLS - winWidth) / 2;
@@ -184,6 +183,11 @@ void levels_menu() {
         items[i] = new_item(choices[i], "");
 	items[n_choices] = (ITEM *)NULL;
 
+    backItems = (ITEM **)calloc(2, sizeof(ITEM *));
+    const char* back_text = "< BACK >";
+    backItems[0] = new_item(back_text, "");
+    backItems[1] = (ITEM *)NULL;
+
 	menu = new_menu((ITEM **)items);
     menuWin = newwin(winHeight, winWidth, starty, startx);
     set_menu_format(menu, rows, cols);
@@ -193,6 +197,14 @@ void levels_menu() {
     set_menu_win(menu, menuWin);
     set_menu_sub(menu, derwin(menuWin, rows, winWidth - 4, 2, 2));
 
+    back = new_menu((ITEM **)backItems);
+    set_menu_format(back, 1, 1);
+    set_menu_fore(back, COLOR_PAIR(OPTION_PAIR));
+    set_menu_back(back, COLOR_PAIR(OPTION_PAIR));
+    set_menu_mark(back, "");
+    set_menu_win(back, menuWin);
+    set_menu_sub(back, derwin(menuWin, 1, strlen(back_text), winHeight - 2, 20));
+
     keypad(menuWin, TRUE);
     box(menuWin, 0, 0);
 	mvwaddch(menuWin, 0, (winWidth - strlen(title)) / 3, ACS_RTEE);
@@ -200,9 +212,20 @@ void levels_menu() {
     mvwprintw(menuWin, 0, (winWidth - strlen(title)) / 2, "%s", title);
 
     post_menu(menu);
+    post_menu(back);
     wrefresh(menuWin);
 
+
     while ((c = wgetch(menuWin)) != '\n') {
+
+        if (c == 27) {
+            focusOnBack = !focusOnBack;
+            set_menu_fore(back, COLOR_PAIR(SELECTED_OPTION_PAIR));
+        }
+        if (focusOnBack) {
+            menu_driver(back, REQ_DOWN_ITEM);
+        } else {
+            set_menu_fore(back, COLOR_PAIR(OPTION_PAIR));
         switch (c) {
             case KEY_DOWN:  menu_driver(menu, REQ_DOWN_ITEM); break;
             case KEY_UP:    menu_driver(menu, REQ_UP_ITEM); break;
@@ -211,10 +234,25 @@ void levels_menu() {
             case KEY_NPAGE: menu_driver(menu, REQ_SCR_DPAGE); break;
 			case KEY_PPAGE: menu_driver(menu, REQ_SCR_UPAGE); break;
         }
-        wrefresh(menuWin);
+        }
+        wrefresh(menuWin); // TODO: refresh is too slow
     }
 
-    int choice = item_index(current_item(menu));
+    int choice;
+    if (focusOnBack) { // TODO: should unpost the whole window not just the menus
+        unpost_menu(back);
+        free_menu(back);
+        free_item(backItems[0]);
+        free(backItems);
+        unpost_menu(menu);
+        free_menu(menu);
+        for (size_t i = 0; i < choices.size(); ++i) free_item(items[i]);
+        free(items);
+        delwin(menuWin);
+        return;
+    } else {
+        choice = item_index(current_item(menu));
+    }
 
     unpost_menu(menu);
     free_menu(menu);
