@@ -58,7 +58,8 @@ _Tested on Linux_
 - C++ 17 Compiler
 - CMake >= v3.12
 - Conan
-- ncurses
+- Ncurses with wide-char/UTF-8 support
+- Terminal emulator with UTF-8 support
 
 ### Build
 
@@ -242,8 +243,13 @@ _Highest score is in fact the least score, it indicates number of moves_
 - [Working with Conan and CMake](https://www.codeproject.com/Articles/5385907/Managing-Cplusplus-Projects-with-Conan-and-CMake)
 - [ASCII art Generator (for the banner)](https://patorjk.com/software/taag/#p=display&f=Graffiti&t=Brainy%20Warrior)
 - [Alice and Bob](https://en.wikipedia.org/wiki/Alice_and_Bob)
+
+**NCurses:**
 - [NCurses Doc](https://tldp.org/HOWTO/NCURSES-Programming-HOWTO/index.html)
 - [FinalCut C++ Library for TUI](https://github.com/gansm/finalcut): I did not use it but it's worth checking for lightweight C++ library for creating terminal-based applications.
+- [Curses (ncurses) tutorial](https://github.com/mcdaniel/curses_tutorial)
+- [Colors in NCurses](https://www.linuxjournal.com/content/about-ncurses-colors-0)
+- [Custom colors](https://www.youtube.com/watch?v=YyyhQ0B3huo&ab_channel=CasualCoder): Though might not work based on your terminal emulator, if it does not implement `initc` feature then you won't see the changes (further read [here](https://stackoverflow.com/questions/10809350/ncurses-why-does-init-color-return-ok-but-still-not-set-the-color)).
 
 **Algorithms:**
 - [A* (A-Star) algorithm](https://en.wikipedia.org/wiki/A*_search_algorithm)

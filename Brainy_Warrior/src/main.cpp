@@ -29,6 +29,7 @@ std::string name;
 #define BANNER_PAIR 1
 #define OPTION_PAIR 2
 #define SELECTED_OPTION_PAIR 3
+#define GREY_OPTION_PAIR 4
 
 // print-strings all in one place
 const std::string BrainyWarrior = "__________               .__                __      __                     .__              \n\\______   \\____________  |__| ____ ___.__. /  \\    /  \\_____ ______________|__| ___________ \n |    |  _/\\_  __ \\__  \\ |  |/    <   |  | \\   \\/\\/   /\\__  \\_  __ \\_  __ \\  |/  _ \\_  __  \\\n |    |   \\ |  | \\// __ \\|  |   |  \\___  |  \\        /  / __ \\|  | \\/|  | \\/  (  <_> )  | \\/\n |______  / |__|  (____  /__|___|  / ____|   \\__/\\  /  (____  /__|   |__|  |__|\\____/|__|   \n        \\/             \\/        \\/\\/             \\/        \\/                              ";
@@ -74,7 +75,7 @@ int main_menu() {
 
     keypad(menuWin, TRUE);
     box(menuWin, 0, 0);
-    mvwprintw(menuWin, 0, (40 - strlen(title)) / 2, "%s", title);
+	mvwprintw(menuWin, 0, (40 - strlen(title)) / 2, "%s", title);
 	mvwaddch(menuWin, 0, 11, ACS_RTEE);
 	//mvwhline(menuWin, 0, 1, ACS_HLINE, 38);
 	mvwaddch(menuWin, 0, 28, ACS_LTEE);
@@ -221,22 +222,24 @@ void levels_menu() {
         if (c == 27) {
             focusOnBack = !focusOnBack;
             set_menu_fore(back, COLOR_PAIR(SELECTED_OPTION_PAIR));
+            set_menu_fore(menu, COLOR_PAIR(GREY_OPTION_PAIR));
         }
         if (focusOnBack) {
             menu_driver(back, REQ_DOWN_ITEM);
         } else {
             set_menu_fore(back, COLOR_PAIR(OPTION_PAIR));
-        switch (c) {
-            case KEY_DOWN:  menu_driver(menu, REQ_DOWN_ITEM); break;
-            case KEY_UP:    menu_driver(menu, REQ_UP_ITEM); break;
-            case KEY_LEFT:  menu_driver(menu, REQ_LEFT_ITEM); break;
-            case KEY_RIGHT: menu_driver(menu, REQ_RIGHT_ITEM); break;
-            case KEY_NPAGE: menu_driver(menu, REQ_SCR_DPAGE); break;
-			case KEY_PPAGE: menu_driver(menu, REQ_SCR_UPAGE); break;
+            set_menu_fore(menu, COLOR_PAIR(SELECTED_OPTION_PAIR));
+            switch (c) {
+                case KEY_DOWN:  menu_driver(menu, REQ_DOWN_ITEM); break;
+                case KEY_UP:    menu_driver(menu, REQ_UP_ITEM); break;
+                case KEY_LEFT:  menu_driver(menu, REQ_LEFT_ITEM); break;
+                case KEY_RIGHT: menu_driver(menu, REQ_RIGHT_ITEM); break;
+                case KEY_NPAGE: menu_driver(menu, REQ_SCR_DPAGE); break;
+			    case KEY_PPAGE: menu_driver(menu, REQ_SCR_UPAGE); break;
         }
-        }
-        wrefresh(menuWin); // TODO: refresh is too slow
     }
+        wrefresh(menuWin); // TODO: refresh is too slow
+}
 
     int choice;
     if (focusOnBack) { // TODO: should unpost the whole window not just the menus
@@ -304,42 +307,42 @@ int main() {
 
 void level(const std::string& level) {
     Board board = set_game_board(level);
-
+    
     WIZARDTILES = getWizardTiles(board);
     printBoard(board);
 
-        std::cout<<instructions<<std::endl;
-        Node_State state(board, nullptr, 0, 0);
-        std::queue<Node_State> q;
-        q.push(state);
-        while(!q.empty()){
-            Tile& player = board.getPlayerTile();
-            Node_State current(q.front());
-            q.pop();
-            // WIN CASE
-            if(board.win()){
-                std::cout<<gameWin<<std::endl;
+    std::cout<<instructions<<std::endl;
+    Node_State state(board, nullptr, 0, 0);
+    std::queue<Node_State> q;
+    q.push(state);
+    while(!q.empty()){
+        Tile& player = board.getPlayerTile();
+        Node_State current(q.front());
+        q.pop();
+        // WIN CASE
+        if(board.win()){
+            std::cout<<gameWin<<std::endl;
             updateStats(name, level, true);
-                std::cout<<"print path? (y/n)\n";
-                char yn1; std::cin>>yn1;
-                if(tolower(yn1) == 'y') printBoard(getPath(&current));
-                std::cout<< "Print stats? (y/n)\n";
-                char yn2; std::cin>>yn2;
+            std::cout<<"print path? (y/n)\n";
+            char yn1; std::cin>>yn1;
+            if(tolower(yn1) == 'y') printBoard(getPath(&current));
+            std::cout<< "Print stats? (y/n)\n";
+            char yn2; std::cin>>yn2;
             tolower(yn2) == 'y' ? printStats(level) : exit(0);
-                exit(0);
-            }
-            // LOSE CASE
-            if(player.getValue() == -1){
-                std::cout<<gameOver<<std::endl;
-            updateStats(name, level, false);
-            }
-            char m; std::cin>>m;
-            board = move(board, m);
-            Node_State movedBoard(board, &current, 0, 0);
-            q.push(movedBoard);
-            printBoard(board);
-    }
+            exit(0);
         }
+        // LOSE CASE
+        if(player.getValue() == -1){
+            std::cout<<gameOver<<std::endl;
+            updateStats(name, level, false);
+        }
+        char m; std::cin>>m;
+        board = move(board, m);
+        Node_State movedBoard(board, &current, 0, 0);
+        q.push(movedBoard);
+        printBoard(board);
+    }
+}
 
 void computer_play() {
     // TODO deal with this
