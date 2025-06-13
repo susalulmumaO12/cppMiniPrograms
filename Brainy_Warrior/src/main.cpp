@@ -242,30 +242,27 @@ void levels_menu() {
 }
 
     int choice;
-    if (focusOnBack) { // TODO: should unpost the whole window not just the menus
-        unpost_menu(back);
-        free_menu(back);
-        free_item(backItems[0]);
-        free(backItems);
-        unpost_menu(menu);
-        free_menu(menu);
-        for (size_t i = 0; i < choices.size(); ++i) free_item(items[i]);
-        free(items);
-        delwin(menuWin);
+
+    unpost_menu(back);
+    free_menu(back);
+    free_item(backItems[0]);
+    free(backItems);
+    unpost_menu(menu);
+    free_menu(menu);
+    for (size_t i = 0; i < choices.size(); ++i)
+        free_item(items[i]);
+    free(items);
+    werase(menuWin);
+    wrefresh(menuWin);
+    delwin(menuWin);
+    clear();
+    refresh();
+
+    if (focusOnBack) {
         return;
     } else {
         choice = item_index(current_item(menu));
     }
-
-    unpost_menu(menu);
-    free_menu(menu);
-    for (int i = 0; i < n_choices; ++i)
-        free_item(items[i]);
-    delete[] items;
-    delwin(menuWin);
-
-    endwin();
-
     if (choice >= 0 && choice < (int)levelKeys.size()) {
         std::string levelKey = levelKeys[choice];
         clear();
