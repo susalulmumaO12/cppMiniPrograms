@@ -185,7 +185,7 @@ void levels_menu() {
 	items[n_choices] = (ITEM *)NULL;
 
     backItems = (ITEM **)calloc(2, sizeof(ITEM *));
-    const char* back_text = "< BACK >";
+    const char* back_text = "< Back >";
     backItems[0] = new_item(back_text, "");
     backItems[1] = (ITEM *)NULL;
 
@@ -221,14 +221,22 @@ void levels_menu() {
 
         if (c == 27) {
             focusOnBack = !focusOnBack;
-            set_menu_fore(back, COLOR_PAIR(SELECTED_OPTION_PAIR));
-            set_menu_fore(menu, COLOR_PAIR(GREY_OPTION_PAIR));
+            if (focusOnBack) {
+                set_menu_fore(menu, COLOR_PAIR(GREY_OPTION_PAIR));
+                set_menu_fore(back, COLOR_PAIR(SELECTED_OPTION_PAIR));
+            } else {
+                set_menu_fore(menu, COLOR_PAIR(SELECTED_OPTION_PAIR));
+                set_menu_fore(back, COLOR_PAIR(OPTION_PAIR));
+            }
+
+            unpost_menu(menu);
+            post_menu(menu);
+            unpost_menu(back);
+            post_menu(back);
         }
         if (focusOnBack) {
             menu_driver(back, REQ_DOWN_ITEM);
         } else {
-            set_menu_fore(back, COLOR_PAIR(OPTION_PAIR));
-            set_menu_fore(menu, COLOR_PAIR(SELECTED_OPTION_PAIR));
             switch (c) {
                 case KEY_DOWN:  menu_driver(menu, REQ_DOWN_ITEM); break;
                 case KEY_UP:    menu_driver(menu, REQ_UP_ITEM); break;
@@ -238,7 +246,7 @@ void levels_menu() {
 			    case KEY_PPAGE: menu_driver(menu, REQ_SCR_UPAGE); break;
         }
     }
-        wrefresh(menuWin); // TODO: refresh is too slow
+        wrefresh(menuWin);
 }
 
     int choice;
@@ -274,6 +282,7 @@ int main() {
 	/* Initialize curses */	
     setlocale(LC_ALL, ""); // UTF-8 support
 	initscr();
+    set_escdelay(25);
 	start_color();
     cbreak();
     noecho();
@@ -283,7 +292,7 @@ int main() {
     init_pair(BANNER_PAIR, COLOR_CYAN, COLOR_BLACK);
     init_pair(OPTION_PAIR, COLOR_WHITE, COLOR_BLACK);
     init_pair(SELECTED_OPTION_PAIR, COLOR_WHITE, COLOR_RED);
-    init_pair(MENU_PAD_PAIR, COLOR_BLUE, COLOR_YELLOW);
+    init_pair(GREY_OPTION_PAIR, COLOR_BLACK, COLOR_WHITE); //TODO: look into color coding in various terminal emulators
 
     attron(COLOR_PAIR(BANNER_PAIR));
     mvaddstr(0, 0, BrainyWarrior.c_str());
