@@ -44,7 +44,7 @@ const std::string gameWin = "\033[38;5;226mYOU WIN!\033[0m";
 const std::string algorithms = "\033[38;5;189mChoose algorithm: \033[0m\n\033[48;5;220m\033[38;5;18m1) BFS\033[0m\033[0m \033[48;5;17m\033[38;5;220m2) DFS\033[0m\033[0m \033[48;5;175m\033[38;5;53m3) UCS\033[0m\033[0m \033[48;5;28m\033[38;5;52m4) Hill Climbing\033[0m\033[0m \033[48;5;160m\033[38;5;231m5) A_star\033[0m\033[0m";
 
 void level(const std::string& level);
-void stats();
+void stats(const std::string& level);
 
 int main_menu() {
     clear();
@@ -293,7 +293,7 @@ void stats_menu() {
     labels.push_back("All stats");
     for (const auto& level : statsJson["levels"].items()) {
         std::string label = level.key() + " stats";
-        levelKeys.push_back(levelName);
+        levelKeys.push_back(level.key());
         labels.push_back(label);
     }
 
@@ -505,6 +505,10 @@ void computer_play() {
             case 5: a_star(board); break;
         } */
 }
-void stats() {
-    //printStats("0"); // TODO deal with this
+void stats(const std::string& level) {
+
+    if(level == "All stats") {
+        printStats("0");
+    }
+    else printStats(level);
 }
