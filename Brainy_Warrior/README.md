@@ -33,13 +33,7 @@
 
 ## Preview
 
-The game is printed on the console, and takes user input from keyboard on game options:
-
-<img src="./screenshot/lvl1.png" alt="level 1" height="150" /> <img src="./screenshot/gameover.png" alt="lose state" height="150" />
-<br>
-<img src="./screenshot/win.png" alt="win state" height="150" />&emsp; <img src="./screenshot/path.png" alt="path" height="150" />
-
-_In the pictures above_ `5` _is considered a target/ enemy and_ `9` _is the player._
+<img src="./screenshot/tui_main_menu.png" alt="level 1" height="200" /> <img src="./screenshot/tui_levels_menu.png" alt="lose state" height="200" />
 
 ## Game Flow
 <!-- 
