@@ -1,21 +1,7 @@
 #include <iostream>
-#include <fstream>
-#include <queue>
-#include <locale.h>
-#include <ncurses.h>
-#include <curses.h>
-#include <menu.h>
-#include <nlohmann/json.hpp>
-#include <vector>
-#include "algorithms.h"
-#include "tile.h"
-#include "board.h"
-#include "helper_functions.h"
-#include "moves.h"
+
+#include "brainy_warrior_tui.h"
 #include "main.h"
-
-
-using json = nlohmann::json;
 
 // defining default value for each global variable
 bool WIZMOVED = false;
@@ -25,11 +11,6 @@ int SCORE = 0;
 dist distanceType = man;
 std::string name;
 
-#define ARRAY_SIZE(a) (sizeof(a) / sizeof(a[0]))
-#define BANNER_PAIR 1
-#define OPTION_PAIR 2
-#define SELECTED_OPTION_PAIR 3
-#define GREY_OPTION_PAIR 4
 
 // print-strings all in one place
 const std::string BrainyWarrior = "__________               .__                __      __                     .__              \n\\______   \\____________  |__| ____ ___.__. /  \\    /  \\_____ ______________|__| ___________ \n |    |  _/\\_  __ \\__  \\ |  |/    <   |  | \\   \\/\\/   /\\__  \\_  __ \\_  __ \\  |/  _ \\_  __  \\\n |    |   \\ |  | \\// __ \\|  |   |  \\___  |  \\        /  / __ \\|  | \\/|  | \\/  (  <_> )  | \\/\n |______  / |__|  (____  /__|___|  / ____|   \\__/\\  /  (____  /__|   |__|  |__|\\____/|__|   \n        \\/             \\/        \\/\\/             \\/        \\/                              ";
@@ -420,35 +401,21 @@ int choice;
 }
 
 int main() {
-	/* Initialize curses */	
-    setlocale(LC_ALL, ""); // UTF-8 support
-	initscr();
-    set_escdelay(25);
-	start_color();
-    cbreak();
-    noecho();
-	keypad(stdscr, TRUE); // support arrow keys for stdscr
-    curs_set(0);
 	
-    init_pair(BANNER_PAIR, COLOR_CYAN, COLOR_BLACK);
-    init_pair(OPTION_PAIR, COLOR_WHITE, COLOR_BLACK);
-    init_pair(SELECTED_OPTION_PAIR, COLOR_WHITE, COLOR_RED);
-    init_pair(GREY_OPTION_PAIR, COLOR_BLACK, COLOR_WHITE); //TODO: look into color coding in various terminal emulators
-
-    attron(COLOR_PAIR(BANNER_PAIR));
-    mvaddstr(0, 0, BrainyWarrior.c_str());
-    attroff(COLOR_PAIR(BANNER_PAIR));
+    init_tui();
 
     while (true) {
 
         int choice = main_menu();
-        if (choice == 0) levels_menu(); // LEVELS
+        if (choice == 0) {
+            name = ask_name();
+            levels_menu();
+        } // LEVELS
         //else if (choice == 1) computer_play(); // COMPUTER
         else if (choice == 2) stats_menu(); // STATS
         else break; // QUIT
     }
 
-    endwin();
     return 0;
 }
 
