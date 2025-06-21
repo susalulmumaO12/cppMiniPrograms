@@ -49,10 +49,3 @@ void computer_play() {
             case 5: a_star(board); break;
         } */
 }
-void stats(const std::string& level) {
-
-    if(level == "All stats") {
-        printStats("0");
-    }
-    else printStats(level);
-}
