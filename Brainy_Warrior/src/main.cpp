@@ -29,7 +29,7 @@ int main() {
         } // LEVELS
         //else if (choice == 1) computer_play(); // COMPUTER
         else if (choice == 2) stats_menu(); // STATS
-        else break; // QUIT
+        else { quit(); break; } // QUIT
     }
 
     return 0;

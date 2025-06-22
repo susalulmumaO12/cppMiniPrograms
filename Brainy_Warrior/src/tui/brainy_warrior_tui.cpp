@@ -102,3 +102,9 @@ std::string ask_name() {
 
     return name;
 }
+
+void quit() {
+    clear();
+    endwin();
+    //TODO print "Goodbye!" for a second then clear
+}

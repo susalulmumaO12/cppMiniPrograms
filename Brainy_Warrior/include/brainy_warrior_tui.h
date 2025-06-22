@@ -14,6 +14,7 @@ int main_menu();
 std::string ask_name();
 void levels_menu();
 void stats_menu();
+void quit();
 
 void level(const std::string& level);
 void stats(const std::string& level);
