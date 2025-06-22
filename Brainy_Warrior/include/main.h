@@ -26,6 +26,7 @@ extern bool WIZMOVED;
 extern circularq WIZARDTILES;
 extern Tile currentWizard;
 extern int SCORE;
+extern std::string name;
 
 enum dist { man, euc, mink, cheb };
 extern dist distanceType;

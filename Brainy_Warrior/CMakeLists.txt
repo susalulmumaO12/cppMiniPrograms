@@ -7,6 +7,7 @@ set(SOURCE_DIR src)
 set(STRUCTURE_DIR src/structure)
 set(LOGIC_DIR src/logic)
 set(GAME_SOLVER_DIR src/game_solver)
+set(TUI_DIR src/tui)
 set(INCLUDE_DIR include)
 
 # Access JSON package
@@ -27,10 +28,13 @@ add_executable(Brainy_Warrior
     ${GAME_SOLVER_DIR}/uniform_cost_search.cpp
     ${GAME_SOLVER_DIR}/hill_climbing.cpp
     ${GAME_SOLVER_DIR}/A_star_search.cpp
+    ${TUI_DIR}/brainy_warrior_tui.cpp
+    ${TUI_DIR}/levels_tui.cpp
+    ${TUI_DIR}/stats_tui.cpp
 )
 
 #include headers
-include_directories(${INCLUDE_DIR} ${STRUCTURE_DIR} ${LOGIC_DIR} ${GAME_SOLVER_DIR})
+include_directories(${INCLUDE_DIR} ${STRUCTURE_DIR} ${LOGIC_DIR} ${GAME_SOLVER_DIR} ${TUI_DIR})
 include_directories(${CURSES_INCLUDE_DIR})
 
 # Set target properties
