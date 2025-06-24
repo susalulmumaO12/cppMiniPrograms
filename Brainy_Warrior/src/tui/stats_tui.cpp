@@ -2,6 +2,7 @@
 
 #include <fstream>
 #include <queue>
+#include <vector>
 #include <locale.h>
 #include <ncurses.h>
 #include <curses.h>
@@ -16,7 +17,9 @@
 using json = nlohmann::json;
 
 void stats_menu() {
-    
+    clear();
+    refresh();
+
     json statsJson;
     std::ifstream statsFile("../stats.json");
     if (statsFile.is_open()) {
@@ -158,8 +161,27 @@ int choice;
 
 void stats(const std::string& level) {
 
+    std::vector<std::pair<int, std::pair<int, std::pair<int, std::string>>>> score_pairs =  fetchStats(level);
+    
     if(level == "All stats") {
-        printStats("0");
+
+        std::cout << "stats for " << level << ":\n";
+        std::cout << "Name | Score | Tries | Wins\n";
+        for (auto player : score_pairs) {
+            std::cout << player.second.second.second << " | " 
+                 << player.first << " | " 
+                 << player.second.first << " | " 
+                 << player.second.second.first << std::endl;
+        }
+        std::cout << std::endl;
+    } else {
+        
+        std::cout << "Name | Score | Tries | Wins\n";
+        for (auto player : score_pairs) {
+            std::cout << player.second.second.second << " | " 
+                 << player.first << " | " 
+                 << player.second.first << " | " 
+                 << player.second.second.first << std::endl;
+        }
     }
-    else printStats(level);
 }

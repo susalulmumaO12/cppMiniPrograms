@@ -14,7 +14,7 @@
 Board set_game_board(std::string levelKey);
 void printTile(int value);
 void printBoard(Board board);
-void printStats(std::string levelName);
+std::vector<std::pair<int, std::pair<int, std::pair<int, std::string>>>> fetchStats(std::string levelName);
 void updateStats(const std::string& playerName, std::string levelName, bool win);
 dist getDistanceType();
 std::list<Node_State> get_next_cost_states(Node_State* board);

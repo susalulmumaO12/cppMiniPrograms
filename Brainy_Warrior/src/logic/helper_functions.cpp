@@ -81,7 +81,7 @@ void printBoard(Board board){
     cout<<endl;
 }
 
-void printStats(string levelName) {
+vector<pair<int, pair<int, pair<int, string>>>> fetchStats(string levelName) {
     json stats;
     vector<pair<int, pair<int, pair<int, string>>>> score_pairs;
 
@@ -92,11 +92,10 @@ void printStats(string levelName) {
         inputFile.close();
     }
 
-    if (levelName != "0") { // TODO: this method is stupid
+    if (levelName != "All stats") { // TODO: this method is stupid, is it still???
 
         if (!stats["levels"].contains(levelName)) {
             cout << "No one played this level yet!\n";
-            return;
         }
 
         for (auto player : stats["levels"][levelName].items()) {
@@ -109,14 +108,6 @@ void printStats(string levelName) {
         }
 
         sort(score_pairs.begin(), score_pairs.end());
-
-        cout << "Name | Score | Tries | Wins\n";
-        for (auto player : score_pairs) {
-            cout << player.second.second.second << " | " 
-                 << player.first << " | " 
-                 << player.second.first << " | " 
-                 << player.second.second.first << endl;
-        }
 
     } else { // print all levels stats
         for (auto levelItem : stats["levels"].items()) {
@@ -133,18 +124,10 @@ void printStats(string levelName) {
             }
 
             sort(score_pairs.begin(), score_pairs.end());
-
-            cout << "stats for " << levelName << ":\n";
-            cout << "Name | Score | Tries | Wins\n";
-            for (auto player : score_pairs) {
-                cout << player.second.second.second << " | " 
-                     << player.first << " | " 
-                     << player.second.first << " | " 
-                     << player.second.second.first << endl;
-            }
-            cout << endl;
         }
     }
+
+    return score_pairs;
 }
 
 void updateStats(const string& playerName, string levelName, bool win) {

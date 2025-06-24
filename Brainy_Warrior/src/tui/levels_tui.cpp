@@ -201,7 +201,7 @@ void level(const std::string& level) {
             if(tolower(yn1) == 'y') printBoard(getPath(&current));
             std::cout<< "Print stats? (y/n)\n";
             char yn2; std::cin>>yn2;
-            tolower(yn2) == 'y' ? printStats(level) : exit(0);
+            //tolower(yn2) == 'y' ? printStats(level) : exit(0);
             exit(0);
         }
         // LOSE CASE
