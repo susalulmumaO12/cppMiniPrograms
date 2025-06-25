@@ -91,41 +91,18 @@ vector<pair<int, pair<int, pair<int, string>>>> fetchStats(string levelName) {
         inputFile >> stats;
         inputFile.close();
     }
-
-    if (levelName != "All stats") { // TODO: this method is stupid, is it still???
-
-        if (!stats["levels"].contains(levelName)) {
-            cout << "No one played this level yet!\n";
-        }
-
-        for (auto player : stats["levels"][levelName].items()) {
-            string playerName = player.key();
-            int playerScore = player.value()["score"];
-            int playerTries = player.value()["tries"];
-            int playerWins = player.value()["wins"];
-
-            score_pairs.push_back({playerScore, {playerTries, {playerWins, playerName}}});
-        }
-
-        sort(score_pairs.begin(), score_pairs.end());
-
-    } else { // print all levels stats
-        for (auto levelItem : stats["levels"].items()) {
-            string levelName = levelItem.key();
-            score_pairs.clear();
-            
-            for (auto player : levelItem.value().items()) {  
-                string playerName = player.key();
-                int playerScore = player.value()["score"];
-                int playerTries = player.value()["tries"];
-                int playerWins = player.value()["wins"];
-
-                score_pairs.push_back({playerScore, {playerTries, {playerWins, playerName}}});
-            }
-
-            sort(score_pairs.begin(), score_pairs.end());
-        }
+    
+    if (!stats["levels"].contains(levelName)) {
+        cout << "No one played this level yet!\n";
     }
+    for (auto player : stats["levels"][levelName].items()) {
+        string playerName = player.key();
+        int playerScore = player.value()["score"];
+        int playerTries = player.value()["tries"];
+        int playerWins = player.value()["wins"];
+        score_pairs.push_back({playerScore, {playerTries, {playerWins, playerName}}});
+    }
+    sort(score_pairs.begin(), score_pairs.end());
 
     return score_pairs;
 }
