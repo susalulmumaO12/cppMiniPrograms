@@ -30,7 +30,6 @@ void stats_menu() {
     std::vector<std::string> labels;
     std::vector<std::string> levelKeys;
 
-    labels.push_back("All stats");
     for (const auto& level : statsJson["levels"].items()) {
         std::string label = level.key() + " stats";
         levelKeys.push_back(level.key());
@@ -130,6 +129,16 @@ void stats_menu() {
 }
 
 int choice;
+    
+    if (focusOnBack) {
+        return;
+    } else {
+        choice = item_index(current_item(menu));
+    }
+    if (choice >= 0 && choice < (int)levelKeys.size()) {
+        std::string levelKey = levelKeys[choice];
+        stats(levelKey);
+    }
 
     unpost_menu(back);
     free_menu(back);
@@ -146,42 +155,48 @@ int choice;
     clear();
     refresh();
 
-    if (focusOnBack) {
-        return;
-    } else {
-        choice = item_index(current_item(menu));
-    }
-    if (choice >= 0 && choice < (int)levelKeys.size()) {
-        std::string levelKey = levelKeys[choice];
-        clear();
-        stats(levelKey);
-    }
-
 }
 
 void stats(const std::string& level) {
 
-    std::vector<std::pair<int, std::pair<int, std::pair<int, std::string>>>> score_pairs =  fetchStats(level);
-    
-    if(level == "All stats") {
+    std::vector<std::pair<int, std::pair<int, std::pair<int, std::string>>>> score_pairs = fetchStats(level);
 
-        std::cout << "stats for " << level << ":\n";
-        std::cout << "Name | Score | Tries | Wins\n";
-        for (auto player : score_pairs) {
-            std::cout << player.second.second.second << " | " 
-                 << player.first << " | " 
-                 << player.second.first << " | " 
-                 << player.second.second.first << std::endl;
-        }
-        std::cout << std::endl;
-    } else {
-        
-        std::cout << "Name | Score | Tries | Wins\n";
-        for (auto player : score_pairs) {
-            std::cout << player.second.second.second << " | " 
-                 << player.first << " | " 
-                 << player.second.first << " | " 
-                 << player.second.second.first << std::endl;
-        }
+    clear();
+    curs_set(0);
+    int row, col;
+    getmaxyx(stdscr, row, col);
+
+    int starty = (COLS / 2) - 50;
+    int startx = 4;
+
+    std::string header = "Stats for " + level;
+    attron(A_BOLD | COLOR_PAIR(1));
+    mvprintw(starty - 2, (col - header.size()) / 2, "%s", header.c_str());
+    attroff(A_BOLD | COLOR_PAIR(1));
+
+    attron(A_UNDERLINE);
+    mvprintw(starty, startx, "%-12s | %-5s | %-5s | %-5s", "Name", "Score", "Tries", "Wins");
+    attroff(A_UNDERLINE);
+
+    int i = 1;
+    for (const auto& player : score_pairs) {
+        std::string name   = player.second.second.second;
+        int score          = player.first;
+        int tries          = player.second.first;
+        int wins           = player.second.second.first;
+
+        mvprintw(starty + i, startx, "%-12s | %-5d | %-5d | %-5d", name.c_str(), score, tries, wins);
+        i++;
+    }
+
+    attron(A_DIM);
+    mvprintw(row - 2, startx, "Press ESC to return to main menu..."); //TODO fix this
+    attroff(A_DIM);
+
+    refresh();
+    int c = getch();
+    if(c == 27) {
+        clear();
+        refresh();
     }
 }
