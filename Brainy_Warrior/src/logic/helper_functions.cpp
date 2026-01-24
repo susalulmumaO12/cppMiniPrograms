@@ -8,11 +8,14 @@
 #include <list>
 #include <vector>
 #include <cmath>
+#include <algorithm>
 #include "node_state.h"
 #include "board.h"
 #include "tile.h"
 #include "main.h"
 #include "moves.h"
+#include <ncurses.h>
+#include "brainy_warrior_tui.h"
 
 using json = nlohmann::json;
 
@@ -21,8 +24,8 @@ using namespace std;
 Board set_game_board(std::string levelKey){
     ifstream inputFile("../src/levels.json");
     if (!inputFile.is_open()) {
-        cerr << "Error opening levels.json file!" << endl;
-        exit(0);
+        debug_log("Error opening levels.json file!");
+        return Board(0, 0);
     }
 
     // create an empty structure (null)
@@ -30,8 +33,8 @@ Board set_game_board(std::string levelKey){
     inputFile >> j;
 
     if (j.find(levelKey) == j.end()) {
-        cerr<<"Level "<<levelKey<<" not found!"<<endl;
-        exit(0);
+        debug_log("Level " + levelKey + " not found!");
+        return Board(0, 0);
     }
 
     // level data from json file
@@ -51,34 +54,40 @@ Board set_game_board(std::string levelKey){
     return board;
 }
 
-void printTile(int value) {
+
+void printTile(int value, int r, int c) {
+    int pair = 0;
+    const char* sym = " ? ";
     switch (value) {
-        case 0: cout << "\033[48;5;45m\033[38;5;75m 0 \033[0m\033[0m"; break;  // 0:sea
-        case 1: cout << "\033[48;5;42m\033[38;5;36m 1 \033[0m\033[0m"; break;  // 1:land
-        case 3: cout << "\033[48;5;22m\033[38;5;165m O \033[0m\033[0m"; break;  // 3:wizard tile
-        case 4: cout << "\033[48;5;226m\033[38;5;220m 4 \033[0m\033[0m"; break;  // 4:wall
-        case 5: cout << "\033[48;5;96m\033[1;38;5;89m 5 \033[0m\033[0m"; break;  // 5:target
-        case 6: cout << "\033[38;5;226m * \033[0m"; break;                      // 6:star
-        case 7: cout << "\033[48;5;165m\033[1;38;5;22m W \033[0m\033[0m"; break;  // 7:wizard
-        case 8: cout << "\033[48;5;200m\033[1;38;5;9m 8 \033[0m\033[0m"; break;  // 8:won player
-        case 9: cout << "\033[48;5;216m\033[1;38;5;9m 9 \033[0m\033[0m"; break;  // 9:player
-        case -1: cout << "\033[48;5;9m\033[1;38;5;216m X \033[0m\033[0m"; break;  // -1:dead player
-        default: cout << value << " "; break;
+        case 0: pair = SEA_PAIR; sym = "   "; break;
+        case 1: pair = LAND_PAIR; sym = " . "; break;
+        case 3: pair = WIZARD_TILE_PAIR; sym = " O "; break;
+        case 4: pair = WALL_PAIR; sym = " # "; break;
+        case 5: pair = TARGET_PAIR; sym = " X "; break;
+        case 6: pair = STAR_PAIR; sym = " * "; break;
+        case 7: pair = WIZARD_PAIR; sym = " W "; break;
+        case 8: pair = WON_PLAYER_PAIR; sym = " @ "; break;
+        case 9: pair = PLAYER_PAIR; sym = " P "; break;
+        case -1: pair = DEAD_PLAYER_PAIR; sym = " X "; break;
+        default: sym = " ? "; break;
     }
+    attron(COLOR_PAIR(pair));
+    mvprintw(r, c, "%s", sym);
+    attroff(COLOR_PAIR(pair));
 }
 
 void printBoard(Board board){
     int n = board.getN();
     int m = board.getM();
+    int start_r = (LINES - n) / 2;
+    int start_c = (COLS - m * 3) / 2;
 
     for (int i = 0; i < n; i++) {
-            for (int j = 0; j < m; j++) {
-                printTile(board.getTile(i, j).getValue());
-            }
-            cout << endl;
+        for (int j = 0; j < m; j++) {
+            printTile(board.getTile(i, j).getValue(), start_r + i, start_c + j * 3);
+        }
     }
-
-    cout<<endl;
+    refresh();
 }
 
 vector<pair<int, pair<int, pair<int, string>>>> fetchStats(string levelName) {
@@ -93,16 +102,17 @@ vector<pair<int, pair<int, pair<int, string>>>> fetchStats(string levelName) {
     }
     
     if (!stats["levels"].contains(levelName)) {
-        cout << "No one played this level yet!\n";
+        debug_log("No one played this level yet!");
+    } else {
+        for (auto player : stats["levels"][levelName].items()) {
+            string playerName = player.key();
+            int playerScore = player.value()["score"];
+            int playerTries = player.value()["tries"];
+            int playerWins = player.value()["wins"];
+            score_pairs.push_back({playerScore, {playerTries, {playerWins, playerName}}});
+        }
+        sort(score_pairs.begin(), score_pairs.end());
     }
-    for (auto player : stats["levels"][levelName].items()) {
-        string playerName = player.key();
-        int playerScore = player.value()["score"];
-        int playerTries = player.value()["tries"];
-        int playerWins = player.value()["wins"];
-        score_pairs.push_back({playerScore, {playerTries, {playerWins, playerName}}});
-    }
-    sort(score_pairs.begin(), score_pairs.end());
 
     return score_pairs;
 }
@@ -116,7 +126,7 @@ void updateStats(const string& playerName, string levelName, bool win) {
         try {
             inputFile >> stats;
         } catch (json::parse_error& e) {
-            cerr << "Error parsing stats.json. Initializing a new file." << endl;
+            debug_log("Error parsing stats.json. Initializing a new file.");
             stats = json::object();
         }
         inputFile.close();
@@ -145,11 +155,17 @@ void updateStats(const string& playerName, string levelName, bool win) {
         stats["levels"][levelName][playerName]["wins"] = stats["levels"][levelName][playerName]["wins"].get<int>() + 1;
     }
 
+    int currentScore = GameSession::getInstance().score;
     if (!stats["levels"][levelName][playerName].contains("score") || 
-        (SCORE < stats["levels"][levelName][playerName]["score"].get<int>() ||
+        (currentScore < stats["levels"][levelName][playerName]["score"].get<int>() ||
         stats["levels"][levelName][playerName]["score"].get<int>() == 0)) {
-        cout << "New best score for " << playerName << "! Score: " << SCORE << endl;
-        stats["levels"][levelName][playerName]["score"] = SCORE;
+        debug_log("New best score for " + playerName + "! Score: " + to_string(currentScore));
+        stats["levels"][levelName][playerName]["score"] = currentScore;
+        
+        // Visual feedback for new best score
+        attron(A_BOLD | COLOR_PAIR(STAR_PAIR));
+        mvprintw((LINES + 7) / 2 + 4, (COLS - 30) / 2, " NEW BEST SCORE: %d! ", currentScore);
+        attroff(A_BOLD | COLOR_PAIR(STAR_PAIR));
     }
 
     //save the updated stats
@@ -158,56 +174,32 @@ void updateStats(const string& playerName, string levelName, bool win) {
         outputFile << stats.dump(4);
         outputFile.close();
     } else {
-        cerr << "Error: Unable to write to stats.json" << endl;
+        debug_log("Error: Unable to write to stats.json");
     }
 }
 
 dist getDistanceType() {
     int choice;
-
-    // Displaying the menu with ANSI styling
-    cout << "\033[1;37mSelect heuristic calculation:\033[0m\n";
-    cout << "\033[48;5;124m\033[38;5;15m1) Manhattan\033[0m\033[0m ";
-    cout << "\033[48;5;34m\033[38;5;15m2) Euclidean\033[0m\033[0m ";
-    cout << "\033[48;5;208m\033[38;5;15m3) Minkowski (p=3)\033[0m\033[0m ";
-    cout << "\033[48;5;27m\033[38;5;15m4) Chebyshev\033[0m\033[0m ";
-    
-    cin >> choice;
-
-    // Returning the corresponding distance type
-    switch (choice) {
-        case 1:
-            return man; // Manhattan
-        case 2:
-            return euc; // Euclidean
-        case 3:
-            return mink; // Minkowski
-        case 4:
-            return cheb; // Chebyshev
-        default:
-            std::cout << "\033[31mInvalid choice, defaulting to Manhattan.\033[0m\n";
-            return man; // Default to Manhattan
-    }
+    // This is currently unused in the main flow but kept for compatibility
+    return man; 
 }
 
-list<Node_State> get_next_cost_states(Node_State* board){
-    list<Node_State> states;
+list<shared_ptr<Node_State>> get_next_cost_states(shared_ptr<Node_State> board){
+    list<shared_ptr<Node_State>> states;
     
     if(canMoveUp(board->getBoard())){ //cost of moving up: 1
         Board up(board->getBoard());
         up = slideUp(up);
         if(up.getPlayerTile().getValue() != -1){
 
-            Node_State up_state(up, board, board->getG() + 1, 0);
+            auto up_state = make_shared<Node_State>(up, board, board->getG() + 1, 0);
             states.push_back(up_state);
             if(DEBUG){
-
-            cout<<"UP\n";
-            printBoard(up);
+                debug_log("Generated UP state");
             }
 
             if(up.win()){
-            return states;
+                return states;
             }
         }
     }
@@ -218,15 +210,14 @@ list<Node_State> get_next_cost_states(Node_State* board){
         if(down.getPlayerTile().getValue() != -1){
 
 
-            Node_State down_state(down, board, board->getG() + 2, 0);
+            auto down_state = make_shared<Node_State>(down, board, board->getG() + 2, 0);
             states.push_back(down_state);
             if(DEBUG){
-            cout<<"DOWN\n";
-            printBoard(down);
-        }
+                debug_log("Generated DOWN state");
+            }
 
-        if(down.win()){
-            return states;
+            if(down.win()){
+                return states;
             }
         }
     }
@@ -237,17 +228,15 @@ list<Node_State> get_next_cost_states(Node_State* board){
         if(left.getPlayerTile().getValue() != -1){
 
 
-            Node_State left_state(left, board, board->getG() + 5, 0);
+            auto left_state = make_shared<Node_State>(left, board, board->getG() + 5, 0);
             states.push_back(left_state);
 
-        if(DEBUG){
+            if(DEBUG){
+                debug_log("Generated LEFT state");
+            }
 
-        cout<<"LEFT\n";
-        printBoard(left);
-        }
-
-        if(left.win()){
-            return states;
+            if(left.win()){
+                return states;
             }
         }
     }
@@ -258,17 +247,28 @@ list<Node_State> get_next_cost_states(Node_State* board){
         if(right.getPlayerTile().getValue() != -1){
 
 
-            Node_State right_state(right, board, board->getG() + 3, 0);
-        states.push_back(right_state);
-        if(DEBUG){
-
-        cout<<"RIGHT\n";
-        printBoard(right);
-        }
+            auto right_state = make_shared<Node_State>(right, board, board->getG() + 3, 0);
+            states.push_back(right_state);
+            if(DEBUG){
+                debug_log("Generated RIGHT state");
+            }
 
             if(right.win()){
                 return states;
             }
+        }
+    }
+
+    if (!board->getBoard().isWizardUsed()) {
+        Board wiz(board->getBoard());
+        wiz = moveWizard(wiz);
+        auto wiz_state = make_shared<Node_State>(wiz, board, board->getG() + 1, 0);
+        states.push_back(wiz_state);
+        if(DEBUG){
+            debug_log("Generated WIZARD state");
+        }
+        if(wiz.win()){
+            return states;
         }
     }
 
@@ -277,82 +277,66 @@ list<Node_State> get_next_cost_states(Node_State* board){
 
 int distance(Tile t1, Tile t2) {
     int minkowskiP = 3;
-    // Extract coordinates as vectors for generalized calculations
     vector<int> v1 = {t1.getRow(), t1.getCol()};
     vector<int> v2 = {t2.getRow(), t2.getCol()};
 
-    switch (distanceType) {
+    switch (GameSession::getInstance().distanceType) {
         case man:
-            // Manhattan distance - we can only move in 4 directions
             return abs(t1.getRow() - t2.getRow()) + abs(t1.getCol() - t2.getCol());
-        
         case euc:
-            // Euclidean distance
             return static_cast<int>(sqrt((t1.getRow() - t2.getRow()) * (t1.getRow() - t2.getRow()) +
                                           (t1.getCol() - t2.getCol()) * (t1.getCol() - t2.getCol())));
-        
         case mink: {
-            // Minkowski distance (generalized form)
             double sum = 0.0;
             for (size_t i = 0; i < v1.size(); ++i) {
                 sum += pow(abs(v1[i] - v2[i]), minkowskiP);
             }
             return static_cast<int>(pow(sum, 1.0 / minkowskiP));
         }
-
         case cheb: {
-            
-            return static_cast<int>(max((t2.getRow() - t1.getRow()), (t2.getCol() - t1.getCol())));
+            return static_cast<int>(max(abs(t2.getRow() - t1.getRow()), abs(t2.getCol() - t1.getCol())));
         }
-
         default:
-            // Default case (should not happen)
             return 0;
     }
 }
 
-Board getPath(Node_State* win) {
+Board getPath(shared_ptr<Node_State> win) {
     if (win == nullptr) {
-        std::cerr << "Error: win is null.\n";
+        debug_log("Error: win is null.");
         return Board(0, 0);
     }
 
-    //set a board to edit on it
     Board path(win->getBoard());
-    Node_State* current = win;
+    shared_ptr<Node_State> current = win;
 
-    cout << "Tracing back the path...\n";
     while (current != nullptr) {
         Tile playerTile = current->getBoard().getPlayerTile();
-        path.getTile(playerTile.getRow(), playerTile.getCol()).setValue(8);
+        if (playerTile.getRow() >= 0 && playerTile.getRow() < path.getN() &&
+            playerTile.getCol() >= 0 && playerTile.getCol() < path.getM()) {
+            path.getTile(playerTile.getRow(), playerTile.getCol()).setValue(8);
+        }
 
-        // Move up to parent
-        Node_State* parent = current->getParent();
-        if (parent == nullptr) break; // Exit if there's no parent
+        shared_ptr<Node_State> parent = current->getParent();
+        if (parent == nullptr) break;
 
         Tile parentTile = parent->getBoard().getPlayerTile();
 
-        //Color the path between playerTile and parentTile
-        if (playerTile.getRow() == parentTile.getRow()) { // Same row
+        if (playerTile.getRow() == parentTile.getRow()) { 
             int startCol = min(playerTile.getCol(), parentTile.getCol());
             int endCol = max(playerTile.getCol(), parentTile.getCol());
             for (int i = startCol; i <= endCol; i++) {
                 path.getTile(playerTile.getRow(), i).setValue(8);
             }
-        } else if (playerTile.getCol() == parentTile.getCol()) { // Same column
+        } else if (playerTile.getCol() == parentTile.getCol()) {
             int startRow = min(playerTile.getRow(), parentTile.getRow());
             int endRow = max(playerTile.getRow(), parentTile.getRow());
             for (int i = startRow; i <= endRow; i++) {
                 path.getTile(i, playerTile.getCol()).setValue(8);
             }
         }
-
-        current = parent; // Move to the next node
-        /* printBoard(path);
-        system("sleep 3s; clear"); */
+        current = parent;
     }
-
-    cout << "Path tracing completed.\n";
     return path;
 }
 
@@ -369,4 +353,12 @@ string stringBoard(Board& b) {
         }
     }
     return boardHash;
+}
+
+void debug_log(const std::string& message) {
+    std::ofstream logFile("debug.log", std::ios::app);
+    if (logFile.is_open()) {
+        logFile << message << std::endl;
+        logFile.close();
+    }
 }
