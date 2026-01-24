@@ -1,5 +1,7 @@
 #include "algorithms.h"
-
+#include <ncurses.h>
+#include <thread>
+#include <chrono>
 #include <iostream>
 #include <queue>
 #include <vector>
@@ -19,23 +21,33 @@ using namespace std;
 
 int cost = 0;
 
-void hill_climbing(Board board) {
-    priority_queue<Node_State> pq;
+struct NodeStatePtrComparator {
+    bool operator()(const shared_ptr<Node_State>& a, const shared_ptr<Node_State>& b) const {
+        return *a < *b;
+    }
+};
 
-    Node_State start(board, nullptr, 0, 0);
+void hill_climbing(Board board) {
+    priority_queue<shared_ptr<Node_State>, vector<shared_ptr<Node_State>>, NodeStatePtrComparator> pq;
+
+    auto start = make_shared<Node_State>(board, nullptr, 0, 0);
     unordered_set<string> visitedStates;
 
     pq.push(start);
     visitedStates.insert(stringBoard(board));
 
     while(!pq.empty()){
-        Node_State current(pq.top());
-        printBoard(current.getBoard());
+        shared_ptr<Node_State> current = pq.top();
+        clear();
+        printBoard(current->getBoard());
+        mvprintw(LINES - 1, (COLS - 35) / 2, "Hill Climbing: Solving... H: %d", current->getH());
+        refresh();
+        std::this_thread::sleep_for(std::chrono::milliseconds(50));
         pq.pop();
 
-        Tile player = current.getBoard().getPlayerTile();
+        Tile player = current->getBoard().getPlayerTile();
         
-        list<Tile> targets = current.getBoard().getTargetTiles();
+        list<Tile> targets = current->getBoard().getTargetTiles();
 
         // Find the closest target tile
         Tile goal;
@@ -49,26 +61,41 @@ void hill_climbing(Board board) {
         }
 
         // Check for win condition
-        if (current.getBoard().win()) {
-            cout << "\033[38;5;226mYOU WIN!\033[0m\n";
-            cout << "Number of opened states: " << visitedStates.size() << endl;
-            cout<< "cost: " << cost<<endl;
-            printBoard(getPath(&current));
-            exit(0);
+        if (current->getBoard().win()) {
+            clear();
+            printBoard(current->getBoard());
+            mvprintw(LINES - 3, (COLS - 25) / 2, "YOU WIN! States: %zu", visitedStates.size());
+            refresh();
+
+            std::this_thread::sleep_for(std::chrono::seconds(1));
+            clear();
+            printBoard(getPath(current));
+            mvprintw(LINES - 2, (COLS - 11) / 2, "Path Found!");
+            mvprintw(LINES - 1, (COLS - 25) / 2, "Press any key to continue...");
+            refresh();
+            getch();
+            return;
         }
 
         // Generate next states
-        list<Node_State> states = get_next_cost_states(&current);
+        list<shared_ptr<Node_State>> states = get_next_cost_states(current);
         for (auto& state : states) {
-            string stateHash = stringBoard(state.getBoard());
-            Tile nextPlayer = state.getBoard().getPlayerTile();
+            string stateHash = stringBoard(state->getBoard());
+            Tile nextPlayer = state->getBoard().getPlayerTile();
             if (visitedStates.find(stateHash) == visitedStates.end()) {
                 visitedStates.insert(stateHash);
                 int h = distance(nextPlayer, goal);
-                cost += state.getG();
-                Node_State newState(state.getBoard(), &current, 0, current.getH() + h);
+                cost += state->getG();
+                auto newState = make_shared<Node_State>(state->getBoard(), current, 0, current->getH() + h);
                 pq.push(newState);
             }
         }
     }
+
+    // No path found
+    clear();
+    mvprintw(LINES / 2, (COLS - 20) / 2, "No path found.");
+    mvprintw(LINES / 2 + 2, (COLS - 30) / 2, "Press any key to return...");
+    refresh();
+    getch();
 }

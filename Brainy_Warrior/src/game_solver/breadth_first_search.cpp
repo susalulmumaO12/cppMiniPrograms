@@ -1,5 +1,7 @@
 #include "algorithms.h"
-
+#include <ncurses.h>
+#include <thread>
+#include <chrono>
 #include <iostream>
 #include <unordered_set>
 #include <queue>
@@ -14,28 +16,42 @@ using namespace std;
 
 void bfs(Board board){
 
-    queue<Node_State> q;
+    queue<shared_ptr<Node_State>> q;
     unordered_set<string> visitedStates;
-    Node_State start(board, nullptr, 0, 0);
+    auto start = make_shared<Node_State>(board, nullptr, 0, 0);
     q.push(start);
     visitedStates.insert(stringBoard(board));  
 
     while(!q.empty()){
 
-        Node_State current(q.front());
-        printBoard(current.getBoard());
+        shared_ptr<Node_State> current = q.front();
+        clear();
+        printBoard(current->getBoard());
+        mvprintw(LINES - 1, (COLS - 15) / 2, "BFS: Solving...");
+        refresh();
+        std::this_thread::sleep_for(std::chrono::milliseconds(50));
+
         q.pop();
 
-        if(current.getBoard().win()){
-            cout<<"\033[38;5;226mYOU WIN!\033[0m\n";
-            cout << "Number of opened states: " << visitedStates.size() << endl;
-            printBoard(getPath(&current));
-            exit(0);
+        if(current->getBoard().win()){
+            clear();
+            printBoard(current->getBoard());
+            mvprintw(LINES - 3, (COLS - 25) / 2, "YOU WIN! States: %zu", visitedStates.size());
+            refresh();
+            
+            std::this_thread::sleep_for(std::chrono::seconds(1));
+            clear();
+            printBoard(getPath(current));
+            mvprintw(LINES - 2, (COLS - 11) / 2, "Path Found!");
+            mvprintw(LINES - 1, (COLS - 25) / 2, "Press any key to continue...");
+            refresh();
+            getch();
+            return;
         }
 
-        list<Node_State> states = get_next_cost_states(&current);
+        list<shared_ptr<Node_State>> states = get_next_cost_states(current);
         for(auto state:states){
-            string stateHash = stringBoard(state.getBoard());
+            string stateHash = stringBoard(state->getBoard());
             if (visitedStates.find(stateHash) == visitedStates.end()) {
                 visitedStates.insert(stateHash);
                 q.push(state);
@@ -43,4 +59,11 @@ void bfs(Board board){
         }
 
     }
+
+    // No path found
+    clear();
+    mvprintw(LINES / 2, (COLS - 20) / 2, "No path found.");
+    mvprintw(LINES / 2 + 2, (COLS - 30) / 2, "Press any key to return...");
+    refresh();
+    getch();
 }
