@@ -1,16 +1,9 @@
 #include <iostream>
+#include <ncurses.h>
 
 #include "brainy_warrior_tui.h"
 #include "main.h"
-
-// defining default value for each global variable
-bool WIZMOVED = false;
-circularq WIZARDTILES;
-Tile currentWizard;
-int SCORE = 0;
-dist distanceType = man;
-std::string name;
-
+#include "helper_functions.h"
 
 // print-strings all in one place
 const std::string BrainyWarrior = "__________               .__                __      __                     .__              \n\\______   \\____________  |__| ____ ___.__. /  \\    /  \\_____ ______________|__| ___________ \n |    |  _/\\_  __ \\__  \\ |  |/    <   |  | \\   \\/\\/   /\\__  \\_  __ \\_  __ \\  |/  _ \\_  __  \\\n |    |   \\ |  | \\// __ \\|  |   |  \\___  |  \\        /  / __ \\|  | \\/|  | \\/  (  <_> )  | \\/\n |______  / |__|  (____  /__|___|  / ____|   \\__/\\  /  (____  /__|   |__|  |__|\\____/|__|   \n        \\/             \\/        \\/\\/             \\/        \\/                              ";
@@ -24,10 +17,10 @@ int main() {
 
         int choice = main_menu();
         if (choice == 0) {
-            name = ask_name();
+            GameSession::getInstance().playerName = ask_name();
             levels_menu();
         } // LEVELS
-        //else if (choice == 1) computer_play(); // COMPUTER
+        else if (choice == 1) computer_play(); // COMPUTER
         else if (choice == 2) stats_menu(); // STATS
         else { quit(); break; } // QUIT
     }
@@ -35,17 +28,25 @@ int main() {
     return 0;
 }
 
+#include "algorithms.h"
+
 void computer_play() {
-    // TODO deal with this
-    /* distanceType = getDistanceType();
-        int algorithm;
-        std::cout<<algorithms<<std::endl;
-        std::cin>>algorithm;
-        switch(algorithm) {
-            case 1: bfs(board); break;
-            case 2: dfs(board); break;
-            case 3: ucs(board); break;
-            case 4: hill_climbing(board); break;
-            case 5: a_star(board); break;
-        } */
+    std::string levelKey = choose_level_menu();
+    if (levelKey.empty()) return;
+
+    int algo = choose_algorithm_menu();
+    if (algo == -1) return;
+
+    Board board = set_game_board(levelKey);
+    clear();
+    printBoard(board);
+    refresh();
+
+    switch(algo) {
+        case 0: bfs(board); break;
+        case 1: dfs(board); break;
+        case 2: ucs(board); break;
+        case 3: hill_climbing(board); break;
+        case 4: a_star(board); break;
+    }
 }
