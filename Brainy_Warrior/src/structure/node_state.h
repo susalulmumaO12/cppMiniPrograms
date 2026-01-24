@@ -2,12 +2,13 @@
 #define NODE_STATE_H
 
 #include <iostream>
+#include <memory>
 #include "board.h"
 
 class Node_State {
 private:
     Board board;
-    Node_State* parent;
+    std::shared_ptr<Node_State> parent;
 	//cost from start to current
     int g;
 	//heuristic
@@ -16,11 +17,10 @@ private:
     int f;
 
 public:
-    Node_State(Board board, Node_State* parent, int g, int h);
-    Node_State(const Node_State& other);
+    Node_State(Board board, std::shared_ptr<Node_State> parent, int g, int h);
 
     Board& getBoard();
-    Node_State* getParent();
+    std::shared_ptr<Node_State> getParent();
     int getG();
     int getH();
     int getF();
