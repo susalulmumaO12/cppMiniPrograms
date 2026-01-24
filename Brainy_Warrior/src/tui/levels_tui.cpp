@@ -19,7 +19,8 @@ const std::string instructions = "Type in a letter using either of the following
 const std::string gameOver = "\033[31mGAME OVER! You drowned...\033[0m";
 const std::string gameWin = "\033[38;5;226mYOU WIN!\033[0m";
 
-void levels_menu() {
+std::string choose_level_menu() {
+    debug_log("Entering choose_level_menu");
     json levelsJson, statsJson;
 
     std::ifstream levelsFile("../src/levels.json");
@@ -44,7 +45,7 @@ void levels_menu() {
 
         std::string difficulty = info.value("difficulty", "easy");
         bool hasWizard = info.contains("wizard") && info["wizard"].get<bool>();
-        bool played = statsJson["levels"].contains(levelName) && statsJson["levels"][levelName].contains(name);
+        bool played = statsJson["levels"].contains(levelName) && statsJson["levels"][levelName].contains(GameSession::getInstance().playerName);
 
         if (difficulty == "easy") label += " ▂   "; 
         else if (difficulty == "medium") label += " ▂▃  ";
@@ -148,7 +149,13 @@ void levels_menu() {
         wrefresh(menuWin);
 }
 
-    int choice;
+    debug_log("levels_menu loop finished, char: " + std::to_string(c));
+
+    int choice = -1;
+    if (!focusOnBack) {
+        choice = item_index(current_item(menu));
+    }
+    debug_log("levels_menu choice: " + std::to_string(choice) + " focusOnBack: " + std::to_string(focusOnBack));
 
     unpost_menu(back);
     free_menu(back);
@@ -166,12 +173,17 @@ void levels_menu() {
     refresh();
 
     if (focusOnBack) {
-        return;
-    } else {
-        choice = item_index(current_item(menu));
+        return "";
     }
     if (choice >= 0 && choice < (int)levelKeys.size()) {
-        std::string levelKey = levelKeys[choice];
+        return levelKeys[choice];
+    }
+    return "";
+}
+
+void levels_menu() {
+    std::string levelKey = choose_level_menu();
+    if (!levelKey.empty()) {
         clear();
         level(levelKey);
     }
@@ -181,38 +193,86 @@ void levels_menu() {
 void level(const std::string& level) {
     Board board = set_game_board(level);
     
-    WIZARDTILES = getWizardTiles(board);
+    auto& session = GameSession::getInstance();
+    session.wizardTiles = getWizardTiles(board);
+    
+    clear();
     printBoard(board);
+    mvprintw(LINES - 1, (COLS - instructions.size()) / 2, "%s", instructions.c_str());
+    refresh();
 
-    std::cout<<instructions<<std::endl;
-    Node_State state(board, nullptr, 0, 0);
-    std::queue<Node_State> q;
+    auto state = std::make_shared<Node_State>(board, nullptr, 0, 0);
+    std::queue<std::shared_ptr<Node_State>> q;
     q.push(state);
+    
     while(!q.empty()){
         Tile& player = board.getPlayerTile();
-        Node_State current(q.front());
+        std::shared_ptr<Node_State> current = q.front();
         q.pop();
+        
+        debug_log("In level loop, player at " + std::to_string(player.getRow()) + "," + std::to_string(player.getCol()));
+
         // WIN CASE
         if(board.win()){
-            std::cout<<gameWin<<std::endl;
-            updateStats(name, level, true);
-            std::cout<<"print path? (y/n)\n";
-            char yn1; std::cin>>yn1;
-            if(tolower(yn1) == 'y') printBoard(getPath(&current));
-            std::cout<< "Print stats? (y/n)\n";
-            char yn2; std::cin>>yn2;
-            //tolower(yn2) == 'y' ? printStats(level) : exit(0);
-            exit(0);
+            clear();
+            printBoard(board);
+            attron(A_BOLD | COLOR_PAIR(WON_PLAYER_PAIR));
+            mvprintw(LINES - 4, (COLS - 10) / 2, " YOU WIN! ");
+            attroff(A_BOLD | COLOR_PAIR(WON_PLAYER_PAIR));
+            
+            updateStats(session.playerName, level, true);
+            mvprintw(LINES - 2, (COLS - 20) / 2, "Print path? (y/n)");
+            mvprintw(LINES - 1, (COLS - instructions.size()) / 2, "%s", instructions.c_str());
+            refresh();
+            int yn1 = getch();
+            if(tolower(yn1) == 'y') {
+                clear();
+                printBoard(getPath(current));
+                attron(A_BOLD | COLOR_PAIR(STAR_PAIR));
+                mvprintw(LINES - 3, (COLS - 12) / 2, " PATH FOUND ");
+                attroff(A_BOLD | COLOR_PAIR(STAR_PAIR));
+                mvprintw(LINES - 1, (COLS - 25) / 2, "Press any key to exit...");
+                refresh();
+                getch();
+            }
+            return;
         }
+        
         // LOSE CASE
         if(player.getValue() == -1){
-            std::cout<<gameOver<<std::endl;
-            updateStats(name, level, false);
+            clear();
+            printBoard(board);
+            attron(A_BOLD | COLOR_PAIR(DEAD_PLAYER_PAIR));
+            mvprintw(LINES - 3, (COLS - 25) / 2, " GAME OVER! You drowned... ");
+            attroff(A_BOLD | COLOR_PAIR(DEAD_PLAYER_PAIR));
+            
+            updateStats(session.playerName, level, false);
+            mvprintw(LINES - 1, (COLS - 30) / 2, "Press any key to return to menu...");
+            refresh();
+            getch();
+            return;
         }
-        char m; std::cin>>m;
-        board = move(board, m);
-        Node_State movedBoard(board, &current, 0, 0);
+
+        int m = getch();
+        debug_log("Key pressed in level: " + std::to_string(m));
+        if (m == 27) return; // ESC to quit level
+        
+        char moveChar = 0;
+        switch(m) {
+            case KEY_UP:    moveChar = 'w'; break;
+            case KEY_DOWN:  moveChar = 's'; break;
+            case KEY_LEFT:  moveChar = 'a'; break;
+            case KEY_RIGHT: moveChar = 'd'; break;
+            default:        moveChar = (char)m; break;
+        }
+
+        board = move(board, moveChar);
+        auto movedBoard = std::make_shared<Node_State>(board, current, 0, 0);
         q.push(movedBoard);
+        
+        clear();
         printBoard(board);
+        mvprintw(LINES - 1, (COLS - instructions.size()) / 2, "%s", instructions.c_str());
+        refresh();
     }
 }
