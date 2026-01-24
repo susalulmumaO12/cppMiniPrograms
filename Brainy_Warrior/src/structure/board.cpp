@@ -24,6 +24,9 @@ Board::Board(const Board& other) {
 
     n = other.n;
     m = other.m;
+    wizardUsed = other.wizardUsed;
+    wizardTiles = other.wizardTiles;
+    currentWizardIndex = other.currentWizardIndex;
 
     // Initialize 2d board
     board = vector<vector<Tile>>(n, vector<Tile>(m));
@@ -50,13 +53,15 @@ Tile& Board::getTile(int i, int j) {
 
 Tile& Board::getPlayerTile() {
     for (int i = 0; i < n; i++) {
-            for (int j = 0; j < m; j++) {
-                if(board[i][j].getValue()== 9 || board[i][j].getValue()== -1){
-                    //cout<<"DBG BOARD "<<board[i][j].getValue()<<endl;
-                    return board[i][j];
-                }
+        for (int j = 0; j < m; j++) {
+            if (board[i][j].getValue() == 9 || board[i][j].getValue() == -1) {
+                return board[i][j];
             }
         }
+    }
+    // Return a dummy tile if not found (should not happen with valid levels)
+    static Tile dummy(-1, -1, -1);
+    return dummy;
 }
 
 list<Tile> Board::getTargetTiles(){
@@ -88,3 +93,10 @@ void Board::setTile(Tile& tile, int value) {
 
     tile.setValue(value);
 }
+
+bool Board::isWizardUsed() const { return wizardUsed; }
+void Board::setWizardUsed(bool used) { wizardUsed = used; }
+const std::vector<Tile>& Board::getWizardTiles() const { return wizardTiles; }
+void Board::setWizardTiles(const std::vector<Tile>& tiles) { wizardTiles = tiles; }
+int Board::getCurrentWizardIndex() const { return currentWizardIndex; }
+void Board::setCurrentWizardIndex(int index) { currentWizardIndex = index; }
