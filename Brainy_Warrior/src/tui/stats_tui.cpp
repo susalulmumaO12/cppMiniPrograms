@@ -158,45 +158,53 @@ int choice;
 }
 
 void stats(const std::string& level) {
-
     std::vector<std::pair<int, std::pair<int, std::pair<int, std::string>>>> score_pairs = fetchStats(level);
+    std::string currentPlayer = GameSession::getInstance().playerName;
 
     clear();
     curs_set(0);
     int row, col;
     getmaxyx(stdscr, row, col);
 
-    int starty = (COLS / 2) - 50;
-    int startx = 4;
+    std::string header = "Stats for " + level + " (Player: " + currentPlayer + ")";
+    int starty = row / 4;
+    int startx = (col - 40) / 2;
 
-    std::string header = "Stats for " + level;
-    attron(A_BOLD | COLOR_PAIR(1));
+    attron(A_BOLD | COLOR_PAIR(BANNER_PAIR));
     mvprintw(starty - 2, (col - header.size()) / 2, "%s", header.c_str());
-    attroff(A_BOLD | COLOR_PAIR(1));
+    attroff(A_BOLD | COLOR_PAIR(BANNER_PAIR));
 
-    attron(A_UNDERLINE);
+    attron(A_UNDERLINE | COLOR_PAIR(OPTION_PAIR));
     mvprintw(starty, startx, "%-12s | %-5s | %-5s | %-5s", "Name", "Score", "Tries", "Wins");
-    attroff(A_UNDERLINE);
+    attroff(A_UNDERLINE | COLOR_PAIR(OPTION_PAIR));
 
     int i = 1;
+    bool found = false;
     for (const auto& player : score_pairs) {
         std::string name   = player.second.second.second;
+        if (name != currentPlayer) continue; // Filter by current player
+        
+        found = true;
         int score          = player.first;
         int tries          = player.second.first;
         int wins           = player.second.second.first;
 
+        attron(COLOR_PAIR(OPTION_PAIR));
         mvprintw(starty + i, startx, "%-12s | %-5d | %-5d | %-5d", name.c_str(), score, tries, wins);
+        attroff(COLOR_PAIR(OPTION_PAIR));
         i++;
     }
 
+    if (!found) {
+        mvprintw(starty + 2, (col - 25) / 2, "No stats found for you.");
+    }
+
     attron(A_DIM);
-    mvprintw(row - 2, startx, "Press ESC to return to main menu..."); //TODO fix this
+    mvprintw(row - 2, (col - 35) / 2, "Press any key to return...");
     attroff(A_DIM);
 
     refresh();
-    int c = getch();
-    if(c == 27) {
-        clear();
-        refresh();
-    }
+    getch();
+    clear();
+    refresh();
 }
