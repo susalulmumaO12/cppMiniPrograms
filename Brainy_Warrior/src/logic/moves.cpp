@@ -82,7 +82,6 @@ bool canMoveRight(Board b){
 Board slideRight(Board& b){
 
     if(!canMoveRight(b)){
-        cout<<"\033[44mInvalid move!\033[0m\n";
         return b;
     }
     Tile& tile = b.getPlayerTile();
@@ -102,7 +101,7 @@ Board slideRight(Board& b){
             swapTiles(b, tile, b.getTile(i, k-1));
             return b;
         } else if(next == 5 || next == 7){
-            if(next == 7) WIZMOVED = true;
+            if(next == 7) b.setWizardUsed(true);
             b.getTile(i, k).setValue(1);
             swapTiles(b, tile, b.getTile(i, k));
             return b;
@@ -114,7 +113,6 @@ Board slideRight(Board& b){
 Board slideLeft(Board& b){
 
     if(!canMoveLeft(b)){
-        cout<<"\033[44mInvalid move!\033[0m\n";
         return b;
     }
 
@@ -128,14 +126,13 @@ Board slideLeft(Board& b){
         if(next == 0){
             // if leftmost tile is 0: set player value tp -1
             tile.setValue(-1);
-			//cout<<"DBG new tile value is: "<<tile.getValue()<<endl;
             swapTiles(b, tile, b.getTile(i, j));
             return b;
         } else if(next == 4){
             swapTiles(b, tile, b.getTile(i, k+1));
             return b;
         } else if(next == 5 || next == 7){
-            if(next == 7) WIZMOVED = true;
+            if(next == 7) b.setWizardUsed(true);
             b.getTile(i, k).setValue(1);
             swapTiles(b, tile, b.getTile(i, k));
             return b;
@@ -146,7 +143,6 @@ Board slideLeft(Board& b){
 
 Board slideUp(Board& b){
     if(!canMoveUp(b)){
-        cout<<"\033[44mInvalid move!\033[0m\n";
         return b;
     }
     Tile& tile = b.getPlayerTile();
@@ -165,7 +161,7 @@ Board slideUp(Board& b){
             swapTiles(b, tile, b.getTile(k+1, j));
             return b;
         } else if(next == 5 || next == 7){
-            if(next == 7) WIZMOVED = true;
+            if(next == 7) b.setWizardUsed(true);
             b.getTile(k, j).setValue(1);
             swapTiles(b, tile, b.getTile(k, j));
             return b;
@@ -176,7 +172,6 @@ Board slideUp(Board& b){
 
 Board slideDown(Board& b){
     if(!canMoveDown(b)){
-        cout<<"\033[44mInvalid move!\033[0m\n";
         return b;
     }
     Tile& tile = b.getPlayerTile();
@@ -196,7 +191,7 @@ Board slideDown(Board& b){
             swapTiles(b, tile, b.getTile(k-1, j));
             return b;
         } else if(next == 5 || next == 7){
-            if(next == 7) WIZMOVED = true;
+            if(next == 7) b.setWizardUsed(true);
             b.getTile(k, j).setValue(1);
             swapTiles(b, tile, b.getTile(k, j));
             return b;
@@ -206,43 +201,61 @@ Board slideDown(Board& b){
 }
 
 circularq getWizardTiles(Board& board){
-
     int n = board.getN();
     int m = board.getM();
-
-    circularq wizTiles;
+    circularq wizQueue;
+    std::vector<Tile> wizTiles;
+    int currentIdx = -1;
 
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < m; j++) {
             if(board.getTile(i, j).getValue() == 3 || board.getTile(i, j).getValue() == 7){
-                if(board.getTile(i, j).getValue() == 7) currentWizard = board.getTile(i, j);
-
-                wizTiles.push(board.getTile(i, j));
+                if(board.getTile(i, j).getValue() == 7) currentIdx = wizTiles.size();
+                wizTiles.push_back(board.getTile(i, j));
+                wizQueue.push(board.getTile(i, j));
             }
         }
     }
 
-    wizTiles.tiles.empty() ? WIZMOVED = true : WIZMOVED = false;
-    return wizTiles;
+    board.setWizardTiles(wizTiles);
+    board.setCurrentWizardIndex(currentIdx);
+    board.setWizardUsed(wizTiles.empty());
+    return wizQueue;
 }
 
 Board moveWizard(Board& board){
+    const auto& wizTiles = board.getWizardTiles();
+    if (wizTiles.empty()) return board;
 
-    if(WIZMOVED){
-        cout<<"You used up your wizard moves!\n";
-        return board;
+    int currentIdx = board.getCurrentWizardIndex();
+    // Fallback if index is invalid
+    if (currentIdx < 0 || currentIdx >= (int)wizTiles.size()) {
+        for (int i = 0; i < (int)wizTiles.size(); ++i) {
+            if (board.getTile(wizTiles[i].getRow(), wizTiles[i].getCol()).getValue() == 7) {
+                currentIdx = i;
+                break;
+            }
+        }
     }
-    Tile nextWizard; 
+    if (currentIdx < 0) return board;
 
-    nextWizard = WIZARDTILES.nextTile();
+    int nextIdx = (currentIdx + 1) % wizTiles.size();
 
-    swapTiles(board , currentWizard, nextWizard);
-    currentWizard = nextWizard;
+    Tile& currentLoc = board.getTile(wizTiles[currentIdx].getRow(), wizTiles[currentIdx].getCol());
+    Tile& nextLoc = board.getTile(wizTiles[nextIdx].getRow(), wizTiles[nextIdx].getCol());
+
+    int val1 = currentLoc.getValue();
+    int val2 = nextLoc.getValue();
+
+    currentLoc.setValue(val2);
+    nextLoc.setValue(val1);
+
+    board.setCurrentWizardIndex(nextIdx);
     return board;
 }
 
 Board move(Board& b, char m){
-    SCORE++;
+    GameSession::getInstance().score++;
     switch(tolower(m)){
         case 'i':
         case 'w':
@@ -264,7 +277,6 @@ Board move(Board& b, char m){
             return moveWizard(b);
             break;
         default:
-            cout<<"invalid move char";
             return b;
             break;
     }
