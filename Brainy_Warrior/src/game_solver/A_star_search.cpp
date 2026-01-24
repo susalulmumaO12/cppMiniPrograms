@@ -26,20 +26,34 @@ struct NodeStatePtrComparator {
 
 void a_star(Board board) {
     priority_queue<shared_ptr<Node_State>, vector<shared_ptr<Node_State>>, NodeStatePtrComparator> openList;
-    unordered_map<string, bool> closedList;
+    unordered_map<string, int> closedList;
 
     Tile player = board.getPlayerTile();
     list<Tile> targets = board.getTargetTiles();
 
-    auto startNode = make_shared<Node_State>(board, nullptr, 0, distance(player, targets.front()));
+    auto startNode = make_shared<Node_State>(board, nullptr, 0, 0);
     openList.push(startNode);
+    closedList[stringBoard(board)] = 0;
 
+    int explored = 0;
     while (!openList.empty()) {
         shared_ptr<Node_State> current = openList.top();
         openList.pop();
 
         Board& currentBoard = current->getBoard();
         string boardKey = stringBoard(currentBoard);
+
+        if (closedList.count(boardKey) && current->getG() > closedList[boardKey]) {
+            continue;
+        }
+        explored++;
+
+        if (explored % 100 == 0) {
+            clear();
+            printBoard(currentBoard);
+            mvprintw(LINES - 1, (COLS - 45) / 2, "A*: Solving... Explored: %d, F: %d, H: %d", explored, current->getF(), current->getH());
+            refresh();
+        }
 
         if (currentBoard.win()) {
             clear();
@@ -57,35 +71,49 @@ void a_star(Board board) {
             return;
         }
 
-        if (closedList[boardKey]) continue;
-        closedList[boardKey] = true;
-        
-        clear();
-        printBoard(currentBoard);
-        mvprintw(LINES - 1, (COLS - 25) / 2, "A*: Solving... F: %d", current->getF());
-        refresh();
-        std::this_thread::sleep_for(std::chrono::milliseconds(50));
-
         list<shared_ptr<Node_State>> nextStates = get_next_cost_states(current);
         for (auto& nextState : nextStates) {
-            Tile nextPlayer = nextState->getBoard().getPlayerTile();
-            list<Tile> nextTargets = nextState->getBoard().getTargetTiles();
-            
-            // Improved Heuristic for Multi-Target sliding games:
-            // 1. Min distance to nearest target
-            // 2. Plus a penalty for each remaining target to encourage clearing them
-            int h = 0;
-            if (!nextTargets.empty()) {
-                int minH = INT_MAX;
-                for (const auto& target : nextTargets) {
-                    int d = distance(nextPlayer, target);
-                    if (d < minH) minH = d;
-                }
-                h = minH + (nextTargets.size() * 2); // Encourages reduction of target count
-            }
+            string nextKey = stringBoard(nextState->getBoard());
+            int nextG = nextState->getG();
 
-            auto nextNode = make_shared<Node_State>(nextState->getBoard(), current, nextState->getG(), h);
-            openList.push(nextNode);
+            if (closedList.find(nextKey) == closedList.end() || nextG < closedList[nextKey]) {
+                Tile nextPlayer = nextState->getBoard().getPlayerTile();
+                list<Tile> nextTargets = nextState->getBoard().getTargetTiles();
+                
+                int h = 0;
+                if (!nextTargets.empty()) {
+                    int minH = INT_MAX;
+                    for (const auto& target : nextTargets) {
+                        int d = distance(nextPlayer, target);
+                        if (d < minH) minH = d;
+                    }
+                    
+                    // LEVEL 17 SPECIAL: If wizard exists, consider its distance to targets too
+                    int wizH = 0;
+                    if (!nextState->getBoard().getWizardTiles().empty()) {
+                        int currentWizIdx = nextState->getBoard().getCurrentWizardIndex();
+                        if (currentWizIdx != -1) {
+                            Tile wizPos = nextState->getBoard().getWizardTiles()[currentWizIdx];
+                            int minWizD = INT_MAX;
+                            for (const auto& target : nextTargets) {
+                                int d = distance(wizPos, target);
+                                if (d < minWizD) minWizD = d;
+                            }
+                            wizH = minWizD;
+                        }
+                    }
+
+                    // REFINED HEURISTIC:
+                    // 1. Target count (highest priority)
+                    // 2. Proximity of player to nearest target
+                    // 3. Proximity of wizard to nearest target (for setup)
+                    h = (nextTargets.size() * 100) + minH + wizH; 
+                }
+
+                auto nextNode = make_shared<Node_State>(nextState->getBoard(), current, nextG, h);
+                closedList[nextKey] = nextG;
+                openList.push(nextNode);
+            }
         }
     }
 

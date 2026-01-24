@@ -22,16 +22,19 @@ void bfs(Board board){
     q.push(start);
     visitedStates.insert(stringBoard(board));  
 
+    int explored = 0;
     while(!q.empty()){
 
         shared_ptr<Node_State> current = q.front();
-        clear();
-        printBoard(current->getBoard());
-        mvprintw(LINES - 1, (COLS - 15) / 2, "BFS: Solving...");
-        refresh();
-        std::this_thread::sleep_for(std::chrono::milliseconds(50));
-
         q.pop();
+        explored++;
+
+        if (explored % 100 == 0) {
+            clear();
+            printBoard(current->getBoard());
+            mvprintw(LINES - 1, (COLS - 30) / 2, "BFS: Solving... Explored: %d", explored);
+            refresh();
+        }
 
         if(current->getBoard().win()){
             clear();

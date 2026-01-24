@@ -29,24 +29,36 @@ void ucs(Board board){
 
     auto start = make_shared<Node_State>(board, nullptr, 0, 0);
 
-    unordered_set<string> visitedStates;
+    unordered_map<string, int> closedList;
 
     pq.push(start);
-    visitedStates.insert(stringBoard(board));
+    closedList[stringBoard(board)] = 0;
 
+    int explored = 0;
     while(!pq.empty()){
         shared_ptr<Node_State> current = pq.top();
-        clear();
-        printBoard(current->getBoard());
-        mvprintw(LINES - 1, (COLS - 25) / 2, "UCS: Solving... Cost: %d", current->getG());
-        refresh();
-        std::this_thread::sleep_for(std::chrono::milliseconds(50));
         pq.pop();
 
-        if(current->getBoard().win()){
+        Board& currentBoard = current->getBoard();
+        string boardKey = stringBoard(currentBoard);
+
+        // If we found a more expensive path to a known state, skip it
+        if (closedList.count(boardKey) && current->getG() > closedList[boardKey]) {
+            continue;
+        }
+        explored++;
+
+        if (explored % 100 == 0) {
             clear();
-            printBoard(current->getBoard());
-            mvprintw(LINES - 3, (COLS - 35) / 2, "YOU WIN! States: %zu, Cost: %d", visitedStates.size(), current->getG());
+            printBoard(currentBoard);
+            mvprintw(LINES - 1, (COLS - 45) / 2, "UCS: Solving... Explored: %d, Cost: %d", explored, current->getG());
+            refresh();
+        }
+
+        if(currentBoard.win()){
+            clear();
+            printBoard(currentBoard);
+            mvprintw(LINES - 3, (COLS - 35) / 2, "YOU WIN! States: %zu, Cost: %d", closedList.size(), current->getG());
             refresh();
 
             std::this_thread::sleep_for(std::chrono::seconds(1));
@@ -60,11 +72,13 @@ void ucs(Board board){
         }
 
         list<shared_ptr<Node_State>> states = get_next_cost_states(current);
-        for(auto& state:states){
-            string stateHash = stringBoard(state->getBoard());
-            if (visitedStates.find(stateHash) == visitedStates.end()) {
-                visitedStates.insert(stateHash);
-                pq.push(state);
+        for(auto& nextState:states){
+            string stateHash = stringBoard(nextState->getBoard());
+            int nextG = nextState->getG();
+            
+            if (closedList.find(stateHash) == closedList.end() || nextG < closedList[stateHash]) {
+                closedList[stateHash] = nextG;
+                pq.push(nextState);
             }
         }
 
