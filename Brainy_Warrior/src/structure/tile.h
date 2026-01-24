@@ -10,13 +10,13 @@ public:
     // Default constructor with default values
     Tile(int row = 0, int col = 0, int value = 0);  
 
-    int getValue();
+    int getValue() const;
     void setValue(int value);
 
-    int getRow();
+    int getRow() const;
     void setRow(int row);
 
-    int getCol();
+    int getCol() const;
     void setCol(int col);
 };
 
