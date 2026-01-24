@@ -259,16 +259,19 @@ list<shared_ptr<Node_State>> get_next_cost_states(shared_ptr<Node_State> board){
         }
     }
 
-    if (!board->getBoard().isWizardUsed()) {
+    // Wizard moves are always allowed if wizard tiles exist
+    if (!board->getBoard().getWizardTiles().empty()) {
         Board wiz(board->getBoard());
         wiz = moveWizard(wiz);
-        auto wiz_state = make_shared<Node_State>(wiz, board, board->getG() + 1, 0);
-        states.push_back(wiz_state);
-        if(DEBUG){
-            debug_log("Generated WIZARD state");
-        }
-        if(wiz.win()){
-            return states;
+        if (stringBoard(wiz) != stringBoard(board->getBoard())) {
+            auto wiz_state = make_shared<Node_State>(wiz, board, board->getG() + 1, 0);
+            states.push_back(wiz_state);
+            if(DEBUG){
+                debug_log("Generated WIZARD state");
+            }
+            if(wiz.win()){
+                return states;
+            }
         }
     }
 
@@ -342,16 +345,23 @@ Board getPath(shared_ptr<Node_State> win) {
 
 
 string stringBoard(Board& b) {
-    string boardHash;
     int n = b.getN();
     int m = b.getM();
+    string boardHash;
+    boardHash.reserve(n * m + 3); // board + wizard state
 
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < m; j++) {
-            boardHash += to_string(b.getTile(i, j).getValue());
-            boardHash += ',';
+            int val = b.getTile(i, j).getValue();
+            // Map common values to single chars for compression
+            if (val >= 0 && val <= 9) boardHash += (char)('0' + val);
+            else if (val == -1) boardHash += 'X';
+            else boardHash += '?';
         }
     }
+    // Include wizard state in hash to distinguish states where wizard moved
+    boardHash += b.isWizardUsed() ? 'W' : 'w';
+    boardHash += (char)('A' + b.getCurrentWizardIndex() + 1);
     return boardHash;
 }
 
