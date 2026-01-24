@@ -202,6 +202,7 @@ void level(const std::string& level) {
     refresh();
 
     auto state = std::make_shared<Node_State>(board, nullptr, 0, 0);
+    std::string feedback;
     std::queue<std::shared_ptr<Node_State>> q;
     q.push(state);
     
@@ -266,12 +267,26 @@ void level(const std::string& level) {
             default:        moveChar = (char)m; break;
         }
 
-        board = move(board, moveChar);
+        Board nextBoard = move(board, moveChar);
+        
+        if (stringBoard(nextBoard) == stringBoard(board)) {
+            feedback = "Invalid Move!";
+        } else {
+            feedback = "";
+            if (tolower(moveChar) == 'z') feedback = "Wizard Rotated!";
+            board = nextBoard;
+        }
+
         auto movedBoard = std::make_shared<Node_State>(board, current, 0, 0);
         q.push(movedBoard);
         
         clear();
         printBoard(board);
+        if (!feedback.empty()) {
+            attron(A_BOLD | COLOR_PAIR(STAR_PAIR));
+            mvprintw((LINES + board.getN()) / 2 + 2, (COLS - feedback.size()) / 2, "%s", feedback.c_str());
+            attroff(A_BOLD | COLOR_PAIR(STAR_PAIR));
+        }
         mvprintw(LINES - 1, (COLS - instructions.size()) / 2, "%s", instructions.c_str());
         refresh();
     }
