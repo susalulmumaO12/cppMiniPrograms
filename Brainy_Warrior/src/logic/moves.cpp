@@ -93,17 +93,25 @@ Board slideRight(Board& b){
         int next = b.getTile(i, k).getValue();
 
         if(next == 0){
-			// if rightmost tile is 0: set player value tp -1
+			// if tile is 0: set player value to -1 (GAME OVER)
             tile.setValue(-1);
             swapTiles(b, tile, b.getTile(i, j));
             return b;
         } else if(next == 4){
+            // Wall: stop at previous tile
             swapTiles(b, tile, b.getTile(i, k-1));
             return b;
         } else if(next == 5 || next == 7){
+            // Target or Wizard: stop at current tile and clear it
             if(next == 7) b.setWizardUsed(true);
             b.getTile(i, k).setValue(1);
             swapTiles(b, tile, b.getTile(i, k));
+            return b;
+        }
+        
+        // Edge of board: if it's the last tile and we haven't stopped
+        if (k == m - 1) {
+            swapTiles(b, tile, b.getTile(i, m-1));
             return b;
         }
     }
@@ -124,7 +132,6 @@ Board slideLeft(Board& b){
         int next = b.getTile(i, k).getValue();
 
         if(next == 0){
-            // if leftmost tile is 0: set player value tp -1
             tile.setValue(-1);
             swapTiles(b, tile, b.getTile(i, j));
             return b;
@@ -135,6 +142,11 @@ Board slideLeft(Board& b){
             if(next == 7) b.setWizardUsed(true);
             b.getTile(i, k).setValue(1);
             swapTiles(b, tile, b.getTile(i, k));
+            return b;
+        }
+
+        if (k == 0) {
+            swapTiles(b, tile, b.getTile(i, 0));
             return b;
         }
     }
@@ -153,7 +165,6 @@ Board slideUp(Board& b){
         int next = b.getTile(k, j).getValue();
 
         if(next == 0){
-            // if upmost tile is 0: set player value tp -1
             tile.setValue(-1);
             swapTiles(b, tile, b.getTile(i, j));
             return b;
@@ -164,6 +175,11 @@ Board slideUp(Board& b){
             if(next == 7) b.setWizardUsed(true);
             b.getTile(k, j).setValue(1);
             swapTiles(b, tile, b.getTile(k, j));
+            return b;
+        }
+
+        if (k == 0) {
+            swapTiles(b, tile, b.getTile(0, j));
             return b;
         }
     }
@@ -183,7 +199,6 @@ Board slideDown(Board& b){
         int next = b.getTile(k, j).getValue();
 
         if(next == 0){
-            // if downmost tile is 0: set player value tp -1
             tile.setValue(-1);
             swapTiles(b, tile, b.getTile(i, j));
             return b;
@@ -194,6 +209,11 @@ Board slideDown(Board& b){
             if(next == 7) b.setWizardUsed(true);
             b.getTile(k, j).setValue(1);
             swapTiles(b, tile, b.getTile(k, j));
+            return b;
+        }
+
+        if (k == n - 1) {
+            swapTiles(b, tile, b.getTile(n-1, j));
             return b;
         }
     }
