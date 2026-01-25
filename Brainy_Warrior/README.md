@@ -74,29 +74,15 @@ _Tested on Linux_
 
 ### Build
 
-Conan package manager and CMake are used for this process, to build the project run the following commands in `./Brainy_Warrior` one by one:
+Conan package manager and CMake are used for this process, to launch the game just run the `run_game.sh` script:
 
 ```sh
-conan install .
+./run_game.sh
 ```
-
-```sh
-cd build
-```
-
-```sh
-cmake .. -DCMAKE_TOOLCHAIN_FILE="Release/generators/conan_toolchain.cmake" -DCMAKE_BUILD_TYPE=Release
-```
-
-```sh
-cmake --build .
-```
-
-The C++ code should compile successfully, make sure by starting the game, run the following command (inside `./build` directory):
-
-```sh
-./Brainy_Warrior
-```
+>[!TIP]
+>On some environments you might need to start a python venv first using the following command: `python -m bw_venv` 
+>
+>then activate it: `source bw_venv/bin/activate`, after that you should be able to start the script normally.
 
 ## Code Breakdown
 
@@ -284,6 +270,10 @@ _Highest score is in fact the least score, it indicates number of moves_
 - [9 Distance Measures in Data Science](https://www.maartengrootendorst.com/blog/distances/)
 - [Measuring Distance](https://chris3606.github.io/GoRogue/articles/grid_components/measuring-distance.html)
 
+**UML:**
+- [Drawing UML with PlantUML](https://pdf.plantuml.net/PlantUML_Language_Reference_Guide_en.pdf)
+- [PlantUML Theme Gallery](https://the-lum.github.io/puml-themes-gallery/themes/index.html)
+
 ## Draft of the thinking process
 
 <img src="./screenshot/page1.png" alt="level 1" height="300" /> <img src="./screenshot/page2.png" alt="level 1" height="300" /> <img src="./screenshot/page3.png" alt="level 1" height="300" /> <img src="./screenshot/wizard.png" height="300" />
@@ -292,7 +282,8 @@ _Highest score is in fact the least score, it indicates number of moves_
 
 There are various ways to improve the game which is currently under construction:
 
-- [ ] Make TUI, using ncurses possibly.
+- [X] Make TUI, using ncurses possibly.
+- [X] Automate game build.
 - ~~[ ] Optimize time complexity of computer playing~~
 - [X] Implement levels with wizard (above 5 on the original game website)
 - [X] Track score for players based on name, and number of steps
