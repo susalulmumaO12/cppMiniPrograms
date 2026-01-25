@@ -1,0 +1,42 @@
+@startuml
+!define RECTANGLE_COLOR #ADD8E6
+skinparam {
+    Handwritten true
+    Shadowing false
+    BackgroundColor RECTANGLE_COLOR
+    BorderColor black
+}
+
+start
+
+:Enter Name;
+:Enter Level Number (1 to 17);
+:Choose Playing Option (User/Computer);
+if (User Playing?) then (yes)
+    :Display Board;
+    repeat
+        :Type in a Letter (WASD, IJKL, Z);
+        :Print game board;
+        :Check game state;
+        if (Win State?) then (yes)
+            :Display Win Message;
+            stop
+        else (no)
+            if (Game Over?) then (yes)
+                :Display Game Over Message;
+                stop
+            endif
+        endif
+    repeat while (Continue Playing?)
+else (no)
+    :Display Board;
+    :Select Heuristic Calculation;
+    :Choose Algorithm;
+    :Perform Computation;
+    :Check Game State;
+    :Print number of opened nodes;
+    :Print Path;
+endif
+
+stop
+@enduml
