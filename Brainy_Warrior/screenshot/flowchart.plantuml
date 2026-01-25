@@ -1,42 +1,81 @@
 @startuml
-!define RECTANGLE_COLOR #ADD8E6
 skinparam {
-    Handwritten true
+    BackgroundColor #ADD8E6
+    BorderColor Black
     Shadowing false
-    BackgroundColor RECTANGLE_COLOR
-    BorderColor black
+    Handwritten true
+    Activity {
+        BackgroundColor #ecf1f9ff
+        BorderColor Black
+    }
 }
 
 start
 
-:Enter Name;
-:Enter Level Number (1 to 17);
-:Choose Playing Option (User/Computer);
-if (User Playing?) then (yes)
-    :Display Board;
-    repeat
-        :Type in a Letter (WASD, IJKL, Z);
-        :Print game board;
-        :Check game state;
-        if (Win State?) then (yes)
-            :Display Win Message;
-            stop
-        else (no)
-            if (Game Over?) then (yes)
-                :Display Game Over Message;
-                stop
-            endif
-        endif
-    repeat while (Continue Playing?)
-else (no)
-    :Display Board;
-    :Select Heuristic Calculation;
-    :Choose Algorithm;
-    :Perform Computation;
-    :Check Game State;
-    :Print number of opened nodes;
-    :Print Path;
-endif
+:Launch Game;
 
-stop
+repeat
+    :Control Panel;
+    if (User Choice?) then (Run Game)
+
+        repeat
+            :Main Menu;
+            if (Menu Option?) then (Play Levels)
+
+                :Ask Player Name;
+                :Choose Level (1-17);
+                    :Display Board;
+                    repeat
+                        :Player Input (WASD / IJKL / Z);
+                        :Update Board;
+                        :Check Game State;
+                    repeat while (Game Running?)
+
+                    if (Win?) then (yes)
+                        :Show Win Screen;
+                        if (Draw Path?) then (yes)
+                            :Display Path;
+                        endif
+                    else
+                        :Show Game Over Screen;
+                    endif
+
+            elseif (Computer Play)
+                :Choose Level (1-17);
+                :Choose Algorithm:
+                *BFS
+                *DFS
+                *UCS
+                *Hill Climbing
+                *A_Star;
+                :Run Solver;
+                :Show Solution (path);
+
+            elseif (View Stats)
+                :Select Level Stats;
+                :Display Stats Table;
+
+            elseif (Settings)
+                :Choose Theme:
+                *Classic
+                *High Contrast
+                *Legacy;
+
+            elseif (About)
+                :Show About Screen;
+
+            else (Quit Game)
+                break
+            endif
+
+        repeat while (Back to Main Menu)
+
+    elseif (Rebuild)
+        :Clean & Build Project;
+    else (Exit)
+        stop
+    endif
+
+repeat while (Control Panel Active)
+
 @enduml
