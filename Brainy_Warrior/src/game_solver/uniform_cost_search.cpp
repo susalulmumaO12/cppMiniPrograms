@@ -1,4 +1,4 @@
-#include "../../include/algorithms.h"
+#include "algorithms.h"
 #include <ncurses.h>
 #include <thread>
 #include <chrono>
@@ -7,13 +7,14 @@
 #include <vector>
 #include <list>
 #include <climits>
-#include <unordered_set>
+#include <unordered_map>
 #include <string>
 #include "board.h"
 #include "node_state.h"
 #include "tile.h"
 #include "helper_functions.h"
 #include "main.h"
+#include "board_view.h"
 
 
 using namespace std;

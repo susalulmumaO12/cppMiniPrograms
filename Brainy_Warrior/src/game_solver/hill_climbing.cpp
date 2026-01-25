@@ -15,6 +15,7 @@
 #include "tile.h"
 #include "helper_functions.h"
 #include "main.h"
+#include "board_view.h"
 
 
 using namespace std;
