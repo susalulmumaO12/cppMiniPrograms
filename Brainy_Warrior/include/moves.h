@@ -4,8 +4,8 @@
 #include <iostream>
 #include <string>
 #include <list>
-#include "../structure/board.h"
-#include "../structure/tile.h"
+#include "board.h"
+#include "tile.h"
 #include "main.h"
 
 
