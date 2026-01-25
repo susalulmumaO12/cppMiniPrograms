@@ -6,6 +6,7 @@
 #include "tile.h"
 
 enum dist { man, euc, mink, cheb };
+enum theme { classic, high_contrast, legacy };
 
 struct circularq {
     std::vector<Tile> tiles;
@@ -30,6 +31,7 @@ public:
     int score = 0;
     std::string playerName;
     dist distanceType = man;
+    theme currentTheme = classic;
 
     static GameSession& getInstance() {
         static GameSession instance;

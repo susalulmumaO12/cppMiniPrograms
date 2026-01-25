@@ -22,6 +22,7 @@
 #define DEAD_PLAYER_PAIR 14
 
 void init_tui();
+void apply_theme();
 int main_menu();
 std::string ask_name();
 std::string choose_level_menu();
@@ -29,6 +30,7 @@ int choose_algorithm_menu();
 void levels_menu();
 void computer_play();
 void stats_menu();
+void settings_menu();
 void about_menu();
 void quit();
 
