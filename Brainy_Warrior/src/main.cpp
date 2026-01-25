@@ -4,6 +4,7 @@
 #include "brainy_warrior_tui.h"
 #include "main.h"
 #include "helper_functions.h"
+#include "board_view.h"
 
 // print-strings all in one place
 const std::string BrainyWarrior = "__________               .__                __      __                     .__              \n\\______   \\____________  |__| ____ ___.__. /  \\    /  \\_____ ______________|__| ___________ \n |    |  _/\\_  __ \\__  \\ |  |/    <   |  | \\   \\/\\/   /\\__  \\_  __ \\_  __ \\  |/  _ \\_  __  \\\n |    |   \\ |  | \\// __ \\|  |   |  \\___  |  \\        /  / __ \\|  | \\/|  | \\/  (  <_> )  | \\/\n |______  / |__|  (____  /__|___|  / ____|   \\__/\\  /  (____  /__|   |__|  |__|\\____/|__|   \n        \\/             \\/        \\/\\/             \\/        \\/                              ";
@@ -22,6 +23,7 @@ int main() {
         } // LEVELS
         else if (choice == 1) computer_play(); // COMPUTER
         else if (choice == 2) stats_menu(); // STATS
+        else if (choice == 3) about_menu(); // ABOUT
         else { quit(); break; } // QUIT
     }
 
