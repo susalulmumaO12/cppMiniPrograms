@@ -31,6 +31,7 @@ add_executable(Brainy_Warrior
     ${TUI_DIR}/brainy_warrior_tui.cpp
     ${TUI_DIR}/levels_tui.cpp
     ${TUI_DIR}/stats_tui.cpp
+    ${TUI_DIR}/board_view.cpp
 )
 
 #include headers
