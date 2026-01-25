@@ -1,6 +1,6 @@
-#include<iostream>
-#include"node_state.h"
-#include"board.h"
+#include <iostream>
+#include "node_state.h"
+#include "board.h"
 
 //Constructor
 Node_State::Node_State(Board board, std::shared_ptr<Node_State> parent, int g, int h)

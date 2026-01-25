@@ -1,6 +1,6 @@
 #include "board.h"
-#include<iostream>
-#include<list>
+#include <iostream>
+#include <list>
 #include "tile.h"
 
 using namespace std;
