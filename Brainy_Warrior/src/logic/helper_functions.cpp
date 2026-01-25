@@ -1,4 +1,4 @@
-#include "helper_functions.h"
+#include "../include/helper_functions.h"
 #define DEBUG false
 
 #include <iostream>
@@ -50,6 +50,9 @@ Board set_game_board(std::string levelKey){
             board.getTile(i, j).setValue(levelData[i][j]);
         }
     }
+
+    // Initialize wizard tiles once (Phase 34)
+    getWizardTiles(board);
 
     return board;
 }
@@ -259,18 +262,18 @@ list<shared_ptr<Node_State>> get_next_cost_states(shared_ptr<Node_State> board){
         }
     }
 
-    // Wizard moves: allow only if it actually changes the state 
+    // Wizard moves: Universal Successors (Phase 28)
+    // Add all possible rotations as direct successors to avoid deep nested wizard moves
     const auto& wizardTiles = board->getBoard().getWizardTiles();
     if (!wizardTiles.empty()) {
         Board wiz(board->getBoard());
-        wiz = moveWizard(wiz);
-        string nextHash = stringBoard(wiz);
-        
-        if (nextHash != stringBoard(board->getBoard())) {
-            auto wiz_state = make_shared<Node_State>(wiz, board, board->getG() + 1, 0);
+        for (int r = 1; r < (int)wizardTiles.size(); r++) {
+            wiz = moveWizard(wiz);
+            // Each rotation costs 1
+            auto wiz_state = make_shared<Node_State>(wiz, board, board->getG() + r, 0);
             states.push_back(wiz_state);
             if(DEBUG){
-                debug_log("Generated WIZARD state");
+                debug_log("Generated WIZARD rotation " + to_string(r));
             }
             if(wiz.win()){
                 return states;
@@ -351,7 +354,7 @@ string stringBoard(Board& b) {
     int n = b.getN();
     int m = b.getM();
     string boardHash;
-    boardHash.reserve(n * m + 10); 
+    boardHash.reserve(n * m + 50); // Increased capacity for wizard positions
 
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < m; j++) {
@@ -361,11 +364,26 @@ string stringBoard(Board& b) {
             else boardHash += '?';
         }
     }
-    // Include absolute wizard position and state to prevent any collisions
+    
+    // Include absolute wizard positions to prevent any collisions
+    // Format: |W:count|pos1_row,pos1_col|pos2_row,pos2_col|...
+    const auto& wizardTiles = b.getWizardTiles();
     boardHash += '|';
     boardHash += b.isWizardUsed() ? 'W' : 'w';
     boardHash += ':';
+    boardHash += to_string(wizardTiles.size());
+    
+    for (const auto& wizardTile : wizardTiles) {
+        boardHash += '|';
+        boardHash += to_string(wizardTile.getRow());
+        boardHash += ',';
+        boardHash += to_string(wizardTile.getCol());
+    }
+    
+    // Include current wizard index for completeness
+    boardHash += '|';
     boardHash += to_string(b.getCurrentWizardIndex());
+    
     return boardHash;
 }
 
