@@ -15,6 +15,11 @@
 
 - [Preview](#preview)
 - [Game Flow](#game-flow)
+- [Themes](#themes)
+  - [Classic](#classic-natural-colors)
+  - [High Contrast](#high-contrast)
+  - [Legacy](#legacy-black--green)
+  - [Terminal Emulator Profiles Effect on Themes](#terminal-emulator-profile-effect-on-themes)
 - [How to Run](#how-to-run)
   - [Requirements](#requirements)
   - [Build](#build)
@@ -62,6 +67,30 @@ The game is designed with a user-friendly TUI (Terminal User Interface). Upon la
 Below is a flowchart that demonstrates the game flow ([display full size](./screenshot/flowchart.png)):
 
 <img src="./screenshot/flowchart.png" height="500" alt="flowchart"/>
+
+## Themes
+You are able to pick out of three themes, a theme affects general TUI coloring, and board colors:
+### Classic (natural colors)
+<img src="./screenshot/tui_settings_menu.png" alt="classic theme" height="200" /> <img src="./screenshot/classic_lvl9.png" alt="level 9 in classic theme" height="200" /> 
+
+Where the sea is a tone of blue, walls are a tone of brown, and grass land is represented with green dots.
+
+### High Contrast
+<img src="./screenshot/high_contrast_menu.png" alt="high contrast theme" height="200" /> <img src="./screenshot/hc_lvl9.png" alt="level 9 in high contrast theme" height="200" /> 
+
+Where the sea is blue, walls are represented with brown `#`, and grass land is dotted white.
+
+### Legacy (black & green)
+<img src="./screenshot/legacy_menu.png" alt="legacy theme" height="200" /> <img src="./screenshot/legacy_lvl9.png" alt="level 9 in legacy theme" height="200" /> 
+
+Where the sea is green, walls are represented with white `#`, and grass land is represented with green dots. This theme is tricky to play with!
+
+### Terminal Emulator Profile Effect on Themes
+
+Your terminal emulator might have a profile, screenshots above are taken on a terminal with no profile, below is how Classic Theme might look differently in various profiles:
+
+<img src="./screenshot/breeze_lvl9.png" alt="breeze" height="200" /> <img src="./screenshot/otto_lvl9.png" alt="otto" height="200" /> <img src="./screenshot/campbell_lvl9.png" alt="campbell" height="200" />
+<img src="./screenshot/materia_dark_lvl9.png" alt="materia dark" height="200" /> <img src="./screenshot/sweet_lvl9.png" alt="breeze" height="200" />
 
 ## How to Run
 
