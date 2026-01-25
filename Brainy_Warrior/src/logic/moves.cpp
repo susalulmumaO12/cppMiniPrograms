@@ -244,11 +244,12 @@ circularq getWizardTiles(Board& board){
 }
 
 Board moveWizard(Board& board){
+    // Use the stored wizard tiles instead of re-scanning (Phase 34)
     const auto& wizTiles = board.getWizardTiles();
     if (wizTiles.empty()) return board;
 
     int currentIdx = board.getCurrentWizardIndex();
-    // Fallback if index is invalid
+    // Fallback if index is invalid - check for value 7 or just use the index
     if (currentIdx < 0 || currentIdx >= (int)wizTiles.size()) {
         for (int i = 0; i < (int)wizTiles.size(); ++i) {
             if (board.getTile(wizTiles[i].getRow(), wizTiles[i].getCol()).getValue() == 7) {
