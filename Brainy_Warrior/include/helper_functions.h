@@ -1,19 +1,19 @@
 #ifndef HELPER_FUNCTIONS_H
 #define HELPER_FUNCTIONS_H
+
 #include <iostream>
 #include <list>
 #include <vector>
 #include <cmath>
 #include <string>
-#include "../structure/node_state.h"
-#include "../structure/board.h"
-#include "../structure/tile.h"
+#include <memory>
+#include "node_state.h"
+#include "board.h"
+#include "tile.h"
 #include "main.h"
 #include "moves.h"
 
 Board set_game_board(std::string levelKey);
-void printTile(int value);
-void printBoard(Board board);
 std::vector<std::pair<int, std::pair<int, std::pair<int, std::string>>>> fetchStats(std::string levelName);
 void updateStats(const std::string& playerName, std::string levelName, bool win);
 dist getDistanceType();
