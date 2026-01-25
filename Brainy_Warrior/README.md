@@ -11,7 +11,7 @@
 </pre>
 [Brainy Warrior](https://www.coolmathgames.com/0-brainy-warrior) is a puzzle game, the goal of the game is to defeat all enemies, by moving (sliding) towards them, if there is no enemy or wall standing in your way, you might fall into the sea!
 
-**Table of Contents:**
+<details><summary><b>Table of Contents</b></summary>
 
 - [Preview](#preview)
 - [Game Flow](#game-flow)
@@ -39,6 +39,7 @@
 - [Draft of the thinking process](#draft-of-the-thinking-process)
 - [Future Improvements](#future-improvements)
 - [Old Looks](#old-looks)
+</details>
 
 ## Preview
 
@@ -47,7 +48,7 @@
 ## Game Flow
 
 <!-- Add image here miss saruma -->
-The game is designed with a user-friendly TUI (Terminal User Interface). Upon launching, players are greeted with a Main Menu where they can choose to play levels manually, watch the computer solve puzzles using various AI algorithms, or view their statistics.
+The game is designed with a user-friendly TUI (Terminal User Interface). Upon launching, player is greeted with a Main Menu where they can choose to play levels manually, watch the computer solve puzzles using various AI algorithms, or view their statistics.
 
 **User Prompts & Navigation:**
 
@@ -139,7 +140,9 @@ next = 5, 7? // enemy, wizard
 > [!NOTE]
 > The game restricts movement to 4 directions, Manhattan Distance is the most logical way to calculate distance, the other methods are experimental only (for educational purposes).
 
-When user selects computer as the player, the game prompts the user to choose heuristic calculation method, `distance` function takes two parameters of type `Tile`, `t1` and `t2`, here are the implemented methods so far:
+[DEPRECATED] When user selects computer as the player, the game prompts the user to choose heuristic calculation method, `distance` function takes two parameters of type `Tile`, `t1` and `t2`, here are the implemented methods so far:
+
+<details><summary>Expand Heuristics</summary>
 
 #### Manhattan Distance
 
@@ -207,6 +210,7 @@ $$
 ```cpp
 max((t2.getRow() - t1.getRow(), (t2.getCol() - t1.getCol())));
 ```
+ </details>
 
 ### Path Retrieval
 
