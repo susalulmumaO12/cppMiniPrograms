@@ -22,28 +22,67 @@ void init_tui() {
     noecho();
 	keypad(stdscr, TRUE); // support arrow keys for stdscr
     curs_set(0);
-	
-    init_pair(BANNER_PAIR, COLOR_CYAN, COLOR_BLACK);
-    init_pair(OPTION_PAIR, COLOR_WHITE, COLOR_BLACK);
-    init_pair(SELECTED_OPTION_PAIR, COLOR_WHITE, COLOR_RED);
-    init_pair(GREY_OPTION_PAIR, COLOR_BLACK, COLOR_WHITE); //TODO: look into color coding in various terminal emulators
+    apply_theme();
+}
 
-    init_pair(SEA_PAIR, COLOR_BLUE, COLOR_CYAN);
-    init_pair(LAND_PAIR, COLOR_GREEN, COLOR_BLACK);
-    init_pair(WIZARD_TILE_PAIR, COLOR_MAGENTA, COLOR_BLACK);
-    init_pair(WALL_PAIR, COLOR_YELLOW, COLOR_YELLOW);
-    init_pair(TARGET_PAIR, COLOR_RED, COLOR_BLACK);
-    init_pair(STAR_PAIR, COLOR_YELLOW, COLOR_BLACK);
-    init_pair(WIZARD_PAIR, COLOR_MAGENTA, COLOR_WHITE);
-    init_pair(WON_PLAYER_PAIR, COLOR_YELLOW, COLOR_GREEN);
-    init_pair(PLAYER_PAIR, COLOR_WHITE, COLOR_BLUE);
-    init_pair(DEAD_PLAYER_PAIR, COLOR_RED, COLOR_WHITE);
+void apply_theme() {
+    theme current = GameSession::getInstance().currentTheme;
+
+    if (current == high_contrast) {
+        init_pair(BANNER_PAIR, COLOR_BLACK, COLOR_WHITE);
+        init_pair(OPTION_PAIR, COLOR_WHITE, COLOR_BLACK);
+        init_pair(SELECTED_OPTION_PAIR, COLOR_BLACK, COLOR_YELLOW);
+        init_pair(GREY_OPTION_PAIR, COLOR_WHITE, COLOR_BLACK);
+
+        init_pair(SEA_PAIR, COLOR_WHITE, COLOR_BLUE);
+        init_pair(LAND_PAIR, COLOR_BLACK, COLOR_WHITE);
+        init_pair(WIZARD_TILE_PAIR, COLOR_CYAN, COLOR_BLACK);
+        init_pair(WALL_PAIR, COLOR_YELLOW, COLOR_BLACK);
+        init_pair(TARGET_PAIR, COLOR_RED, COLOR_BLACK);
+        init_pair(STAR_PAIR, COLOR_YELLOW, COLOR_BLACK); // High visibility for feedback
+        init_pair(WIZARD_PAIR, COLOR_MAGENTA, COLOR_BLACK);
+        init_pair(WON_PLAYER_PAIR, COLOR_GREEN, COLOR_BLACK);
+        init_pair(PLAYER_PAIR, COLOR_BLUE, COLOR_WHITE);
+        init_pair(DEAD_PLAYER_PAIR, COLOR_WHITE, COLOR_RED);
+    } else if (current == legacy) {
+        init_pair(BANNER_PAIR, COLOR_GREEN, COLOR_BLACK);
+        init_pair(OPTION_PAIR, COLOR_GREEN, COLOR_BLACK);
+        init_pair(SELECTED_OPTION_PAIR, COLOR_BLACK, COLOR_GREEN);
+        init_pair(GREY_OPTION_PAIR, COLOR_WHITE, COLOR_BLACK);
+
+        init_pair(SEA_PAIR, COLOR_BLACK, COLOR_GREEN);
+        init_pair(LAND_PAIR, COLOR_GREEN, COLOR_BLACK);
+        init_pair(WIZARD_TILE_PAIR, COLOR_GREEN, COLOR_BLACK);
+        init_pair(WALL_PAIR, COLOR_WHITE, COLOR_BLACK);
+        init_pair(TARGET_PAIR, COLOR_GREEN, COLOR_BLACK);
+        init_pair(STAR_PAIR, COLOR_GREEN, COLOR_BLACK);
+        init_pair(WIZARD_PAIR, COLOR_BLACK, COLOR_GREEN);
+        init_pair(WON_PLAYER_PAIR, COLOR_BLACK, COLOR_GREEN);
+        init_pair(PLAYER_PAIR, COLOR_BLACK, COLOR_GREEN);
+        init_pair(DEAD_PLAYER_PAIR, COLOR_GREEN, COLOR_BLACK);
+    } else { // Classic
+        init_pair(BANNER_PAIR, COLOR_CYAN, COLOR_BLACK);
+        init_pair(OPTION_PAIR, COLOR_WHITE, COLOR_BLACK);
+        init_pair(SELECTED_OPTION_PAIR, COLOR_WHITE, COLOR_RED);
+        init_pair(GREY_OPTION_PAIR, COLOR_BLACK, COLOR_WHITE);
+
+        init_pair(SEA_PAIR, COLOR_BLUE, COLOR_CYAN);
+        init_pair(LAND_PAIR, COLOR_GREEN, COLOR_BLACK);
+        init_pair(WIZARD_TILE_PAIR, COLOR_MAGENTA, COLOR_BLACK);
+        init_pair(WALL_PAIR, COLOR_YELLOW, COLOR_YELLOW);
+        init_pair(TARGET_PAIR, COLOR_RED, COLOR_BLACK);
+        init_pair(STAR_PAIR, COLOR_YELLOW, COLOR_BLACK);
+        init_pair(WIZARD_PAIR, COLOR_MAGENTA, COLOR_WHITE);
+        init_pair(WON_PLAYER_PAIR, COLOR_YELLOW, COLOR_GREEN);
+        init_pair(PLAYER_PAIR, COLOR_WHITE, COLOR_BLUE);
+        init_pair(DEAD_PLAYER_PAIR, COLOR_RED, COLOR_WHITE);
+    }
 }
 
 int main_menu() {
     debug_log("Entering main_menu");
     clear();
-    const char *choices[] = {"Play Levels", "Computer Play", "View Stats", "About", "Quit Game"};
+    const char *choices[] = {"Play Levels", "Computer Play", "View Stats", "Settings", "About", "Quit Game"};
     
     ITEM **items;
     int c;				
@@ -174,6 +213,65 @@ std::string ask_name() {
     return name;
 }
 
+void settings_menu() {
+    clear();
+    const char *choices[] = {"Theme: Classic", "Theme: High Contrast", "Theme: Legacy", "< Back >"};
+    
+    ITEM **items;
+    int c;				
+	MENU *menu;
+    WINDOW *menuWin;
+    int n_choices;
+    int winHeight = 10, winWidth = 40;
+    int startx = (COLS - winWidth) / 2;
+    int starty = (LINES - winHeight) / 2;
+    const char* title = "   SETTINGS   ";
+
+    n_choices = ARRAY_SIZE(choices);
+    items = (ITEM **)calloc(n_choices + 1, sizeof(ITEM *));
+    for(int i = 0; i < n_choices; ++i) {
+        items[i] = new_item(choices[i], "");
+    }
+    items[n_choices] = (ITEM *)NULL;
+	menu = new_menu((ITEM **)items);
+    menuWin = newwin(winHeight, winWidth, starty, startx);
+    set_menu_fore(menu, COLOR_PAIR(SELECTED_OPTION_PAIR));
+    set_menu_back(menu, COLOR_PAIR(OPTION_PAIR));
+    set_menu_mark(menu, " > ");
+    set_menu_win(menu, menuWin);
+    set_menu_sub(menu, derwin(menuWin, 6, 38, 3, 1));
+
+    keypad(menuWin, TRUE);
+    box(menuWin, 0, 0);
+	mvwprintw(menuWin, 0, (40 - strlen(title)) / 2, "%s", title);
+
+    post_menu(menu);
+    wrefresh(menuWin);
+
+    while ((c = wgetch(menuWin)) != '\n') {
+        switch (c) {
+            case KEY_DOWN:  menu_driver(menu, REQ_DOWN_ITEM); break;
+            case KEY_UP:    menu_driver(menu, REQ_UP_ITEM); break;
+        }
+        wrefresh(menuWin);
+    }
+
+    int choice = item_index(current_item(menu));
+    
+    if (choice == 0) GameSession::getInstance().currentTheme = classic;
+    else if (choice == 1) GameSession::getInstance().currentTheme = high_contrast;
+    else if (choice == 2) GameSession::getInstance().currentTheme = legacy;
+
+    apply_theme();
+
+    unpost_menu(menu);
+    free_menu(menu);
+    for (int i = 0; i < n_choices; ++i)
+        free_item(items[i]);
+    free(items);
+    delwin(menuWin);
+}
+
 void about_menu() {
     clear();
     curs_set(0);
@@ -210,6 +308,13 @@ void about_menu() {
 
 void quit() {
     clear();
+    int row, col;
+    getmaxyx(stdscr, row, col);
+    const char* msg = "Goodbye! Happy playing!";
+    attron(A_BOLD | COLOR_PAIR(STAR_PAIR));
+    mvprintw(row / 2, (col - strlen(msg)) / 2, "%s", msg);
+    attroff(A_BOLD | COLOR_PAIR(STAR_PAIR));
+    refresh();
+    napms(1000); // Wait for 1 second
     endwin();
-    //TODO print "Goodbye!" for a second then clear
 }

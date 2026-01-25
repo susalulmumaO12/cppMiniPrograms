@@ -23,7 +23,8 @@ int main() {
         } // LEVELS
         else if (choice == 1) computer_play(); // COMPUTER
         else if (choice == 2) stats_menu(); // STATS
-        else if (choice == 3) about_menu(); // ABOUT
+        else if (choice == 3) settings_menu(); // SETTINGS
+        else if (choice == 4) about_menu(); // ABOUT
         else { quit(); break; } // QUIT
     }
 
