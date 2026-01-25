@@ -43,11 +43,13 @@
 
 ## Preview
 
-<img src="./screenshot/tui_main_menu.png" alt="level 1" height="200" /> <img src="./screenshot/tui_levels_menu.png" alt="lose state" height="200" />
+<img src="./screenshot/tui_main_menu.png" alt="Main Menu" height="200" /> <img src="./screenshot/tui_levels_menu.png" alt="levels menu" height="200" /> <img src="./screenshot/tui_settings_menu.png" alt="settings" height="200" /> <img src="./screenshot/tui_algorithms_menu.png" alt="settings" height="200" />
 
 ## Game Flow
 
-<!-- Add image here miss saruma -->
+<img src="./screenshot/tui_lvl1.png" alt="level 1" height="200" /> <img src="./screenshot/lose_hc_theme.png" alt="lose state" height="200" />
+<img src="./screenshot/tui_win.png" alt="win state" height="200" /> <img src="./screenshot/path_hc_theme.png" alt="path" height="200" /> 
+
 The game is designed with a user-friendly TUI (Terminal User Interface). Upon launching, player is greeted with a Main Menu where they can choose to play levels manually, watch the computer solve puzzles using various AI algorithms, or view their statistics.
 
 **User Prompts & Navigation:**
