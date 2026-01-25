@@ -92,3 +92,16 @@
   - **Persistent Heuristics:** Implemented robust Level 17 detection that remains active even after targets are collected, using an extremely flat heuristic weight to prioritize exploration. [DONE]
   - **Static Wizard Initialization:** Ensured wizard-capable tiles are initialized once and never removed, allowing the solver to rotate through tiles even after the wizard power is collected. [DONE]
     - **Note:** Discovered a major flaw in the wizard logic. Previously, when the player collected a wizard power, the game "forgot" that tile was ever a wizard position. This shrunk the rotation pool and changed the board's behavior in a way that wasn't intended for the solver. The wizard positions (the tiles where a wizard can be) are now static for the entire level, even after the active wizard (7) is collected and becomes land (1).
+
+## Phase 12: Architectural Refactoring & Polishing
+
+**Date:** 2026-01-25
+
+- **Objectives:**
+  - **Clean Architecture & Decoupling:** Successfully decoupled UI/Visualization from core game logic by moving board printing functions to a dedicated `board_view.cpp` in the `tui/` directory. [DONE]
+  - **Standardized Include Paths:** Refactored the entire project to use standardized include paths (e.g., `#include "board.h"`) rather than fragile relative paths. This leverages CMake's `target_include_directories` properly. [DONE]
+  - **Namespace Hygiene:** Removed `using namespace std;` from header files to prevent namespace pollution and aligned with modern C++ best practices. [DONE]
+  - **Header Organization:** Moved all core structure headers (`board.h`, `tile.h`, `node_state.h`) into the `include/` directory for better visibility and standard compliance. [DONE]
+  - **Generalized Heuristics:** Refactored hardcoded Level 17 optimization into a generalized "Complexity Heuristic" that scales based on board features (like wizard count) rather than level numbers. [DONE]
+  - **Build Quality:** Resolved all compiler warnings related to unused variables and misleading indentation. [DONE]
+  - **UI/UX Polish:** Added a credits-rich "About" section to the main menu and enhanced `run_game.sh` to be interactive and visually appealing with the "Graphite" artwork. [DONE]
