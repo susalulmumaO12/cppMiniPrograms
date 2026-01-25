@@ -43,7 +43,7 @@ void init_tui() {
 int main_menu() {
     debug_log("Entering main_menu");
     clear();
-    const char *choices[] = {"Play Levels", "Computer Play","View Stats", "Quit Game"};
+    const char *choices[] = {"Play Levels", "Computer Play", "View Stats", "About", "Quit Game"};
     
     ITEM **items;
     int c;				
@@ -57,9 +57,10 @@ int main_menu() {
 
     n_choices = ARRAY_SIZE(choices);
     items = (ITEM **)calloc(n_choices + 1, sizeof(ITEM *));
-    for(int i = 0; i < n_choices; ++i)
+    for(int i = 0; i < n_choices; ++i) {
         items[i] = new_item(choices[i], "");
-	items[n_choices] = (ITEM *)NULL;
+    }
+    items[n_choices] = (ITEM *)NULL;
 	menu = new_menu((ITEM **)items);
     menuWin = newwin(winHeight, winWidth, starty, startx);
     set_menu_fore(menu, COLOR_PAIR(SELECTED_OPTION_PAIR));
@@ -115,9 +116,10 @@ int choose_algorithm_menu() {
 
     n_choices = ARRAY_SIZE(choices);
     items = (ITEM **)calloc(n_choices + 1, sizeof(ITEM *));
-    for(int i = 0; i < n_choices; ++i)
+    for(int i = 0; i < n_choices; ++i) {
         items[i] = new_item(choices[i], "");
-	items[n_choices] = (ITEM *)NULL;
+    }
+    items[n_choices] = (ITEM *)NULL;
 	menu = new_menu((ITEM **)items);
     menuWin = newwin(winHeight, winWidth, starty, startx);
     set_menu_fore(menu, COLOR_PAIR(SELECTED_OPTION_PAIR));
@@ -170,6 +172,40 @@ std::string ask_name() {
     clear();
 
     return name;
+}
+
+void about_menu() {
+    clear();
+    curs_set(0);
+    int row, col;
+    getmaxyx(stdscr, row, col);
+
+    const char* title = " ABOUT BRAINY WARRIOR ";
+    std::string text[] = {
+        "Brainy Warrior is a strategic puzzle game.",
+        "Goal: Defeat all enemies (X) by sliding.",
+        "Beware: If you slide without hitting a target",
+        "or a wall, you'll fall into the sea!",
+        "",
+        "Special Tiles:",
+        " O - Wizard positions (rotate with Z)",
+        " W - Active Wizard (acts as a stop)",
+        "",
+        "Programmer: susalulmumaO12",
+        "",
+        "Press any key to return..."
+    };
+
+    attron(A_BOLD | COLOR_PAIR(BANNER_PAIR));
+    mvprintw(row / 4 - 2, (col - strlen(title)) / 2, "%s", title);
+    attroff(A_BOLD | COLOR_PAIR(BANNER_PAIR));
+
+    for (size_t i = 0; i < 12; ++i) {
+        mvprintw(row / 4 + i, (col - text[i].length()) / 2, "%s", text[i].c_str());
+    }
+
+    refresh();
+    getch();
 }
 
 void quit() {
