@@ -12,6 +12,7 @@
 #include "board.h"
 #include "helper_functions.h"
 #include "moves.h"
+#include "board_view.h"
 
 using json = nlohmann::json;
 
@@ -80,9 +81,10 @@ std::string choose_level_menu() {
 
     n_choices = choices.size();
     items = (ITEM **)calloc(n_choices + 1, sizeof(ITEM *));
-    for(int i = 0; i < n_choices; ++i)
+    for(int i = 0; i < n_choices; ++i) {
         items[i] = new_item(choices[i], "");
-	items[n_choices] = (ITEM *)NULL;
+    }
+    items[n_choices] = (ITEM *)NULL;
 
     backItems = (ITEM **)calloc(2, sizeof(ITEM *));
     const char* back_text = "< Back >";
