@@ -29,9 +29,10 @@ int choose_algorithm_menu();
 void levels_menu();
 void computer_play();
 void stats_menu();
+void about_menu();
 void quit();
 
 void level(const std::string& level);
 void stats(const std::string& level);
 
-#endif BRAINY_WARRIOR_TUI_H
+#endif // BRAINY_WARRIOR_TUI_H
