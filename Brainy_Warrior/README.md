@@ -45,9 +45,17 @@
 <img src="./screenshot/tui_main_menu.png" alt="level 1" height="200" /> <img src="./screenshot/tui_levels_menu.png" alt="lose state" height="200" />
 
 ## Game Flow
-<!-- 
-TODO screenshots of user prompts
--->
+
+<!-- Add image here miss saruma -->
+The game is designed with a user-friendly TUI (Terminal User Interface). Upon launching, players are greeted with a Main Menu where they can choose to play levels manually, watch the computer solve puzzles using various AI algorithms, or view their statistics.
+
+**User Prompts & Navigation:**
+
+- **Main Menu:** Navigate using Arrow Keys and select with Enter.
+- **Level Selection:** Choose from 17 challenging levels, each with difficulty and feature indicators (like wizard availability).
+- **Computer Play:** Select an algorithm (BFS, DFS, UCS, Hill Climbing, or A*) and watch it solve the level in real-time.
+- **In-Game:** Use WASD or IJKL for sliding movement, and Z to rotate wizard positions.
+
 Below is a flowchart that demonstrates the game flow ([display full size](./screenshot/flowchart.png)):
 
 <img src="./screenshot/flowchart.png" height="500" alt="flowchart"/>
