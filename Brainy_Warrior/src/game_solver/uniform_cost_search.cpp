@@ -1,4 +1,4 @@
-#include "algorithms.h"
+#include "../../include/algorithms.h"
 #include <ncurses.h>
 #include <thread>
 #include <chrono>
