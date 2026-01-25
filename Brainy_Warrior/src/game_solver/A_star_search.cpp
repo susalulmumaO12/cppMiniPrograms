@@ -1,4 +1,4 @@
-#include "../../include/algorithms.h"
+#include "algorithms.h"
 #include <ncurses.h>
 #include <thread>
 #include <chrono>
@@ -14,6 +14,7 @@
 #include "tile.h"
 #include "helper_functions.h"
 #include "main.h"
+#include "board_view.h"
 
 
 using namespace std;
@@ -28,7 +29,6 @@ void a_star(Board board) {
     priority_queue<shared_ptr<Node_State>, vector<shared_ptr<Node_State>>, NodeStatePtrComparator> openList;
     unordered_map<string, int> closedList;
 
-    Tile player = board.getPlayerTile();
     list<Tile> targets = board.getTargetTiles();
 
     auto startNode = make_shared<Node_State>(board, nullptr, 0, 0);
@@ -88,19 +88,20 @@ void a_star(Board board) {
                         if (d < minH) minH = d;
                     }
                     
-                    // REFINED HEURISTIC (Phase 31):
-                    // 1. Target count (highest priority)
+                    // GENERALIZED COMPLEXITY HEURISTIC (Phase 38):
+                    // 1. Target count
                     // 2. Proximity of player to nearest target
                     
-                    // For Level 17, we use an extremely flat heuristic.
-                    // Detection: 4 wizard tiles (unique to Level 17). 
-                    // Persistent: We check wizard tiles count, which stays 4 even after targets are hit.
-                    bool isLevel17 = (nextState->getBoard().getWizardTiles().size() == 4);
+                    // Instead of hardcoding level numbers, we scale the heuristic 
+                    // based on board features (like wizard tiles).
+                    int wizardCount = nextState->getBoard().getWizardTiles().size();
                     
-                    if (isLevel17) {
-                        // Use a very low multiplier for targets to prioritize reaching them over collection order
-                        h = (nextTargets.size() * 2) + minH; 
+                    if (wizardCount > 0) {
+                        // High-complexity level (likely requires setup moves)
+                        // Use a lower target multiplier to encourage exploration
+                        h = (nextTargets.size() * 5) + minH; 
                     } else {
+                        // Simple level
                         h = (nextTargets.size() * 50) + minH;
                     }
                 }
