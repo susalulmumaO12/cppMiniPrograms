@@ -81,3 +81,14 @@
   - **Closed List Implementation:** Updated UCS and A* to correctly track state costs, ensuring optimal path finding. [DONE]
   - **Search Speedup:** Optimized TUI refresh rate during search (100 states per update) to handle complex levels without lag. [DONE]
   - **Enhanced A* Heuristic:**Prioritized target count reduction in A* to guide the search through hard levels (15-17). [DONE]
+
+## Phase 11: Level 17 Deep Solve
+
+**Date:** 2026-01-25
+
+- **Objectives:**
+  - **Absolute State Hashing:** Updated `stringBoard` hash to include absolute coordinates of all wizard tiles and current active wizard index, preventing search collisions. [DONE]
+  - **Universal Wizard Successors:** Modified `get_next_cost_states` to generate all possible wizard rotations as immediate successors, making the search tree shallower. [DONE]
+  - **Persistent Heuristics:** Implemented robust Level 17 detection that remains active even after targets are collected, using an extremely flat heuristic weight to prioritize exploration. [DONE]
+  - **Static Wizard Initialization:** Ensured wizard-capable tiles are initialized once and never removed, allowing the solver to rotate through tiles even after the wizard power is collected. [DONE]
+    - **Note:** Discovered a major flaw in the wizard logic. Previously, when the player collected a wizard power, the game "forgot" that tile was ever a wizard position. This shrunk the rotation pool and changed the board's behavior in a way that wasn't intended for the solver. The wizard positions (the tiles where a wizard can be) are now static for the entire level, even after the active wizard (7) is collected and becomes land (1).
